@@ -1,0 +1,26 @@
+.stream-size {
+    width: 870px;
+    height: 490px;
+}
+
+#view-1 {
+    left: 60px;
+    top: 30px;
+}
+
+#view-2 {
+    left: 990px;
+    top: 30px;
+}
+
+#view-3 {
+    left: 60px;
+    top: 550px;
+}
+
+#commentary-area {
+    position: absolute;
+    width: 900px;
+    left: 990px;
+    top: 790px;
+}

@@ -1,0 +1,83 @@
+body{
+    font-family: 'Bebas Neue';
+    letter-spacing: 1.5px;
+    color: #e7ecef;
+}
+
+.lego-tile {
+    background: #272727;
+}
+
+.lego-tile::before {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    z-index: -1;
+    overflow: hidden;
+    background-image: url(/assets/legotile.png);
+    background-repeat: repeat;
+    transform: rotate(30deg);
+}
+
+.commentator-box-container {
+    background-color: #e7ecef;
+    width: 420px;
+    height: 50px;
+    padding: 4px;
+    padding-left: 8px;
+}
+
+.commentator-box {
+    background-color: #1c6998;
+    color: #e7ecef;
+    font-size: 25px;
+
+
+    padding-top: 4px;
+    padding-left: 8px;
+}
+
+.commentator-box-solo {
+    width: 402px;
+    height: 42px;
+}
+
+.commentator-box-pronouns {
+    width: 352px;
+    height: 42px;
+}
+
+.pronoun-box {
+    color: #1c6998;
+    text-align: center;
+}
+
+.stream-viewport {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 1);
+}
+
+.full-border {
+    border: 4px solid #e7ecef;
+}
+
+.top-border {
+    border-top: 4px solid #e7ecef;
+}
+
+.bottom-border {
+    border-bottom: 4px solid #e7ecef;
+}
+
+.left-border {
+    border-left: 4px solid #e7ecef;
+}
+
+.right-border {
+    border-right: 4px solid #e7ecef;
+}
+
+
