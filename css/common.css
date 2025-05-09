@@ -24,7 +24,7 @@ body{
 
 .commentator-box-container {
     background-color: #e7ecef;
-    width: 420px;
+    width: 270px;
     height: 50px;
     padding: 4px;
     padding-left: 8px;
@@ -35,18 +35,17 @@ body{
     color: #e7ecef;
     font-size: 25px;
 
-
     padding-top: 4px;
     padding-left: 8px;
 }
 
 .commentator-box-solo {
-    width: 402px;
+    width: 252px;
     height: 42px;
 }
 
 .commentator-box-pronouns {
-    width: 352px;
+    width: 302px;
     height: 42px;
 }
 

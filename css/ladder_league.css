@@ -3,6 +3,13 @@
     height: 490px;
 }
 
+#data-table {
+    position: absolute;
+    width: 900px;
+    left: 990px;
+    top: 790px;
+}
+
 #view-1 {
     left: 60px;
     top: 30px;
@@ -20,7 +27,8 @@
 
 #commentary-area {
     position: absolute;
-    width: 900px;
+    width: 860px;
     left: 990px;
-    top: 790px;
+    top: 590px;
+    margin: 10px;
 }
