@@ -63,6 +63,28 @@ export function getNextEvent(stateData) {
     return most_recent;
 }
 
+/**
+ * Return the IDs of the runners present in the provided event.
+ */
+export function getEventRunners(event) {
+    var runners = []
+    for (const runner of event.runner_state_map.keys()) {
+        runners.push(runner);
+    } 
+
+    return runners;
+}
+
+/**
+ * Return the IDs of the provided stream runners in order
+ * of appearance.
+ */
+export function getOrderedStreamRunners(stream) {
+    var keys = stream.stream_runners.keys();
+    keys.sort();
+    return keys.map((k) => stream.stream_runners[k]);
+}
+
 export function getEventById(stateData, eventId) {
     for (const event of stateData.events) {
         if (event.id == eventId) {
