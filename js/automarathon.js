@@ -68,9 +68,9 @@ export function getNextEvent(stateData) {
  */
 export function getEventRunners(event) {
     var runners = []
-    for (const runner of event.runner_state_map.keys()) {
+    for (const runner of Object.keys(event.runner_state)) {
         runners.push(runner);
-    } 
+    }
 
     return runners;
 }
@@ -80,7 +80,7 @@ export function getEventRunners(event) {
  * of appearance.
  */
 export function getOrderedStreamRunners(stream) {
-    var keys = stream.stream_runners.keys();
+    var keys = Object.keys(stream.stream_runners);
     keys.sort();
     return keys.map((k) => stream.stream_runners[k]);
 }
@@ -115,6 +115,24 @@ export function getEventForHost(stateData, host) {
     return null;
 }
 
+/**
+ * Return the provided event's timer's elapsed time in milliseconds.
+ */
+export function getEventTimerValue(event) {
+    if (event.timer_start_time == null) {
+        return 0;
+    } else {
+        var start = event.timer_start_time;
+        var end = event.timer_end_time;
+        if (end == null) {
+            end = new Date().getTime();
+        }
+
+        console.log("time", end - start)
+        return end - start;
+    }
+}
+
 export function toStringTime(totalMillis, forceHours = false, forceMinutes = false, showDecimal = false, precision = 2) {
     const millis = Math.floor(totalMillis % 1000);
     const totalSeconds = Math.floor(totalMillis / 1000)
@@ -133,9 +151,7 @@ export function toStringTime(totalMillis, forceHours = false, forceMinutes = fal
         timeOut += minutes.toString().padStart(2, '0') + ":";
     }
 
-    if (seconds > 0) {
-        timeOut += seconds.toString().padStart(2, '0');
-    }
+    timeOut += seconds.toString().padStart(2, '0');
 
     if (showDecimal) {
         timeOut += "." + (millis.toString().padStart(precision, '0').substring(0, precision));
