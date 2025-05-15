@@ -12,6 +12,8 @@
         <style>
             :root {
                 --ladder-white:#C8C8C6;
+                --global-drop-radius: 10px;
+                --global-drop-color: #1A1A1A;
             }
             .runner-name{
                 display: flex;
@@ -21,6 +23,7 @@
                 color: var(--ladder-white);
                 padding-left: 30px;
                 padding-right: 30px;
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
             }
             .runner-text{
                 font-size: 39px;
@@ -35,6 +38,7 @@
                 flex-direction: column;
                 justify-content: center;
                 gap: 0px;
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
             }
             .commentator-name {
                 font-size: 28px;
@@ -70,6 +74,21 @@
                 font-weight: bold;
                 font-size: 43px;
                 color: var(--ladder-white);
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+            .runner-overlay{
+                text-align: center;
+                font-weight: bold;
+                font-size: 67px;
+                text-shadow: 0 0 5px rgb(30, 30, 30); 
+                color: var(--ladder-bright);
+                background-color: rgba(0,0,0,0.6);
+                visibility: hidden;
+                opacity: 0;
+                transition: opacity 250ms ease-in, visibility 0ms ease-in 250ms;
+            }
+
+                transition-delay: 0ms;
             }
         </style>
     </head>
@@ -81,18 +100,27 @@
             </div>
         </div>
         <div id="view-2">
+            <div class="runner-overlay show" id="view-2-overlay" style="position:absolute; left: 1126px; top: 0px; width:794px;height:443px;">
+                <span>2:23:03</span>
+            </div>
             <div class="runner-name" style="position:absolute; left: 1126px; top: 443px; width:794px;height:63px;line-height: 63px;">
                 <span class="runner-text" id="runner-2-name">P53&nbsp;&nbsp;<span class="fi fi-us"></span></span>
                 <span class="runner-seed" id="runner-2-seed">SEED 2</span>
             </div>
         </div>
         <div id="view-3">
+            <div class="runner-overlay show" id="view-3-overlay" style="position:absolute; left: 0px; top: 518px; width:793px;height:443px;">
+                <span>2:23:03</span>
+            </div>
             <div class="runner-name" style="position:absolute; left: 0px; top: 961px; width:794px;height:63px;line-height: 63px;">
                 <span class="runner-text" id="runner-3-name">EROADHOUSE&nbsp;&nbsp;<span class="fi fi-us"></span></span>
                 <span class="runner-seed" id="runner-3-seed">SEED 3</span>
             </div>
         </div>
         <div id="view-4">
+            <div class="runner-overlay show" id="view-4-overlay" style="position:absolute; left: 1126px; top: 518px; width:794px;height:443px;">
+                <span>2:23:03</span>
+            </div>
             <div class="runner-name" style="position:absolute; left: 1126px; top: 961px; width:794px;height:63px;line-height: 63px;">
                 <span class="runner-text" id="runner-4-name">EROADHOUSE&nbsp;&nbsp;<span class="fi fi-us"></span></span>
                 <span class="runner-seed" id="runner-4-seed">SEED 4</span>
@@ -108,13 +136,13 @@
         </div>
 
         <div id="commentary-area">
-            <div id="commentator-box-1" class="commentator-slot commentator-voice-activity" style="position:absolute; left: 833px; top: 681px; width:254px;height:68px; line-height: 68px;">
+            <div id="commentator-box-1" class="commentator-slot commentator-voice" style="position:absolute; left: 833px; top: 681px; width:254px;height:68px; line-height: 68px;">
                 <span class="commentator-name confirm_selection ">SIEDEMNASTEK</span>
             </div>
-            <div id="commentator-box-2" class="commentator-slot commentator-voice-activity" style="position:absolute; left: 833px; top: 754px; width:254px;height:67px; line-height: 67px;">
+            <div id="commentator-box-2" class="commentator-slot commentator-voice active" style="position:absolute; left: 833px; top: 754px; width:254px;height:67px; line-height: 67px;">
                 <span class="commentator-name">LASERTRAP</span><span class="commentator-pronoun">They/Them</span>
             </div>
-            <div id="commentator-box-3" class="commentator-slot commentator-voice-activity" style="position:absolute; left: 833px; top: 826px; width:254px;height:67px; line-height: 67px;">
+            <div id="commentator-box-3" class="commentator-slot commentator-voice" style="position:absolute; left: 833px; top: 826px; width:254px;height:67px; line-height: 67px;">
                 <span class="commentator-name">P53</span>
             </div>
         </div>
