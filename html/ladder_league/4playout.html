@@ -12,6 +12,7 @@
         <style>
             :root {
                 --ladder-white:#C8C8C6;
+                --ladder-bright:#D8D8D6;
                 --global-drop-radius: 10px;
                 --global-drop-color: #1A1A1A;
             }
@@ -52,14 +53,14 @@
                 line-height: 18px;
                 color: var(--ladder-white);
             }
-            .commentator-voice-activity {
+            .commentator-voice {
                 -webkit-transition: text-shadow 0.3s linear;
                 -moz-transition: text-shadow 0.3s linear;
                 -ms-transition: text-shadow 0.3s linear;
                 -o-transition: text-shadow 0.3s linear;
                 transition: text-shadow 0.3s linear;
             }
-            .commentator-voice-active {
+            .commentator-voice.active {
                 text-shadow: 0 0 3.5px rgb(214, 223, 253); 
             }
             .timer{
@@ -68,6 +69,7 @@
                 font-size: 60px;
                 font-variant-numeric: tabular-nums;
                 color: var(--ladder-white);
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
             }
             .event-title{
                 text-align: center;
@@ -82,18 +84,27 @@
                 font-size: 67px;
                 text-shadow: 0 0 5px rgb(30, 30, 30); 
                 color: var(--ladder-bright);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
                 background-color: rgba(0,0,0,0.6);
                 visibility: hidden;
                 opacity: 0;
                 transition: opacity 250ms ease-in, visibility 0ms ease-in 250ms;
             }
 
+            .runner-overlay.show {
+                visibility: visible;
+                opacity: 1;
                 transition-delay: 0ms;
             }
         </style>
     </head>
     <body style="width:1920px; height:1080px; background-image: url('LadderLeague2025_4Player.png');" class="bg-secondary border">
         <div id="view-1">
+            <div class="runner-overlay show" id="view-1-overlay" style="position:absolute; left: 0px; top: 0px; width:793px;height:443px;">
+                <span>2:23:03</span>
+            </div>
             <div class="runner-name" style="position:absolute; left: 0px; top: 443px; width:793px;height:63px;line-height: 63px;">
                 <span class="runner-text" id="runner-1-name">SIEDEMNASTEK&nbsp;&nbsp;<span class="fi fi-pl"></span></span>
                 <span class="runner-seed" id="runner-1-seed">SEED 1</span>     
