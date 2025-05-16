@@ -128,9 +128,26 @@ export function getEventTimerValue(event) {
             end = new Date().getTime();
         }
 
-        console.log("time", end - start)
         return end - start;
     }
+}
+
+export function getUpcomingEvents(stateData) {
+    var current_millis = Date.now();
+    var events = [];
+
+    for (const event of stateData.events) {
+        if (event.event_start_time != null && !event.complete) {
+            var diff = event.event_start_time - current_millis;
+            if (diff > 0) {
+                events.push(event);
+            }
+        }
+    }
+
+    events.sort((a, b) => { return a.event_start_time - b.event_start_time });
+
+    return events;
 }
 
 export function toStringTime(totalMillis, forceHours = false, forceMinutes = false, showDecimal = false, precision = 2) {
@@ -143,8 +160,10 @@ export function toStringTime(totalMillis, forceHours = false, forceMinutes = fal
     const minutes = totalMinutes % 60;
 
     var timeOut = "";
-    if (hours > 0 || forceHours) {
+    if (forceHours) {
         timeOut += hours.toString().padStart(2, '0') + ":";
+    } else if (hours > 0) {
+        timeOut += hours.toString() + ":";
     }
 
     if (hours > 0 || minutes > 0 || forceHours || forceMinutes) {
