@@ -1,7 +1,134 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </head>
-    <body style="width:1920px; height:1080px;" class="bg-secondary border">
+    <style>
+        :root {
+            --ladder-white:#C8C8C6;
+        }
+        .player-icon{
+            width: 120px;
+            height: 120px;
+        }
+        .event-players{
+            font-size: 50px;
+            font-weight:bold;
+            color: var(--ladder-white);
+            font-family: "Rubik";
+            text-transform: uppercase;
+        }
+        .event-seed{
+            font-size: 40px;
+            font-weight:bold;
+            color: var(--ladder-white);
+            font-family: "Rubik";
+            text-transform: uppercase;
+        }
+        .info-box{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 20px;
+        }
+        .vs-box{
+            text-align: center;
+            font-size: 35px;
+            color: var(--ladder-white);
+            font-family: "Rubik";
+        }
+        .best-time{
+            font-size:25px;
+            color: var(--ladder-white);
+            font-family: "Rubik";
+        }
+        .c-flag{
+            width: 64px;
+            height:64px;
+        }
+         .runner-name{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                font-weight: bold;
+                color: var(--ladder-white);
+                align-items: center;
+        }
+            
+    </style>
+    <body style="width:1920px; height:1080px; background-image: url('LadderLeague2025_Starting.jpg');" class="bg-secondary border">
+        <div class="info-box" style="position: absolute; left: 960px; top:100px; width: 850px; height:900px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-2">
+                        <img class="player-icon align-middle" src="WiiSuper.png"/>
+                    </div>
+                    <div class="col-10">
+                        <div class="runner-name">
+                            <span class="event-players">Wiisuper</span>
+                            <span class="event-seed">Seed 1</span>
+                         </div>
+                         <div class="runner-name">
+                            <div class="best-time">
+                                League Best: &nbsp;&nbsp;&nbsp;2:23:34
+                            </div>
+                            <div class="best-time">
+                                Country: &nbsp;&nbsp;&nbsp;<img class=" c-flag" alt="United States" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/US.svg"/>
+                            </div>
+                        </div>      
+                    </div>
+                </div>
+            </div>
+            <div class="row vs-box">
+                <div>VS</div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-2">
+                        <img class="player-icon align-middle" src="Biksel.png"/>
+                    </div>
+                    <div class="col-10">
+                        <div class="runner-name">
+                            <span class="event-players">Wiisuper</span>
+                            <span class="event-seed">Seed 1</span>
+                         </div>
+                         <div class="runner-name">
+                            <div class="best-time">
+                                League Best: &nbsp;&nbsp;&nbsp;2:23:34
+                            </div>
+                            <div class="best-time">
+                                Country:&nbsp;&nbsp;&nbsp;<img class=" c-flag" alt="United States" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/US.svg"/>
+                            </div>
+                        </div>      
+                    </div>
+                </div>
+            </div>
+            <div class="row vs-box">
+                <div>VS</div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-2">
+                        <img class="player-icon align-middle" src="Dimei.png"/>
+                    </div>
+                    <div class="col-10">
+                        <div class="runner-name">
+                            <span class="event-players">Wiisuper</span>
+                            <span class="event-seed">Seed 1</span>
+                         </div>
+                         <div class="runner-name">
+                            <div class="best-time">
+                                League Best: &nbsp;&nbsp;&nbsp;2:23:34
+                            </div>
+                            <div class="best-time">
+                                Country:&nbsp;&nbsp;&nbsp;<img class=" c-flag" alt="United States" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/US.svg"/>
+                            </div>
+                        </div>      
+                    </div>
+                </div>
+            </div>
+            
+        </div>
     </body>
 </html>
