@@ -173,7 +173,8 @@ function displayLiveDeltas(data, stream, splits) {
                 var runner_split = split_data[runner];
                 var time_element = document.getElementById("runner-" + runner_idx + "-split-" + row_index);
                 if (runner_split == null || runner_split.time == null) {
-                    time_element.innerHTML = "--"
+                    time_element.innerHTML = "--";
+                    time_element.className = "data-row-split";
                 } else {
                     time_element.innerHTML = toStringTime(runner_split.time, false, true, false)
                     let setstyle = "data-row-split";
