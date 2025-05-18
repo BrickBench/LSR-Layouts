@@ -11,19 +11,23 @@
     <style>
         :root {
             --ladder-white:#C8C8C6;
+            --global-drop-radius: 9px;
+            --global-drop-color: #101010;
         }
         .event-name{
             font-size: 75px;
             font-weight: bold;
             color: var(--ladder-white);
             text-align: center;
+            text-transform: capitalize;
         }
         .runner-name{
-            font-size: 45px;
+            font-size: 42px;
             font-weight: bold;
             color: var(--ladder-white);
             text-align: center;
             text-transform: uppercase;
+            text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
         }
         .runner-status{
             font-size: 50px;
@@ -33,120 +37,135 @@
             text-transform: uppercase;
         }
         .player-icon{
-            width: 85px;
-            height: 85px;
+            width: 102px;
+            height: 102px;
             margin: auto;    
             display: block;
         }
         .episode-header{
-            font-size: 60px;
+            font-size: 55px;
             font-weight: bold;
             color: var(--ladder-white);
             text-align: center;
+            text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            line-height: 90px;
         }
         .times{
-            font-size: 65px;
+            font-size: 60px;
+            font-weight: 600;
             color: var(--ladder-white);
             text-align: center;
+            text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            line-height: 90px;
         }
         .end-times{
-            font-size: 63px;
+            font-size: 62px;
             font-weight: bold;
             color: var(--ladder-white);
             text-align: center;
+            text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
         }
         .event-time-header{
-            font-size: 35px;
+            font-size: 33px;
             font-weight: bold;
             color: var(--ladder-white);
             text-align: center;
+            text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
         }
         .event-time-icon{
-            font-size: 45px;
+            font-size: 46px;
             font-weight: bold;
             color: var(--ladder-white);
             text-align: center;
+            text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
         }
         .event-time{
-            font-size: 45px;
+            font-size: 41px;
+            font-weight: 600;
             color: var(--ladder-white);
             text-align:center;
+            text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
         }
     </style>
-    <body style="width:1920px; height:1080px; background-image: url('');" class="border">
-        <div class="container">
-            <div class="row event-name">
-                <span>Week 1 Rung 1 Results</span>
+    <body style="width:1920px; height:1080px; background-image: url('resultsedited.png');" class="border">
+        <div class="container" style="position: absolute; left:302px;top:0px; width: 1314px; height: 1024px">
+            <div class="row event-name pt-2">
+                <span><span id="event-title"></span><span> RESULTS</span></span>
             </div>
-            <div class="row">
+            <div class="row pt-3">
                 <div class="col-1">
 
                 </div>
+                <!--Dependent on the rung. In the top rung it should be Qualified, "blank" , Demoted
+                    In bottom rung it should be "Promoted", "Eliminated", "Eliminated"
+                    For other rungs it should be "Promoted", "blank", "Demoted" -->
                 <div class="col runner-status">
-                    <span id="runner-1-status">Promoted</span>
+                    <span id="position-1-status">Promoted</span>
                 </div>
-                <div class="col runner-name">
-                    <span id="runner-2-status">Eliminated</span>
+                <div class="col runner-status">
+                    <span id="position-2-status">Eliminated</span>
                 </div>
-                <div class="col runner-name">
-                    <span id="runner-3-status">Eliminated</span>
+                <div class="col runner-status">
+                    <span id="position-3-status">Eliminated</span>
                 </div>
             </div>
-            <div class="row">
+            <div class="row pt-3">
                 <div class="col-1">
                     
                 </div>
                 <div class="col align-middle">
-                    <img class="player-icon" id="runner-1-img" src="icons/Anonymous.png"/>
+                    <img class="player-icon" id="position-1-img" src="icons/Anonymous.png"/>
                 </div>
                 <div class="col">
-                    <img class="player-icon align-middle" id="runner-2-img" src="icons/Anonymous.png"/>
+                    <img class="player-icon align-middle" id="position-2-img" src="icons/Anonymous.png"/>
                 </div>
                 <div class="col">
-                    <img class="player-icon align-middle" id="runner-3-img" src="icons/Anonymous.png"/>
+                    <img class="player-icon align-middle" id="position-3-img" src="icons/Anonymous.png"/>
                 </div>
             </div>
             <div class="row">
                 <div class="col-1">
 
                 </div>
+                <!--Position 1 is not necessarily the same as Runner 1. Position 1 should be the person that won the race and so on.-->
                 <div class="col runner-name">
-                    <span id="runner-1-name">Anonymous</span>
+                    <span id="position-1-name">Anonymous</span>
                 </div>
                 <div class="col runner-name">
-                    <span id="runner-2-name">SIEDEMNASTEK</span>
+                    <span id="position-2-name">SIEDEMNASTEK</span>
                 </div>
                 <div class="col runner-name">
-                    <span id="runner-3-name">P53</span>
+                    <span id="position-3-name">P53</span>
                 </div>
             </div>
             <div class="row">
                 <div class="col-1 ">
                     <div style="display: flex; flex-direction: row; align-items: center;">
-                        <i class="bi bi-ladder event-time-icon"></i> <span class="event-time-header">Best</span>
+                        &nbsp;<i class="bi bi-ladder event-time-icon"></i> <span class="event-time-header">PB</span>
                     </div>
                 </div>
                 <div class="col event-time">
-                    <span id="runner-1-name">2:19:20</span>
+                    <span id="position-1-time">2:19:20</span>
                 </div>
                 <div class="col event-time">
-                    <span id="runner-2-name">2:19:20</span>
+                    <span id="position-2-time">2:19:20</span>
                 </div>
                 <div class="col event-time">
-                    <span id="runner-3-name">2:19:20</span>
+                    <span id="position-3-time">2:19:20</span>
                 </div>
             </div>
-            <div class="row">
+            <!--No 0 padding on hours digits-->
+            <div class="row" style="padding-top:40px">
                 <div class="col-1 episode-header">
                     I
                 </div>
-                <div class="col times">
+                <div class="col times" id="position-1-e-1-time">
                     19:23
                 </div>
-                <div class="col times">
+                <div class="col times" id="position-2-e-1-time">
                     19:23
                 </div>
-                <div class="col times">
+                <div class="col times" id="position-3-e-1-time">
                     19:23
                 </div>
             </div>
@@ -154,13 +173,13 @@
                 <div class="col-1 episode-header">
                     II
                 </div>
-                <div class="col times">
+                <div class="col times" id="position-1-e-2-time">
                     19:23
                 </div>
-                <div class="col times">
+                <div class="col times" id="position-2-e-2-time">
                     19:23
                 </div>
-                <div class="col times">
+                <div class="col times" id="position-3-e-2-time">
                     19:23
                 </div>
             </div>
@@ -168,27 +187,27 @@
                 <div class="col-1 episode-header">
                     IV
                 </div>
-                <div class="col times">
-                    1:19:23
+                <div class="col times" id="position-1-e-4-time">
+                    19:23
                 </div>
-                <div class="col times">
-                    1:19:23
+                <div class="col times" id="position-2-e-4-time">
+                    19:23
                 </div>
-                <div class="col times">
-                    1:19:23
+                <div class="col times" id="position-3-e-4-time">
+                    19:23
                 </div>
             </div>
             <div class="row">
                 <div class="col-1 episode-header">
                     VI
                 </div>
-                <div class="col times">
+                <div class="col times" id="position-1-e-6-time">
                     1:19:23
                 </div>
-                <div class="col times">
+                <div class="col times" id="position-2-e-6-time">
                     1:19:23
                 </div>
-                <div class="col times">
+                <div class="col times" id="position-3-e-6-time">
                     1:19:23
                 </div>
             </div>
@@ -196,13 +215,13 @@
                 <div class="col-1 episode-header">
                     III
                 </div>
-                <div class="col times">
+                <div class="col times" id="position-1-e-3-time">
                     1:19:23
                 </div>
-                <div class="col times">
+                <div class="col times" id="position-2-e-3-time">
                     1:19:23
                 </div>
-                <div class="col times">
+                <div class="col times" id="position-3-e-3-time">
                     1:19:23
                 </div>
             </div>
@@ -210,13 +229,13 @@
                 <div class="col-1 episode-header">
                     V
                 </div>
-                <div class="col end-times">
+                <div class="col end-times" id="position-1-e-5-time">
                     2:19:23
                 </div>
-                <div class="col end-times">
+                <div class="col end-times" id="position-2-e-5-time">
                     2:19:23
                 </div>
-                <div class="col end-times">
+                <div class="col end-times" id="position-3-e-5-time">
                     2:19:23
                 </div>
             </div>

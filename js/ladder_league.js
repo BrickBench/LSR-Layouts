@@ -531,6 +531,9 @@ connectToVoiceStream(function(data) {
     }
 })
 
+let timer_element = document.getElementById("timer");
+let starter_element = document.getElementById("starting-soon");
+
 setInterval(function() {
     if (state == null) {
         return;
@@ -543,9 +546,20 @@ setInterval(function() {
 
     var event = getEventById(state, event_id);
 
-    var timer_element = document.getElementById("timer");
     if (timer_element != null) {
         var time = getEventTimerValue(event);
         timer_element.innerHTML = toStringTime(time, false, true);
+    } else {    
+        if(starter_element != null){
+            let cf = state.custom_fields;
+            let timer = cf['countdown-end-time'] ? parseInt(cf['countdown-end-time']) : undefined;
+            let time = timer ? timer - Date.now() : undefined;
+            if(time && time >=0 && cf){
+                starter_element.innerHTML = "<span style=\"font-size:123px;\">"+toStringTime(time, false, true) + "</span>";
+            }else{
+                starter_element.innerHTML = "<span style=\"font-size:87px;\">Starting Soon...</span>"
+            }
+            
+        }
     }
 }, 100)
