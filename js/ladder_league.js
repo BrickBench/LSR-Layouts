@@ -157,7 +157,7 @@ function displayLiveDeltas(data, stream, splits) {
                 let value11 = value1.time;
                 let value21 = value2.time;
                 if(value11 && value21){
-                    return value21 -value11;
+                    return value11-value21;
                 }
                 if(value11 && !value21){
                     return -1;
