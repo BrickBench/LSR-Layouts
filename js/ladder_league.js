@@ -130,7 +130,7 @@ function displayLiveDeltas(data, stream, splits) {
     var first_split_to_show = Math.max(0, (last_split - live_row_count) + 1);
 
     var runners = getOrderedStreamRunners(stream)
-    console.log("runs", data.active_runs);
+    console.log("runs", data.active_runs,runners,stream);
     for (var column = 0; column < 3; column++) {
         if (column >= runners.length) {
             break;
@@ -139,7 +139,7 @@ function displayLiveDeltas(data, stream, splits) {
         document.getElementById("table-runner-" + column).innerHTML = data.people[runners[column]].name.toUpperCase();
         var run = data.active_runs[runners[column]];
         if (run != null && run.bestPossible != null) {
-            document.getElementById("runner-bpt-" + column).innerHTML = toStringTime(run.bestPossible, true, true, true);
+            document.getElementById("runner-bpt-" + column).innerHTML = toStringTime(run.bestPossible, false, true, false);
         } else {
             document.getElementById("runner-bpt-" + column).innerHTML = "--";
         }
@@ -153,13 +153,36 @@ function displayLiveDeltas(data, stream, splits) {
             var split_data = splits[split_index];
             console.log("split_data", split_data);
 
+            let bestSplit = Object.entries(split_data).sort(([key1, value1],[key2, value2])=>{
+                let value11 = value1.time;
+                let value21 = value2.time;
+                if(value11 && value21){
+                    return value21 -value11;
+                }
+                if(value11 && !value21){
+                    return -1;
+                }
+                if(value21 && !value11){
+                    return 1;
+                }
+                return 0;
+            })
+            let bestTime = bestSplit && bestSplit.length > 1 ? bestSplit[0][1].time : undefined;
+
             for (const [runner_idx, runner] of runners.entries()) {
                 var runner_split = split_data[runner];
                 var time_element = document.getElementById("runner-" + runner_idx + "-split-" + row_index);
                 if (runner_split == null || runner_split.time == null) {
                     time_element.innerHTML = "--"
                 } else {
-                    time_element.innerHTML = toStringTime(runner_split.time, false, true, true)
+                    time_element.innerHTML = toStringTime(runner_split.time, false, true, false)
+                    let setstyle = "data-row-split";
+                    if(runner_split.time <= bestTime){
+                        setstyle += " time-leading";
+                    }else{
+                        setstyle += " time-trailing";
+                    }
+                    time_element.className = setstyle;
                 }
             }
 
@@ -259,6 +282,12 @@ function setCommentatorSlots(data, event, host) {
             }
         }
     }
+    if(commentators.length == 2){
+        var commentator_box = document.getElementById("commentator-box-3");
+        if (commentator_box != null) {
+            commentator_box.innerHTML = "<span><img src=\"LLMic.png\"/ style=\"width:37px;height:37px;\"></span>"
+        }
+    }
 }
 
 function setResults(data, event) {
@@ -283,10 +312,10 @@ function setResults(data, event) {
 
             if (contents != "") {
                 name_box.innerHTML = contents;
-                name_box.classList.add("runner-overlay-show");
+                name_box.classList.add("show");
             } else {
                 name_box.innerHTML = "";
-                name_box.classList.remove("runner-overlay-show");
+                name_box.classList.remove("show");
             }
         }
     }
@@ -438,7 +467,6 @@ connectToStateStream(function(data) {
 
     var event = getEventById(data, event_id);
     var host = data.hosts[this_host];
-    console.log("data", data)
 
     setRunnerData(data, event, stream);
     setCommentatorSlots(data, event, host);
@@ -451,10 +479,34 @@ connectToStateStream(function(data) {
         displayLiveDeltas(data, stream, splitData);
     }
 
-    var event_name_element = document.getElementById("event-title")
-    if (event_name_element != null) {
+    var event_name_element = document.getElementById("event-title");
+    if(event_name_element != null){
         event_name_element.innerHTML = event.name;
+    }else{
+        event_name_element = document.getElementById("event-title-split");
+        if(event_name_element != null){
+            let tokens = event.name.split(" ");
+            let splitElements = "";
+            for(let token of tokens){
+                splitElements += "<span>" + token + "</span>";
+            }
+            event_name_element.innerHTML = splitElements;
+        }
     }
+    console.log(data);
+    let cf = data.custom_fields;
+    let backup = document.getElementById("backup-root");
+    let mainTab = document.getElementById("data-table-root");
+    if(backup != null && mainTab != null && cf && cf['enable-table'] != null && cf['enable-table'] != undefined){
+        if(cf['enable-table'] == "false"){
+            backup.style.visibility = "visible";
+            mainTab.style.visibility = "hidden";
+        }else{
+            backup.style.visibility = "hidden";
+            mainTab.style.visibility = "visible";
+        }
+    }
+    
 })
 
 connectToVoiceStream(function(data) {

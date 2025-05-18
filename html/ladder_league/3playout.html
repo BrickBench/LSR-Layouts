@@ -49,7 +49,7 @@
                 width: 10%;
                 font-weight: bold;
                 text-align: center;
-                font-size: 28px;
+                font-size: 26px;
                 padding-left:15px;
                 color: var(--ladder-white);
                 text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
@@ -150,6 +150,9 @@
                 color: var(--ladder-white);
                 text-align: center;
             }
+            .commands-box-exclaim {
+                font-size: 28px;
+            }
 
             .runner-overlay{
                 text-align: center;
@@ -170,6 +173,11 @@
                 visibility: visible;
                 opacity: 1;
                 transition-delay: 0ms;
+            }
+            
+            .bottom-slide{
+                display:flex;
+                flex-wrap: wrap;
             }
         </style>
     </head>
@@ -205,22 +213,21 @@
             <div id="commentator-box-1" class="commentator-slot commentator-voice active" style="position:absolute; left: 1027px; top: 691px; width:236px;height:54px;">
                 <span class="commentator-name">SIEDEMNASTEK</span>
             </div>
-            <div id="commentator-box-2" class="commentator-slot commentator-voice" style="position:absolute; left: 1267px; top: 691px; width:236px;height:54px; line-height: 54px;">
+            <div id="commentator-box-3" class="commentator-slot commentator-voice" style="position:absolute; left: 1267px; top: 691px; width:236px;height:54px; line-height: 54px;">
                 <span class="commentator-name">LASERTRAP</span><span class="commentator-pronoun">They/Them</span>
             </div>
-            <div id="commentator-box-3" class="commentator-slot commentator-voice" style="position:absolute; left: 1508px; top: 691px; width:234px;height:54px; line-height: 54px;">
+            <div id="commentator-box-2" class="commentator-slot commentator-voice" style="position:absolute; left: 1508px; top: 691px; width:234px;height:54px; line-height: 54px;">
                 <span class="commentator-name">P53</span>
             </div>
         </div>
-        <div id="event-title" class="event-title" style="position:absolute; left: 1266px; top: 571px; width:238px;height:115px; line-height:20px;">
+        <div id="event-title-split" class="event-title" style="position:absolute; left: 1266px; top: 571px; width:238px;height:115px; line-height:20px;">
             <span>WEEK 2</span>
             <span>RUNG 2</span>
         </div>
         <div id="timer" class="timer" style="position:absolute; left: 1514px; top: 570px; width:260px;height:115px; line-height: 115px;">
             10:23
         </div>
-<!--
-        <div style="position:absolute; left: 999px; top: 784px; width:775px;height:255px;">
+        <div style="position:absolute; left: 999px; top: 784px; width:775px;height:255px; visibility: hidden;" id="backup-root">
             <div class="container commands-box">
                 
                 <div class="row pt-2">
@@ -228,13 +235,13 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        ! discord
+                        <span class="commands-box-exclaim">!</span> INFO
                     </div>
                     <div class="col">
-                        ! ladderleague
+                        <span class="commands-box-exclaim">!</span> PREDICTIONS
                     </div>
                     <div class="col">
-                        ! standings
+                        <span class="commands-box-exclaim">!</span> DISCORD
                     </div>
                 </div>
                 <div class="row pt-2">
@@ -254,8 +261,8 @@
                     </div>
                 </div>
             </div>
-        </div>-->
-        <div style="position:absolute; left: 999px; top: 784px; width:775px;height:255px;">
+        </div>
+        <div style="position:absolute; left: 999px; top: 784px; width:775px;height:255px;" id="data-table-root">
             <div class="container" id="data-table">
                 <div class="row pt-3">
                     <div class="data-row-header">
@@ -275,13 +282,13 @@
                     <div class="data-row-header" id="label-split-0">
                         1-1
                     </div>
-                    <div class="data-row-split time-last" id="runner-0-split-0">
+                    <div class="data-row-split" id="runner-0-split-0">
                         2:23
                     </div>
-                    <div class="data-row-split time-trailing" id="runner-1-split-0">
+                    <div class="data-row-split" id="runner-1-split-0">
                         2:19
                     </div>
-                    <div class="data-row-split time-leading" id="runner-2-split-0">
+                    <div class="data-row-split" id="runner-2-split-0">
                         2:12
                     </div>
                 </div>
@@ -289,10 +296,10 @@
                     <div class="data-row-header" id="label-split-1">
                         1-2
                     </div>
-                    <div class="data-row-split time-trailing" id="runner-0-split-1">
+                    <div class="data-row-split" id="runner-0-split-1">
                         5:23
                     </div>
-                    <div class="data-row-split time-leading" id="runner-1-split-1">
+                    <div class="data-row-split" id="runner-1-split-1">
                         5:12
                     </div>
                     <div class="data-row-split" id="runner-2-split-1">
@@ -303,10 +310,10 @@
                     <div class="data-row-header" id="label-split-2">
                         6-3
                     </div>
-                    <div class="data-row-split time-leading" id="runner-0-split-2">
+                    <div class="data-row-split" id="runner-0-split-2">
                         10:32
                     </div>
-                    <div class="data-row-split time-trailing" id="runner-1-split-2">
+                    <div class="data-row-split" id="runner-1-split-2">
                         10:56
                     </div>
                     <div class="data-row-split" id="runner-2-split-2">
