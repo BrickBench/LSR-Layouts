@@ -19,7 +19,7 @@ user_meta.set("Anorak", { seed: 6, pb: "2:24:22" })
 user_meta.set("Dragon", { seed: 7, pb: "2:23:14" })
 user_meta.set("FlamingLazer", { seed: 8, pb: "2:24:29" })
 user_meta.set("Dimei", { seed: 9, pb: "2:26:58" })
-user_meta.set("flup", { seed: 10, pb: "2:27:20" })
+user_meta.set("Flup", { seed: 10, pb: "2:27:20" })
 user_meta.set("Coolisen", { seed: 11, pb: "2:29:01" })
 user_meta.set("Revvylo", { seed: 12, pb: "2:29:52" })
 user_meta.set("TwiceLyte", { seed: 13, pb: "2:29:54" })
@@ -40,6 +40,24 @@ user_meta.set("Bennymoon", { seed: 26, pb: "2:45:29" })
 var state = null;
 var commentator_slots = {}
 
+const TOP_RUNG_LABELS = [
+    "Qualified",
+    "",
+    "Demoted"
+]
+
+const MIDDLE_RUNG_LABELS = [
+    "Promoted",
+    "",
+    "Demoted"
+]
+
+const BOTTOM_RUNG_LABELS = [
+    "Promoted",
+    "Eliminated",
+    "Eliminated"
+]
+
 
 /**
     * Calculate per-runner split times and deltas
@@ -54,9 +72,7 @@ function determineSplitInfo(splits, event) {
     for (const runner of runners) {
         if (runner in splits) {
             var split_data = splits[runner];
-            //  if (split_data.splits.length == 36) {
             var times = {}
-            // iterate over all 36 levels
             for (var i = 0; i < 36; i++) {
                 if (i < split_data.splits.length) {
                     if (split_data.splits[i].splitTime != null) {
@@ -66,11 +82,8 @@ function determineSplitInfo(splits, event) {
             }
 
             split_times[runner] = times;
-            //   } //otherwise splits are weird, can't compare
         }
     }
-
-    console.log("split_times", split_times);
 
     var runner_splits_deltas = {};
     for (var i = 0; i < 36; i++) {
@@ -114,8 +127,6 @@ function determineSplitInfo(splits, event) {
         }
     }
 
-    console.log("runner_splits_deltas", runner_splits_deltas);
-
     return runner_splits_deltas;
 }
 
@@ -130,7 +141,7 @@ function displayLiveDeltas(data, stream, splits) {
     var first_split_to_show = Math.max(0, (last_split - live_row_count) + 1);
 
     var runners = getOrderedStreamRunners(stream)
-    console.log("runs", data.active_runs,runners,stream);
+    console.log("runs", data.active_runs, runners, stream);
     for (var column = 0; column < 3; column++) {
         if (column >= runners.length) {
             break;
@@ -153,16 +164,16 @@ function displayLiveDeltas(data, stream, splits) {
             var split_data = splits[split_index];
             console.log("split_data", split_data);
 
-            let bestSplit = Object.entries(split_data).sort(([key1, value1],[key2, value2])=>{
+            let bestSplit = Object.entries(split_data).sort(([key1, value1], [key2, value2]) => {
                 let value11 = value1.time;
                 let value21 = value2.time;
-                if(value11 && value21){
-                    return value11-value21;
+                if (value11 && value21) {
+                    return value11 - value21;
                 }
-                if(value11 && !value21){
+                if (value11 && !value21) {
                     return -1;
                 }
-                if(value21 && !value11){
+                if (value21 && !value11) {
                     return 1;
                 }
                 return 0;
@@ -178,9 +189,9 @@ function displayLiveDeltas(data, stream, splits) {
                 } else {
                     time_element.innerHTML = toStringTime(runner_split.time, false, true, false)
                     let setstyle = "data-row-split";
-                    if(runner_split.time <= bestTime){
+                    if (runner_split.time <= bestTime) {
                         setstyle += " time-leading";
-                    }else{
+                    } else {
                         setstyle += " time-trailing";
                     }
                     time_element.className = setstyle;
@@ -192,6 +203,67 @@ function displayLiveDeltas(data, stream, splits) {
                 document.getElementById("runner-" + runner + "-split-" + row_index).innerHTML = "--";
             }
         }
+    }
+}
+
+function displayFinalTimes(data, event, times) {
+    var rung_labels = getRungLabels(event);
+    var runners = getRunnersByTime(event);
+    console.log("runners", runners);
+
+    for (var i = 0; i < 3; i++) {
+        if (i >= runners.length) {
+            break;
+        }
+
+        var label_box = document.getElementById("position-" + (i + 1) + "-status");
+        var name_box = document.getElementById("position-" + (i + 1) + "-name");
+        var img_box = document.getElementById("position-" + (i + 1) + "-img");
+        var pb_box = document.getElementById("position-" + (i + 1) + "-pb");
+
+        console.log("people", data.people);
+        var participant = data.people[runners[i].id];
+        var participant_meta = null;
+        if (participant != null) {
+            participant_meta = user_meta.get(participant.name);
+        }
+
+        label_box.innerHTML = rung_labels[i];
+        name_box.innerHTML = participant.name.toUpperCase();
+        pb_box.innerHTML = participant_meta.pb;
+        img_box.src = '/html/ladder_league/icons/' + participant.name + ".png";
+
+        for (var s = 0; s < 6; s++) {
+            var split_idx = (s * 6) + 5
+            var entry = document.getElementById("position-" + (i + 1) + "-e-" + (s + 1) + "-time");
+            var entry_str = "--"
+            if (s < times.length) {
+                var split_data = times[split_idx];
+                if (runners[i].id in split_data) {
+                    var runner_split = split_data[runners[i].id];
+                    if (runner_split != null && runner_split.time != null) {
+                        entry_str = toStringTime(runner_split.time, false, true, false);
+                    }
+                }
+            }
+
+            entry.innerHTML = entry_str;
+        }
+    }
+}
+
+function getRungLabels(event) {
+    var name_elements = event.name.split(" ");
+    var week = parseInt(name_elements[1]);
+    var rung = parseInt(name_elements[3]);
+    var week_max_rungs = 7 - (week - 1)
+
+    if (rung == 1) {
+        return TOP_RUNG_LABELS
+    } else if (rung == week_max_rungs) {
+        return BOTTOM_RUNG_LABELS
+    } else {
+        return MIDDLE_RUNG_LABELS
     }
 }
 
@@ -226,6 +298,7 @@ function getCommentatorsOrdered(data, event, host) {
         })
     }
 
+    /* decided not to use discord users
     for (const [_discord_user, discord_data] of Object.entries(host.discord_users)) {
         console.log("discord_data", discord_data);
         if (discord_data.participant in data.people) {
@@ -244,7 +317,7 @@ function getCommentatorsOrdered(data, event, host) {
                 participant: null,
             })
         }
-    }
+    } */
 
     console.log("commentators", commentators);
 
@@ -283,7 +356,8 @@ function setCommentatorSlots(data, event, host) {
             }
         }
     }
-    if(commentators.length == 2){
+
+    if (commentators.length == 2) {
         var commentator_box = document.getElementById("commentator-box-3");
         if (commentator_box != null) {
             commentator_box.innerHTML = "<span><img src=\"LLMic.png\"/ style=\"width:37px;height:37px;\"></span>"
@@ -301,12 +375,9 @@ function setResults(data, event) {
             if (i < ordered_runners.length) {
                 var runner = ordered_runners[i];
                 if (runner.toString() in event.runner_state) {
-                    var state = event.runner_state[runner];
-                    if (state.result != null &&
-                        state.result.SingleScore != null &&
-                        state.result.SingleScore.score != null &&
-                        state.result.SingleScore.score != "") {
-                        contents = '<span>' + state.result.SingleScore.score + '</span>';
+                    var time = getRunnerTime(event, runner);
+                    if (time != null) {
+                        contents = '<span>' + time + '</span>';
                     }
                 }
             }
@@ -338,6 +409,61 @@ function getRunnersBySeed(data, event) {
     runners.sort((a, b) => a.seed - b.seed);
 
     return runners.map((r) => r.id);
+}
+
+function getRunnerTime(event, runner) {
+    var state = event.runner_state[runner];
+    if (
+        state != null &&
+        state.result != null &&
+        state.result.SingleScore != null &&
+        state.result.SingleScore.score != null
+    ) {
+        return state.result.SingleScore.score;
+    } else {
+        return null;
+    }
+}
+
+function compareTime(a, b) {
+    var elements_a = a.split(":");
+    var elements_b = b.split(":");
+
+    if (elements_a.length > elements_b.length) {
+        return 1;
+    } else if (elements_a.length < elements_b.length) {
+        return -1;
+    } else {
+        for (var i = 0; i < elements_a.length; i++) {
+            var a_num = parseInt(elements_a[i]);
+            var b_num = parseInt(elements_b[i]);
+            if (a_num > b_num) {
+                return 1;
+            } else if (a_num < b_num) {
+                return -1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+function getRunnersByTime(event) {
+    var runners = [];
+
+    for (const runner of Object.keys(event.runner_state)) {
+        var time = getRunnerTime(event, runner);
+        if (time != null) {
+            runners.push({
+                id: runner,
+                time: time
+            })
+        }
+    }
+
+    runners.sort((a, b) => compareTime(a.time, b.time));
+
+    return runners
 }
 
 function setRunnerData(data, event) {
@@ -478,36 +604,37 @@ connectToStateStream(function(data) {
         // has live data
         const splitData = determineSplitInfo(data.active_runs, event);
         displayLiveDeltas(data, stream, splitData);
+    } else if (document.getElementById("final-table") != null) {
+        const splitData = determineSplitInfo(data.active_runs, event);
+        displayFinalTimes(data, event, splitData);
     }
 
     var event_name_element = document.getElementById("event-title");
-    if(event_name_element != null){
+    if (event_name_element != null) {
         event_name_element.innerHTML = event.name;
-    }else{
+    } else {
         event_name_element = document.getElementById("event-title-split");
-        if(event_name_element != null){
+        if (event_name_element != null) {
             let tokens = event.name.split(" ");
-            let splitElements = "";
-            for(let token of tokens){
-                splitElements += "<span>" + token + "</span>";
-            }
-            event_name_element.innerHTML = splitElements;
+            let pt1 = tokens[0] + " " + tokens[1];
+            let pt2 = tokens[2] + " " + tokens[3];
+            event_name_element.innerHTML = "<span>" + pt1 + "</span><span>" + pt2 + "</span>";
         }
     }
     console.log(data);
     let cf = data.custom_fields;
     let backup = document.getElementById("backup-root");
     let mainTab = document.getElementById("data-table-root");
-    if(backup != null && mainTab != null && cf && cf['enable-table'] != null && cf['enable-table'] != undefined){
-        if(cf['enable-table'] == "false"){
+    if (backup != null && mainTab != null && cf && cf['enable-table'] != null && cf['enable-table'] != undefined) {
+        if (cf['enable-table'] == "false") {
             backup.style.visibility = "visible";
             mainTab.style.visibility = "hidden";
-        }else{
+        } else {
             backup.style.visibility = "hidden";
             mainTab.style.visibility = "visible";
         }
     }
-    
+
 })
 
 connectToVoiceStream(function(data) {
@@ -549,17 +676,17 @@ setInterval(function() {
     if (timer_element != null) {
         var time = getEventTimerValue(event);
         timer_element.innerHTML = toStringTime(time, false, true);
-    } else {    
-        if(starter_element != null){
+    } else {
+        if (starter_element != null) {
             let cf = state.custom_fields;
             let timer = cf['countdown-end-time'] ? parseInt(cf['countdown-end-time']) : undefined;
             let time = timer ? timer - Date.now() : undefined;
-            if(time && time >=0 && cf){
-                starter_element.innerHTML = "<span style=\"font-size:123px;\">"+toStringTime(time, false, true) + "</span>";
-            }else{
+            if (time && time >= 0 && cf) {
+                starter_element.innerHTML = "<span style=\"font-size:123px;\">" + toStringTime(time, false, true) + "</span>";
+            } else {
                 starter_element.innerHTML = "<span style=\"font-size:87px;\">Starting Soon...</span>"
             }
-            
+
         }
     }
 }, 100)
