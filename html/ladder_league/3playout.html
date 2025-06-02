@@ -18,6 +18,7 @@
                 --ladder-bright:#D8D8D6;
                 --global-drop-radius: 10px;
                 --global-drop-color: #1A1A1A;
+                --bar-height: 20px;
             }
             body {
                 font-family: "Rubik"!important;
@@ -179,6 +180,49 @@
                 display:flex;
                 flex-wrap: wrap;
             }
+
+            .bar-name {
+                font-size: 26px;
+                font-weight: bold;
+                color: var(--ladder-white);
+                line-height: var(--bar-height);
+                width: 250px;
+                text-transform: uppercase;
+            }
+            .bar-title {
+                font-size: 32px;
+                padding-top: 20px;
+                font-weight: bold;
+                text-align: center;
+                color: var(--ladder-white);
+            }
+            .bar-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: left;
+                padding-top:30px;
+            }
+            .bar-percent {
+                font-size: 25px;
+                color: var(--ladder-white);
+                padding-left:20px;
+                line-height: var(--bar-height);
+            }
+            .bar-class {
+                height: var(--bar-height);
+            }
+
+            .infobox-transition {
+                visibility: hidden;
+                opacity: 0;
+                transition: opacity 250ms ease-in, visibility 0ms ease-in 250ms;
+            }
+
+            .infobox-transition.show {
+                visibility: visible;
+                opacity: 1;
+                transition-delay: 0ms;
+            }
         </style>
     </head>
     <body style="width:1920px; height:1080px; background-image: url('LadderLeague2025_3Player.png');">
@@ -227,7 +271,7 @@
         <div id="timer" class="timer" style="position:absolute; left: 1514px; top: 570px; width:260px;height:115px; line-height: 115px;">
             10:23
         </div>
-        <div style="position:absolute; left: 999px; top: 784px; width:775px;height:255px; visibility: hidden;" id="backup-root">
+        <div class="infobox-transition" style="position:absolute; left: 999px; top: 784px; width:775px;height:255px;" id="backup-root">
             <div class="container commands-box">
                 
                 <div class="row pt-2">
@@ -235,7 +279,7 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <span class="commands-box-exclaim">!</span> INFO
+                        <span class="commands-box-exclaim">!</span> BRACKET
                     </div>
                     <div class="col">
                         <span class="commands-box-exclaim">!</span> PREDICTIONS
@@ -262,7 +306,35 @@
                 </div>
             </div>
         </div>
-        <div style="position:absolute; left: 999px; top: 784px; width:775px;height:255px;" id="data-table-root">
+        <div class="infobox-transition show" style="position:absolute; left: 1009px; top: 784px; width:775px;height:255px;" id="live-probability">
+            <div class="container">
+                <div class="row bar-title">
+                    <span>LIVE WIN PROBABILITY</span>
+                </div>
+                <div class="row">
+                    <div class="bar-container">
+                        <div class="bar-name">FLUP</div>
+                        <div style="background-color: #2cac63;" class="bar-class" id="bar-display-1"></div>
+                        <div class="bar-percent" data-val="100" id="bar-percent-1"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="bar-container">
+                        <div class="bar-name">CHARZIGHT</div>
+                        <div style="background-color: #436efb;" class="bar-class" id="bar-display-2"></div>
+                        <div class="bar-percent" data-val="0" id="bar-percent-2"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="bar-container">
+                        <div class="bar-name">ANONYMOUS</div>
+                        <div style="background-color: #feb201;" class="bar-class" id="bar-display-3"></div>
+                        <div class="bar-percent" data-val="0" id="bar-percent-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="infobox-transition" style="position:absolute; left: 999px; top: 784px; width:775px;height:255px;" id="data-table-root">
             <div class="container" id="data-table">
                 <div class="row pt-3">
                     <div class="data-row-header">
@@ -338,4 +410,80 @@
         </div>
     </body>
     <script type="module" src="/js/ladder_league.js"></script>
+    <script>
+        function triggerBars(animatebar){
+
+            //Be careful with over animating the bar on every websocket state change
+            
+
+            //random nums for testing, replace with your real values
+            let barVals2 = [40,55,5];
+            barVals2[0] = Math.random();
+            barVals2[1] = Math.random();
+            barVals2[2] = Math.random();
+
+            let barVals = [0,0,0]
+            barVals[0] = barVals2[0] /(barVals2[0] + barVals2[1] + barVals2[2]) * 100;
+            barVals[1] = barVals2[1] /(barVals2[0] + barVals2[1] + barVals2[2]) * 100;
+            barVals[2] = barVals2[2] /(barVals2[0] + barVals2[1] + barVals2[2]) * 100;
+            //end random testing
+
+
+            //normalization to make sure displayed numbers add to 100
+            let diff = 100 - (Math.floor(barVals[0]) + Math.floor(barVals[1]) + Math.floor(barVals[2]));
+            let sortVal = barVals.map((a, index)=>{
+                return [a,index];
+            }).sort((a,b)=>{
+                return (b[0] % Math.floor(b[0])) - (a[0] - Math.floor(a[0]));
+            });
+
+            for(let i=0;i<3;i++){
+                barVals[i] = Math.floor(barVals[i]);
+            }
+            for(let i = 0; i < diff;i++){
+                barVals[sortVal[i][1]] += 1;
+            }
+
+            let interval = 650;
+            let minBar = 5;
+            let maxBar = 400;
+
+            for(let i = 0; i < 3;i++){
+                let valueDisplay = document.getElementById("bar-percent-"+(i+1).toString());
+                let startValue = -1;
+                let endValue = parseInt(barVals[i]);
+                if(animatebar){
+                    let duration = Math.floor(interval / endValue);
+                    let counter = setInterval(function () {
+                        startValue += 1;
+                        valueDisplay.textContent = Math.max(startValue,0).toString()+"%";
+                        if (startValue == endValue) {
+                            clearInterval(counter);
+                        }
+                    }, duration);
+                }else{
+                    valueDisplay.textContent = endValue.toString()+"%";
+                }
+            };
+
+            let largest = Math.max(...barVals);
+            let widthScale = 100;
+
+            if(largest < 75){
+                widthScale = 90;
+            }
+
+            for(let i = 0; i < 3;i++){
+                let bar = document.getElementById("bar-display-"+(i+1).toString());
+                let barWidth = Math.max(barVals[i]/widthScale * maxBar,minBar);
+                bar.style.width = barWidth.toString()+"px";
+                if(animatebar){
+                    bar.animate(
+                        [ { width: "0px" }, { width: barWidth.toString()+"px" } ],
+                        { duration: 600, forwards: 1 }
+                    );
+                }
+            }
+        }
+    </script>
 </html>
