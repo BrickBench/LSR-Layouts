@@ -1,7 +1,7 @@
 const host = "ws://localhost:28010";
 
-export function connectToStateStream(onData) {
-    const socket = new WebSocket(host + '/ws');
+export function connectToSocket(endpoint, onData) {
+    const socket = new WebSocket(host + endpoint);
     socket.addEventListener("message", (event) => {
         const data = JSON.parse(event.data);
         onData(data);
@@ -9,35 +9,14 @@ export function connectToStateStream(onData) {
 
     socket.onclose = function(_event) {
         setTimeout(function() {
-            connectToStateStream(onData);
+            connectToSocket(onData);
         }, 5000);
     }
 
     socket.onerror = function(_event) {
         socket.close();
         setTimeout(function() {
-            connectToStateStream(onData);
-        }, 5000);
-    }
-}
-
-export function connectToVoiceStream(onData) {
-    const socket = new WebSocket(host + '/ws/voice');
-    socket.addEventListener("message", (voice) => {
-        const data = JSON.parse(voice.data);
-        onData(data);
-    });
-
-    socket.onclose = function(_event) {
-        setTimeout(function() {
-            connectToVoiceStream(onData);
-        }, 5000);
-    }
-
-    socket.onerror = function(_event) {
-        socket.close();
-        setTimeout(function() {
-            connectToVoiceStream(onData);
+            connectToSocket(onData);
         }, 5000);
     }
 }
@@ -113,6 +92,72 @@ export function getEventForHost(stateData, host) {
     }
 
     return null;
+}
+
+/**
+ * Compare two times in the format "hh:mm:ss" or "mm:ss"
+ */
+export function compareTime(a, b) {
+    var elements_a = a.split(":");
+    var elements_b = b.split(":");
+
+    if (elements_a.length > elements_b.length) {
+        return 1;
+    } else if (elements_a.length < elements_b.length) {
+        return -1;
+    } else {
+        for (var i = 0; i < elements_a.length; i++) {
+            var a_num = parseInt(elements_a[i]);
+            var b_num = parseInt(elements_b[i]);
+            if (a_num > b_num) {
+                return 1;
+            } else if (a_num < b_num) {
+                return -1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+/**
+ * Return the provided runner's score
+ */
+export function getRunnerScore(event, runner) {
+    var state = event.runner_state[runner];
+    if (
+        state != null &&
+        state.result != null &&
+        state.result.SingleScore != null &&
+        state.result.SingleScore.score != null
+    ) {
+        return state.result.SingleScore.score;
+    } else {
+        return null;
+    }
+}
+
+/**
+ * Return this event's runners sorted by their time.
+ * This assumes that the score type is "SingleScore",
+ * and times are listed in the format "hh:mm:ss" or "mm:ss".
+ */
+export function getRunnersByTime(event) {
+    var runners = [];
+
+    for (const runner of Object.keys(event.runner_state)) {
+        var time = getRunnerScore(event, runner);
+        if (time != null) {
+            runners.push({
+                id: runner,
+                time: time
+            })
+        }
+    }
+
+    runners.sort((a, b) => compareTime(a.time, b.time));
+
+    return runners
 }
 
 /**
