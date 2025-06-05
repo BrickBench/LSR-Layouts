@@ -19,6 +19,7 @@
                 --global-drop-radius: 10px;
                 --global-drop-color: #1A1A1A;
                 --bar-height: 20px;
+                --bar-height-hup: 25px;
             }
             body {
                 font-family: "Rubik"!important;
@@ -188,13 +189,34 @@
                 line-height: var(--bar-height);
                 width: 250px;
                 text-transform: uppercase;
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
             }
+
+            .bar-name-hup {
+                font-size: 29px;
+                font-weight: bold;
+                color: var(--ladder-white);
+                line-height: var(--bar-height-hup);
+                width: 260px;
+                text-transform: uppercase;
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+
             .bar-title {
                 font-size: 32px;
                 padding-top: 20px;
                 font-weight: bold;
                 text-align: center;
                 color: var(--ladder-white);
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+            .bar-sub-title {
+                font-size: 34px;
+                padding-top: 20px;
+                font-weight: bold;
+                text-align: center;
+                color: var(--ladder-white);
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
             }
             .bar-container {
                 display: flex;
@@ -207,6 +229,7 @@
                 color: var(--ladder-white);
                 padding-left:20px;
                 line-height: var(--bar-height);
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
             }
             .bar-class {
                 height: var(--bar-height);
@@ -306,10 +329,10 @@
                 </div>
             </div>
         </div>
-        <div class="infobox-transition show" style="position:absolute; left: 1009px; top: 784px; width:775px;height:255px;" id="live-probability">
+        <div class="infobox-transition" style="position:absolute; left: 1009px; top: 784px; width:775px;height:255px;" id="live-probability">
             <div class="container">
                 <div class="row bar-title">
-                    <span>LIVE WIN PROBABILITY</span>
+                    <span>LIVE WIN PREDICTION</span>
                 </div>
                 <div class="row">
                     <div class="bar-container">
@@ -330,6 +353,27 @@
                         <div class="bar-name" id="bar-name-3">ANONYMOUS</div>
                         <div style="background-color: #feb201;" class="bar-class" id="bar-display-3"></div>
                         <div class="bar-percent" data-val="0" id="bar-percent-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="infobox-transition" style="position:absolute; left: 1009px; top: 794px; width:775px;height:255px;" id="live-probability-headsup">
+            <div class="container">
+                <div class="row bar-sub-title">
+                    <span id="bar-display-headsup=title">HEAD-TO-HEAD MATCHUP</span>
+                </div>
+                <div class="row pt-1">
+                    <div class="bar-container">
+                        <div class="bar-name-hup" id="bar-name-1-headsup">FLUP</div>
+                        <div style="background-color: #2cac63; height:var(--bar-height-hup);" class="bar-class" id="bar-display-1-headsup"></div>
+                        <div class="bar-percent" data-val="100" id="bar-percent-1-headsup">100%</div>
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="bar-container">
+                        <div class="bar-name-hup" id="bar-name-2-headsup">FLAMINGLAZER</div>
+                        <div style="background-color: #436efb; height:var(--bar-height-hup);" class="bar-class" id="bar-display-2-headsup"></div>
+                        <div class="bar-percent" data-val="0" id="bar-percent-2-headsup">50%</div>
                     </div>
                 </div>
             </div>
