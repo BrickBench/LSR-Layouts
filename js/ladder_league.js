@@ -61,13 +61,13 @@ const BOTTOM_RUNG_LABELS = [
     "Eliminated"
 ]
 
+var last_win_probabilities = {};
 
 /**
     * Calculate per-runner split times and deltas
     * Return a map of the form 
     */
 function determineSplitInfo(splits, event) {
-    console.log("determineSplitInfo", splits, event);
     var runners = getEventRunners(event);
 
     // extract valid runner times
@@ -137,7 +137,7 @@ function determineSplitInfo(splits, event) {
     return runner_splits_deltas;
 }
 
-function displayLiveDeltas(data, stream, splits, run_info) {
+function displayLiveDeltas(data, event, splits, run_info) {
     var last_split = -1;
     // 35, not 36, to avoid spoiling the end of the race
     for (var row_index = 0; row_index < 35; row_index++) {
@@ -148,7 +148,7 @@ function displayLiveDeltas(data, stream, splits, run_info) {
 
     var first_split_to_show = Math.max(0, (last_split - live_row_count) + 1);
 
-    var runners = getOrderedStreamRunners(stream)
+    var runners = getRunnersBySeed(data, event);
     for (var column = 0; column < 3; column++) {
         if (column >= runners.length) {
             break;
@@ -169,7 +169,6 @@ function displayLiveDeltas(data, stream, splits, run_info) {
 
         if (split_index in splits) {
             var split_data = splits[split_index];
-            console.log("split_data", split_data);
 
             let bestSplit = Object.entries(split_data).sort(([_key1, value1], [_key2, value2]) => {
                 let value11 = value1.time;
@@ -216,9 +215,6 @@ function displayLiveDeltas(data, stream, splits, run_info) {
 function displayFinalTimes(data, event, times) {
     var rung_labels = getRungLabels(event);
     var runners = getRunnersByTime(event);
-    console.log("runners", runners);
-
-    console.log("times", times);
 
     for (var i = 0; i < 3; i++) {
         if (i >= runners.length) {
@@ -251,8 +247,6 @@ function displayFinalTimes(data, event, times) {
             var split_idx = (s * 6) + 5
             var entry = document.getElementById("position-" + (i + 1) + "-" + (s + 1) + "-time");
             var entry_str = "--"
-            console.log("s", s)
-            console.log("times", times.length);
             if (s == 5) {
                 var final_time = getRunnerScore(event, runners[i].id);
                 if (final_time != null) {
@@ -260,10 +254,8 @@ function displayFinalTimes(data, event, times) {
                 }
             } else if (s < Object.keys(times).length) {
                 var split_data = times[split_idx];
-                console.log("split_data", split_data);
                 if (runners[i].id in split_data) {
                     var runner_split = split_data[runners[i].id];
-                    console.log("runner_split", runner_split);
                     if (runner_split != null && runner_split.time != null) {
                         entry_str = toStringTime(runner_split.time, false, true, false);
                     }
@@ -271,6 +263,101 @@ function displayFinalTimes(data, event, times) {
             }
 
             entry.innerHTML = entry_str;
+        }
+    }
+}
+
+function normalizePredictions(predictions) {
+    let largest = 0
+    let largest_runner = 0
+    let remaining = 100;
+
+    let new_predictions = {};
+    for (const [runner, prediction] of Object.entries(predictions)) {
+        if (largest < prediction) {
+            largest = prediction;
+            largest_runner = runner;
+        }
+
+        remaining -= Math.floor(prediction * 100);
+        new_predictions[runner] = Math.floor(prediction * 100);
+    }
+
+    new_predictions[largest_runner] += remaining;
+
+    return new_predictions;
+}
+
+function displayLivePredictions(data, event, raw_predictions, raw_last_predictions) {
+    // TODO normalize predictions
+    let runners = getRunnersBySeed(data, event);
+
+    let predictions = normalizePredictions(raw_predictions);
+    let last_predictions = raw_last_predictions ? normalizePredictions(raw_last_predictions) : null;
+
+    const INTERVAL = 650;
+    const MIN_BAR_SIZE = 5;
+    const MAX_BAR_SIZE = 350;
+    const ANIMATE = true;
+
+    for (let i = 0; i < 3; i++) {
+        document.getElementById("bar-name-" + (i + 1)).innerHTML = data.people[runners[i]].name.toUpperCase();
+        let percent_display = document.getElementById("bar-percent-" + (i + 1));
+        let start_value = -1;
+        let end_value = predictions[runners[i]];
+
+        if (last_predictions != null && last_predictions[runners[i]] != null) {
+            start_value = last_predictions[runners[i]];
+        }
+
+        // Set numerical value
+        if (ANIMATE) {
+            let duration = Math.floor(INTERVAL / end_value);
+            let counter = setInterval(function() {
+                if (start_value < end_value) {
+                    start_value += 1;
+                } else if (start_value > end_value) {
+                    start_value -= 1;
+                } else { // animation done
+                    clearInterval(counter);
+                }
+                percent_display.textContent = Math.max(start_value, 0).toString() + "%";
+            }, duration);
+        } else {
+            percent_display.textContent = end_value.toString() + "%";
+        }
+    }
+
+    // set bars
+    let largest = 0;
+    for (const [_runner, prediction] of Object.entries(predictions)) {
+        if (prediction > largest) {
+            largest = prediction;
+        }
+    }
+
+
+    let width_scale = 100;
+    if (largest < 75) {
+        width_scale = 90;
+    }
+
+    for (let i = 0; i < 3; i++) {
+        let bar = document.getElementById("bar-display-" + (i + 1));
+
+        let new_bar_width = Math.max(predictions[runners[i]] / width_scale * MAX_BAR_SIZE, MIN_BAR_SIZE);
+
+        var old_bar_width = 0;
+        if (last_predictions != null && last_predictions[runners[i]] != null) {
+            old_bar_width = Math.max(last_predictions[runners[i]] / width_scale * MAX_BAR_SIZE, MIN_BAR_SIZE);
+        }
+
+        bar.style.width = new_bar_width.toString() + "px";
+        if (ANIMATE) {
+            bar.animate(
+                [{ width: old_bar_width.toString() + "px" }, { width: new_bar_width.toString() + "px" }],
+                { duration: 600, forwards: 1 }
+            );
         }
     }
 }
@@ -320,29 +407,6 @@ function getCommentatorsOrdered(data, event) {
             participant: participant.id,
         })
     }
-
-    /* decided not to use discord users
-    for (const [_discord_user, discord_data] of Object.entries(host.discord_users)) {
-        console.log("discord_data", discord_data);
-        if (discord_data.participant in data.people) {
-            var participant = data.people[discord_data.participant];
-            if (commentators.some(c => c.discord == participant.discord_id)) {
-                continue; // already added above
-            }
-
-            commentators.push({
-                discord: participant.discord_id,
-                participant: participant.id,
-            })
-        } else {
-            commentators.push({
-                discord: discord_data.username,
-                participant: null,
-            })
-        }
-    } */
-
-    console.log("commentators", commentators);
 
     return commentators;
 }
@@ -447,7 +511,6 @@ function getRunnerFastestTime(data, runner) {
         }
     }
 
-    console.log("getRunnerTimes", runner, time);
     return time;
 }
 
@@ -536,7 +599,6 @@ function setNextEventData(data) {
 
     // assume good
     var next_events = getUpcomingEvents(data)
-    console.log("next_events", next_events);
     for (var i = 0; i < 3; i++) {
         if (i < next_events.length) {
             var event = next_events[i];
@@ -598,13 +660,20 @@ connectToSocket('/ws', function(data) {
     let cf = data.custom_fields;
     let backup = document.getElementById("backup-root");
     let mainTab = document.getElementById("data-table-root");
-    if (backup != null && mainTab != null && cf && cf['enable-table'] != null && cf['enable-table'] != undefined) {
-        if (cf['enable-table'] == "false") {
-            backup.style.visibility = "visible";
-            mainTab.style.visibility = "hidden";
+    let liveProbability = document.getElementById("live-probability");
+    if (backup != null && mainTab != null && liveProbability && cf && cf['enable-table'] != null && cf['enable-table'] != undefined) {
+        if (cf['enable-table'] == "prob") {
+            mainTab.classList.remove("show");
+            backup.classList.remove("show");
+            liveProbability.classList.add("show");
+        } else if (cf['enable-table'] == "off") {
+            mainTab.classList.remove("show");
+            backup.classList.add("show");
+            liveProbability.classList.remove("show");
         } else {
-            backup.style.visibility = "hidden";
-            mainTab.style.visibility = "visible";
+            mainTab.classList.add("show");
+            backup.classList.remove("show");
+            liveProbability.classList.remove("show");
         }
     }
 
@@ -621,10 +690,12 @@ connectToSocket('/ws/voice', function(data) {
             if (discord_user.username in commentator_slots) {
                 var box_id = "commentator-box-" + (commentator_slots[discord_user.username] + 1);
                 var slot = document.getElementById(box_id);
-                if (data.voice_users[voice_user].active) {
-                    slot.classList.add("commentator-voice-active");
-                } else {
-                    slot.classList.remove("commentator-voice-active");
+                if (slot != null) {
+                    if (data.voice_users[voice_user].active) {
+                        slot.classList.add("commentator-voice-active");
+                    } else {
+                        slot.classList.remove("commentator-voice-active");
+                    }
                 }
             }
         }
@@ -642,19 +713,30 @@ connectToSocket('/ws/runs', function(data) {
     }
 
     var event = getEventById(state, event_id);
-    var stream = getStreamById(state, event_id);
 
     console.log("data", data);
+    console.log("new", data.win_probabilities);
+    console.log("old", last_win_probabilities);
 
     if (document.getElementById("data-table") != null) {
         // has live data
         const splitData = determineSplitInfo(data.active_runs, event);
-        console.log("bpts", last_real_bpt);
-        displayLiveDeltas(state, stream, splitData, data.active_runs);
+        displayLiveDeltas(state, event, splitData, data.active_runs);
+        if (data.win_probabilities[event.id] != null) {
+            if (last_win_probabilities[event.id] != null) {
+                if (last_win_probabilities[event.id] != data.win_probabilities[event.id]) {
+                    displayLivePredictions(state, event, data.win_probabilities[event.id], last_win_probabilities[event.id]);
+                } // else, probability didnt change so ignore
+            } else { // first time since refrseh
+                displayLivePredictions(state, event, data.win_probabilities[event.id], null);
+            }
+        }
     } else if (document.getElementById("final-table") != null) {
         const splitData = determineSplitInfo(data.active_runs, event);
         displayFinalTimes(state, event, splitData);
     }
+
+    last_win_probabilities = data.win_probabilities;
 })
 
 let timer_element = document.getElementById("timer");

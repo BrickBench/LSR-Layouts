@@ -313,21 +313,21 @@
                 </div>
                 <div class="row">
                     <div class="bar-container">
-                        <div class="bar-name">FLUP</div>
+                        <div class="bar-name" id="bar-name-1">FLUP</div>
                         <div style="background-color: #2cac63;" class="bar-class" id="bar-display-1"></div>
                         <div class="bar-percent" data-val="100" id="bar-percent-1"></div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="bar-container">
-                        <div class="bar-name">CHARZIGHT</div>
+                        <div class="bar-name" id="bar-name-2">CHARZIGHT</div>
                         <div style="background-color: #436efb;" class="bar-class" id="bar-display-2"></div>
                         <div class="bar-percent" data-val="0" id="bar-percent-2"></div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="bar-container">
-                        <div class="bar-name">ANONYMOUS</div>
+                        <div class="bar-name" id="bar-name-3">ANONYMOUS</div>
                         <div style="background-color: #feb201;" class="bar-class" id="bar-display-3"></div>
                         <div class="bar-percent" data-val="0" id="bar-percent-3"></div>
                     </div>
@@ -410,80 +410,4 @@
         </div>
     </body>
     <script type="module" src="/js/ladder_league.js"></script>
-    <script>
-        function triggerBars(animatebar){
-
-            //Be careful with over animating the bar on every websocket state change
-            
-
-            //random nums for testing, replace with your real values
-            let barVals2 = [40,55,5];
-            barVals2[0] = Math.random();
-            barVals2[1] = Math.random();
-            barVals2[2] = Math.random();
-
-            let barVals = [0,0,0]
-            barVals[0] = barVals2[0] /(barVals2[0] + barVals2[1] + barVals2[2]) * 100;
-            barVals[1] = barVals2[1] /(barVals2[0] + barVals2[1] + barVals2[2]) * 100;
-            barVals[2] = barVals2[2] /(barVals2[0] + barVals2[1] + barVals2[2]) * 100;
-            //end random testing
-
-
-            //normalization to make sure displayed numbers add to 100
-            let diff = 100 - (Math.floor(barVals[0]) + Math.floor(barVals[1]) + Math.floor(barVals[2]));
-            let sortVal = barVals.map((a, index)=>{
-                return [a,index];
-            }).sort((a,b)=>{
-                return (b[0] % Math.floor(b[0])) - (a[0] - Math.floor(a[0]));
-            });
-
-            for(let i=0;i<3;i++){
-                barVals[i] = Math.floor(barVals[i]);
-            }
-            for(let i = 0; i < diff;i++){
-                barVals[sortVal[i][1]] += 1;
-            }
-
-            let interval = 650;
-            let minBar = 5;
-            let maxBar = 400;
-
-            for(let i = 0; i < 3;i++){
-                let valueDisplay = document.getElementById("bar-percent-"+(i+1).toString());
-                let startValue = -1;
-                let endValue = parseInt(barVals[i]);
-                if(animatebar){
-                    let duration = Math.floor(interval / endValue);
-                    let counter = setInterval(function () {
-                        startValue += 1;
-                        valueDisplay.textContent = Math.max(startValue,0).toString()+"%";
-                        if (startValue == endValue) {
-                            clearInterval(counter);
-                        }
-                    }, duration);
-                }else{
-                    valueDisplay.textContent = endValue.toString()+"%";
-                }
-            };
-
-            let largest = Math.max(...barVals);
-            let widthScale = 100;
-
-            if(largest < 75){
-                widthScale = 90;
-            }
-
-            for(let i = 0; i < 3;i++){
-                let bar = document.getElementById("bar-display-"+(i+1).toString());
-                let barWidth = Math.max(barVals[i]/widthScale * maxBar,minBar);
-                bar.style.width = barWidth.toString()+"px";
-                if(animatebar){
-                    bar.animate(
-                        [ { width: "0px" }, { width: barWidth.toString()+"px" } ],
-                        { duration: 600, forwards: 1 }
-                    );
-                }
-            }
-        }
-    </script>
-</html>
+ </html>
