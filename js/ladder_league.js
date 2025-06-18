@@ -2,7 +2,7 @@ import {
     connectToSocket,
     getStreamById, getEventTimerValue,
     getEventById, getEventForHost, toStringTime,
-    getEventRunners, getOrderedStreamRunners,
+    getEventRunners,
     getUpcomingEvents, getRunnersByTime,
     getRunnerScore, compareTime
 } from "./automarathon.js";
@@ -61,7 +61,13 @@ const BOTTOM_RUNG_LABELS = [
     "Eliminated"
 ]
 
-var last_win_probabilities = {};
+var last_win_probabilities = null;
+var last_h2h = null;
+
+var raw_predictions = null;
+var h2h_1 = 1;
+var h2h_2 = 2;
+var last_table_setting = "stats";
 
 /**
     * Calculate per-runner split times and deltas
@@ -267,13 +273,13 @@ function displayFinalTimes(data, event, times) {
     }
 }
 
-function normalizePredictions(predictions) {
+function normalizeWinProbability(predictions) {
     let largest = 0
     let largest_runner = 0
     let remaining = 100;
 
     let new_predictions = {};
-    for (const [runner, prediction] of Object.entries(predictions)) {
+    for (const [runner, prediction] of Object.entries(predictions.win_probabilities)) {
         if (largest < prediction) {
             largest = prediction;
             largest_runner = runner;
@@ -288,45 +294,134 @@ function normalizePredictions(predictions) {
     return new_predictions;
 }
 
-function displayLivePredictions(data, event, raw_predictions, raw_last_predictions) {
-    // TODO normalize predictions
-    let runners = getRunnersBySeed(data, event);
+function normalizeHeadToHead(predictions, runner1, runner2) {
+    let good_h2h = null
 
-    let predictions = normalizePredictions(raw_predictions);
-    let last_predictions = raw_last_predictions ? normalizePredictions(raw_last_predictions) : null;
+    for (const h2h of Object.values(predictions.h2h)) {
+        console.log("h2h", h2h, runner1, runner2);
+        if (h2h.run1 == runner1 && h2h.run2 == runner2) {
+            good_h2h = {
+                run1: h2h.run1,
+                run2: h2h.run2,
+                probability: h2h.probability
+            };
+            break;
+        } else if (h2h.run1 == runner2 && h2h.run2 == runner1) {
+            good_h2h = {
+                run1: h2h.run2,
+                run2: h2h.run1,
+                probability: -h2h.probability
+            }
+            break;
+        }
+    }
 
+    if (good_h2h == null) {
+        return null;
+    }
+
+    let r1_win_prob = (good_h2h.probability + 1) / 2;
+    let r2_win_prob = (1 - r1_win_prob);
+
+    if (r1_win_prob > 0.5) {
+        r1_win_prob = Math.floor(r1_win_prob * 100);
+        r2_win_prob = Math.ceil(r2_win_prob * 100);
+    } else {
+        r1_win_prob = Math.ceil(r1_win_prob * 100);
+        r2_win_prob = Math.floor(r2_win_prob * 100);
+    }
+
+    return {
+        runner1: good_h2h.run1,
+        runner2: good_h2h.run2,
+        r1_win_prob: r1_win_prob,
+        r2_win_prob: r2_win_prob
+    }
+}
+
+function animateBar(bar_idx, name, new_value, old_value, largest) {
     const INTERVAL = 650;
     const MIN_BAR_SIZE = 5;
     const MAX_BAR_SIZE = 350;
     const ANIMATE = true;
 
-    for (let i = 0; i < 3; i++) {
-        document.getElementById("bar-name-" + (i + 1)).innerHTML = data.people[runners[i]].name.toUpperCase();
-        let percent_display = document.getElementById("bar-percent-" + (i + 1));
-        let start_value = -1;
-        let end_value = predictions[runners[i]];
+    document.getElementById("bar-name-" + bar_idx).innerHTML = name.toUpperCase();
+    let percent_display = document.getElementById("bar-percent-" + bar_idx);
+    let start_value = -1;
+    let end_value = new_value;
 
-        if (last_predictions != null && last_predictions[runners[i]] != null) {
-            start_value = last_predictions[runners[i]];
-        }
-
-        // Set numerical value
-        if (ANIMATE) {
-            let duration = Math.floor(INTERVAL / end_value);
-            let counter = setInterval(function() {
-                if (start_value < end_value) {
-                    start_value += 1;
-                } else if (start_value > end_value) {
-                    start_value -= 1;
-                } else { // animation done
-                    clearInterval(counter);
-                }
-                percent_display.textContent = Math.max(start_value, 0).toString() + "%";
-            }, duration);
-        } else {
-            percent_display.textContent = end_value.toString() + "%";
-        }
+    if (old_value != null) {
+        start_value = old_value;
     }
+
+    // Set numerical value
+    if (ANIMATE) {
+        let duration = Math.floor(INTERVAL / Math.abs(end_value - start_value));
+        let counter = setInterval(function() {
+            if (start_value < end_value) {
+                start_value += 1;
+            } else if (start_value > end_value) {
+                start_value -= 1;
+            } else { // animation done
+                clearInterval(counter);
+            }
+            percent_display.textContent = Math.max(start_value, 0).toString() + "%";
+        }, duration);
+    } else {
+        percent_display.textContent = end_value.toString() + "%";
+    }
+
+    let width_scale = 100;
+    if (largest < 75) {
+        width_scale = 90;
+    }
+
+    let bar = document.getElementById("bar-display-" + bar_idx);
+
+    let new_bar_width = Math.max(new_value / width_scale * MAX_BAR_SIZE, MIN_BAR_SIZE);
+
+    var old_bar_width = 0;
+    if (old_value != null) {
+        old_bar_width = Math.max(old_value / width_scale * MAX_BAR_SIZE, MIN_BAR_SIZE);
+    }
+
+    bar.style.width = new_bar_width.toString() + "px";
+    if (ANIMATE) {
+        bar.animate(
+            [{ width: old_bar_width.toString() + "px" }, { width: new_bar_width.toString() + "px" }],
+            { duration: 600, forwards: 1 }
+        );
+    }
+
+}
+
+function displayH2H(data, event, raw_predictions, runner1_idx, runner2_idx) {
+    let runners = getRunnersBySeed(data, event);
+
+    let runner1 = data.people[runners[runner1_idx - 1]];
+    let runner2 = data.people[runners[runner2_idx - 1]];
+
+    console.log("runner1", runner1);
+    console.log("runner2", runner2);
+    let h2h = normalizeHeadToHead(raw_predictions, runner1.id, runner2.id);
+    console.log("h2h", h2h);
+
+    if (h2h == null) {
+        return;
+    }
+
+    let largest = Math.max(h2h.r1_win_prob, h2h.r2_win_prob);
+    animateBar(4, runner1.name, h2h.r1_win_prob, last_h2h ? last_h2h.r1_win_prob : null, largest);
+    animateBar(5, runner2.name, h2h.r2_win_prob, last_h2h ? last_h2h.r2_win_prob : null, largest);
+
+    last_h2h = h2h;
+}
+
+function displayLivePredictions(data, event, raw_predictions) {
+    // TODO normalize predictions
+    let runners = getRunnersBySeed(data, event);
+
+    let predictions = normalizeWinProbability(raw_predictions);
 
     // set bars
     let largest = 0;
@@ -336,29 +431,21 @@ function displayLivePredictions(data, event, raw_predictions, raw_last_predictio
         }
     }
 
-
-    let width_scale = 100;
-    if (largest < 75) {
-        width_scale = 90;
+    console.log(predictions)
+    for (let i = 0; i < 3; i++) {
+        animateBar(i + 1, data.people[runners[i]].name, predictions[runners[i]], last_win_probabilities ? last_win_probabilities[runners[i]] : null, largest);
     }
 
-    for (let i = 0; i < 3; i++) {
-        let bar = document.getElementById("bar-display-" + (i + 1));
+    last_win_probabilities = predictions;
+}
 
-        let new_bar_width = Math.max(predictions[runners[i]] / width_scale * MAX_BAR_SIZE, MIN_BAR_SIZE);
-
-        var old_bar_width = 0;
-        if (last_predictions != null && last_predictions[runners[i]] != null) {
-            old_bar_width = Math.max(last_predictions[runners[i]] / width_scale * MAX_BAR_SIZE, MIN_BAR_SIZE);
-        }
-
-        bar.style.width = new_bar_width.toString() + "px";
-        if (ANIMATE) {
-            bar.animate(
-                [{ width: old_bar_width.toString() + "px" }, { width: new_bar_width.toString() + "px" }],
-                { duration: 600, forwards: 1 }
-            );
-        }
+function displayLiveProbabilities(state, event, win_probabilities, h2h_r1, h2h_r2) {
+    if (win_probabilities == null) {
+        return;
+    }
+    if (win_probabilities[event.id] != null) {
+        displayLivePredictions(state, event, win_probabilities[event.id]);
+        displayH2H(state, event, win_probabilities[event.id], h2h_r1, h2h_r2);
     }
 }
 
@@ -630,6 +717,7 @@ function setNextEventData(data) {
 
 connectToSocket('/ws', function(data) {
     state = data;
+    console.log("state", state)
 
     var event_id = getEventForHost(data, this_host);
     if (event_id == null) {
@@ -661,20 +749,49 @@ connectToSocket('/ws', function(data) {
     let backup = document.getElementById("backup-root");
     let mainTab = document.getElementById("data-table-root");
     let liveProbability = document.getElementById("live-probability");
-    if (backup != null && mainTab != null && liveProbability && cf && cf['enable-table'] != null && cf['enable-table'] != undefined) {
-        if (cf['enable-table'] == "prob") {
-            mainTab.classList.remove("show");
-            backup.classList.remove("show");
-            liveProbability.classList.add("show");
-        } else if (cf['enable-table'] == "off") {
-            mainTab.classList.remove("show");
-            backup.classList.add("show");
-            liveProbability.classList.remove("show");
-        } else {
-            mainTab.classList.add("show");
-            backup.classList.remove("show");
-            liveProbability.classList.remove("show");
+    let h2hTab = document.getElementById("live-probability-headsup");
+
+    if (backup != null && mainTab != null && liveProbability && h2hTab && cf && cf['enable-table'] != null && cf['enable-table'] != undefined) {
+        let table_setting = cf['enable-table'].toLowerCase();
+        console.log("table_setting", table_setting);
+
+        if (table_setting != last_table_setting) {
+            if (table_setting == "prob") {
+                mainTab.classList.remove("show");
+                backup.classList.remove("show");
+                h2hTab.classList.remove("show");
+                liveProbability.classList.add("show");
+
+                // clear last probability to trigger bar to extend
+                last_win_probabilities = null;
+            } else if (table_setting.startsWith("h2h") && table_setting.length == 5) {
+                let h2h_p1 = parseInt(table_setting[3]);
+                let h2h_p2 = parseInt(table_setting[4]);
+                if (h2h_p1 < 4 && h2h_p2 < 4) {
+                    h2h_1 = h2h_p1;
+                    h2h_2 = h2h_p2;
+                }
+
+                mainTab.classList.remove("show");
+                backup.classList.remove("show");
+                h2hTab.classList.add("show");
+                liveProbability.classList.remove("show");
+            } else if (table_setting == "off") {
+                mainTab.classList.remove("show");
+                backup.classList.add("show");
+                h2hTab.classList.remove("show");
+                liveProbability.classList.remove("show");
+            } else {
+                mainTab.classList.add("show");
+                backup.classList.remove("show");
+                h2hTab.classList.remove("show");
+                liveProbability.classList.remove("show");
+            }
+
+            last_table_setting = table_setting;
+            displayLiveProbabilities(state, event, raw_predictions, h2h_1, h2h_2);
         }
+
     }
 
 })
@@ -716,27 +833,18 @@ connectToSocket('/ws/runs', function(data) {
 
     console.log("data", data);
     console.log("new", data.win_probabilities);
-    console.log("old", last_win_probabilities);
 
     if (document.getElementById("data-table") != null) {
         // has live data
         const splitData = determineSplitInfo(data.active_runs, event);
         displayLiveDeltas(state, event, splitData, data.active_runs);
-        if (data.win_probabilities[event.id] != null) {
-            if (last_win_probabilities[event.id] != null) {
-                if (last_win_probabilities[event.id] != data.win_probabilities[event.id]) {
-                    displayLivePredictions(state, event, data.win_probabilities[event.id], last_win_probabilities[event.id]);
-                } // else, probability didnt change so ignore
-            } else { // first time since refrseh
-                displayLivePredictions(state, event, data.win_probabilities[event.id], null);
-            }
-        }
     } else if (document.getElementById("final-table") != null) {
         const splitData = determineSplitInfo(data.active_runs, event);
         displayFinalTimes(state, event, splitData);
     }
 
-    last_win_probabilities = data.win_probabilities;
+    raw_predictions = data.win_probabilities;
+    displayLiveProbabilities(state, event, raw_predictions, h2h_1, h2h_2);
 })
 
 let timer_element = document.getElementById("timer");
