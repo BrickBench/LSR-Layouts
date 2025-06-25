@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
+    </head>
+    <style>
+        :root {
+            --ladder-white:#C8C8C6;
+            --ladder-grey:#A2A2A4;
+            --ladder-winner-blue: #7796EC;
+        }
+        .eventHeader{
+            font-size: 26px;
+            font-family: "Rubik";
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--ladder-white);
+            height: 60px;
+            line-height: 60px;
+            display:flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-left: 12px; 
+            margin-right: 12px;
+        }
+        .date {
+            font-size: 24px;
+        }
+        .runner{
+            font-size: 25px;
+            font-family: "Rubik";
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--ladder-white);
+            height: 58px;
+            line-height: 58px;
+            display:flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-left: 10px; 
+            margin-right: 10px;
+        }
+        .runner-winner{
+            font-size: 25px;
+            font-family: "Rubik";
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--ladder-winner-blue);
+            height: 58px;
+            line-height: 58px;
+            display:flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-left: 10px; 
+            margin-right: 10px;
+        }
+        .runner-undecided{
+            font-size: 25px;
+            font-family: "Rubik";
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--ladder-grey);
+            height: 58px;
+            line-height: 58px;
+            display:flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-left: 10px; 
+            margin-right: 10px;
+        }
+    </style>
+    <body style="width:1920px; height:1080px; background-image: url('bracket.png');">
+        <div class="container" style="position:absolute; left: 200px; top: 31px; width:386px;height:175px;" id="qf-1">
+            <div class="eventHeader"><span>ELIM 1</span><span class="date">6/19 - 3:00 EST</span></div>
+            <div class="runner"><span>(1) Frostbyte</span><span>2:32:23</span></div>
+            <div class="runner-winner"><span>(8) FlamingLazer</span><span>2:32:23</span></div>
+        </div>
+        <div class="container" style="position:absolute; left: 200px; top: 315px; width:386px;height:175px;" id="qf-2">
+            <div class="eventHeader"><span>Elim 2</span><span class="date">6/19 - 3:00 EST</span></div>
+            <div class="runner"><span>(1) Frostbyte</span><span>2:32:23</span></div>
+            <div class="runner-winner"><span>(8) FlamingLazer</span><span>2:32:23</span></div>
+        </div>
+        <div class="container" style="position:absolute; left: 200px; top: 595px; width:386px;height:175px;" id="qf-3">
+            <div class="eventHeader"><span>Elim 3</span><span class="date">6/19 - 3:00 EST</span></div>
+            <div class="runner"><span>(1) Frostbyte</span><span>2:32:23</span></div>
+            <div class="runner-winner"><span>(8) FlamingLazer</span><span>2:32:23</span></div>
+        </div>
+        <div class="container" style="position:absolute; left: 200px; top: 877px; width:386px;height:175px;" id="qf-4">
+            <div class="eventHeader"><span>Elim 4</span><span class="date">6/19 - 3:00 EST</span></div>
+            <div class="runner"><span>(1) Frostbyte</span><span>2:32:23</span></div>
+            <div class="runner-winner"><span>(8) FlamingLazer</span><span>2:32:23</span></div>
+        </div>
+
+        <div class="container" style="position:absolute; left: 771px; top: 177px; width:386px;height:175px;" id="sf-1">
+            <div class="eventHeader"><span>Semis 1</span><span class="date">6/19 - 3:00 EST</span></div>
+            <div class="runner"><span>(1) Frostbyte</span><span>2:32:23</span></div>
+            <div class="runner-winner"><span>(8) FlamingLazer</span><span>2:32:23</span></div>
+        </div>
+        <div class="container" style="position:absolute; left: 771px; top: 740px; width:386px;height:175px;" id="sf-2">
+            <div class="eventHeader"><span>Semis 2</span><span class="date">TBA</span></div>
+            <div class="runner"><span>(1) Frostbyte</span><span>- : -- : --</span></div>
+            <div class="runner-undecided"><span>Elim 4 Winner</span><span>- : -- : --</span></div>
+        </div>
+
+        <div class="container" style="position:absolute; left: 1341px; top: 450px; width:386px;height:175px;" id="f-1">
+            <div class="eventHeader"><span>Finals</span><span class="date">TBA</span></div>
+            <div class="runner-undecided"><span>Semis 1 Winner</span><span>- : -- : --</span></div>
+            <div class="runner-undecided"><span>Semis 2 Winner</span><span>- : -- : --</span></div>
+        </div>
+    </body>
+</html>
