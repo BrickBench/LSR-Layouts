@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html style="background-color: transparent;">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
+        <style>
+            :root {
+                --ladder-white:#C8C8C6;
+                --ladder-light-green:#C3F0C3;
+                --ladder-light-red:#F0C4C2;
+                --ladder-lightless-red:#FFC0C1;
+                --ladder-bright:#D8D8D6;
+                --global-drop-radius: 10px;
+                --global-drop-color: #1A1A1A;
+                --bar-height: 20px;
+                --bar-height-hup: 25px;
+            }
+            body {
+                font-family: "Rubik"!important;
+            }
+            .commentator-slot {
+                text-align: center;
+                font-weight: bold;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 0px;
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+            .commentator-name {
+                font-size: 24px;
+                height: 30px;
+                color: var(--ladder-white);
+                line-height: 30px;
+            }
+            .commentator-pronoun {
+                font-size: 13px;
+                height: 18px;
+                line-height: 18px;
+                color: var(--ladder-white);
+            }
+
+            .data-row-header{
+                flex: 0 0 auto;
+                width: 16%;
+                font-weight: bold;
+                text-align: center;
+                font-size: 36px;
+                padding-left:15px;
+                color: var(--ladder-white);
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+
+            .data-col-runner-name{
+                flex: 0 0 auto;
+                width: 42%;
+                font-weight: bold;
+                text-align: center;
+                font-size: 38px;
+                color: var(--ladder-white);
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+
+            .data-row-split{
+                flex: 0 0 auto;
+                width: 42%;
+                text-align: center;
+                font-size: 39px;
+                font-variant-numeric: tabular-nums;
+                color: var(--ladder-white);
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+
+            .data-row-main-time{
+                flex: 0 0 auto;
+                width: 42%;
+                text-align: center;
+                font-weight: bold;
+                font-size: 38px;
+                font-variant-numeric: tabular-nums;
+                color: var(--ladder-white);
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+
+            .timer{
+                font-weight: bold;
+                text-align: center;
+                font-size: 54px;
+                font-variant-numeric: tabular-nums;
+                padding-right: 10px;
+                color: var(--ladder-white);
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+            
+            .event-title{
+                text-align: center;
+                font-weight: bold;
+                font-size: 34px;
+                color: var(--ladder-white);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 25px;
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+
+            .runner-name{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                font-weight: bold;
+                color: var(--ladder-white);
+                padding-left: 30px;
+                padding-right: 30px;
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+            .runner-text{
+                font-size: 41px;
+            }
+            .runner-seed{
+                font-size: 36px;
+            }
+            .time-leading{
+                color: var(--ladder-light-green);
+            }
+            .time-trailing{
+                color: var(--ladder-light-red);
+            }
+            .time-last{
+                color: var(--ladder-lightless-red);
+            }
+            .commentator-voice {
+                -webkit-transition: text-shadow 0.3s linear;
+                -moz-transition: text-shadow 0.3s linear;
+                -ms-transition: text-shadow 0.3s linear;
+                -o-transition: text-shadow 0.3s linear;
+                transition: text-shadow 0.3s linear;
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+            .commentator-voice-active {
+                text-shadow: 0 0 5.2px rgb(214, 223, 253); 
+            }
+            .commands-box {
+                font-weight: bold;
+                font-size: 21px;
+                color: var(--ladder-white);
+                text-align: center;
+            }
+            .commands-box-exclaim {
+                font-size: 23px;
+            }
+
+            .runner-overlay{
+                text-align: center;
+                font-weight: bold;
+                font-size: 67px;
+                text-shadow: 0 0 7px rgb(30, 30, 30); 
+                color: var(--ladder-bright);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                background-color: rgba(0,0,0,0.6);
+                visibility: hidden;
+                opacity: 0;
+                transition: opacity 300ms ease-in, visibility 0ms ease-in 300ms;
+            }
+
+            .runner-overlay-show {
+                visibility: visible;
+                opacity: 1;
+                transition-delay: 0ms;
+            }
+            
+            .bottom-slide{
+                display:flex;
+                flex-wrap: wrap;
+            }
+
+            .bar-name {
+                font-size: 26px;
+                font-weight: bold;
+                color: var(--ladder-white);
+                line-height: var(--bar-height);
+                width: 250px;
+                text-transform: uppercase;
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+
+            .bar-name-hup {
+                font-size: 29px;
+                font-weight: bold;
+                color: var(--ladder-white);
+                line-height: var(--bar-height-hup);
+                width: 260px;
+                text-transform: uppercase;
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+
+            .bar-title {
+                font-size: 32px;
+                padding-top: 20px;
+                font-weight: bold;
+                text-align: center;
+                color: var(--ladder-white);
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+            .bar-sub-title {
+                font-size: 34px;
+                padding-top: 20px;
+                font-weight: bold;
+                text-align: center;
+                color: var(--ladder-white);
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+            .bar-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: left;
+                padding-top:25px;
+                padding-left:50px;
+            }
+            .bar-percent {
+                font-size: 25px;
+                color: var(--ladder-white);
+                padding-left:20px;
+                line-height: var(--bar-height);
+                text-shadow: 0 0 var(--global-drop-radius) var(--global-drop-color); 
+            }
+            .bar-class {
+                height: var(--bar-height);
+            }
+
+            .infobox-transition {
+                visibility: hidden;
+                opacity: 0;
+                transition: opacity 250ms ease-in, visibility 0ms ease-in 250ms;
+            }
+
+            .infobox-transition.show {
+                visibility: visible;
+                opacity: 1;
+                transition-delay: 0ms;
+            }
+        </style>
+    </head>
+    <body style="width:1920px; height:1080px; background-image: url('2pfinal.png');" class="border">
+        <div id="view-1">
+            <div class="runner-overlay" id="view-1-overlay" style="position:absolute; left: 0px; top: 0px; width:952px;height:531px;">
+                <span>2:23:03</span>
+            </div>
+            <div class="runner-name" id="view-1-name" style="position:absolute; left: 0px; top: 531px; width:952px;height:75px;line-height: 75px;">
+                <span class="runner-text" id="runner-1-name-flag">SIEDEMNASTEK&nbsp;&nbsp;<span class="fi fi-pl"></span></span>
+                <span class="runner-seed" id="runner-1-seed">SEED 1</span>     
+            </div>
+        </div>
+        <div id="view-2">
+            <div class="runner-overlay" id="view-2-overlay" style="position:absolute; left: 968px; top: 0px; width:952px;height:531px;">
+                <span>2:23:03</span>
+            </div>
+            <div class="runner-name" id="view-2-name" style="position:absolute; left: 968px; top: 531px; width:952px;height:75px;line-height: 75px;">
+                <span class="runner-text" id="runner-2-name-flag">P53&nbsp;&nbsp;<span class="fi fi-us"></span></span>
+                <span class="runner-seed" id="runner-2-seed">SEED 2</span>
+            </div>
+        </div>
+        <div id="commentary-area">
+            <div id="commentator-box-1" class="commentator-slot commentator-voice active" style="position:absolute; left: 105px; top: 777px; width:244px;height:55px;line-height:55px;">
+                <span class="commentator-name">SIEDEMNASTEK</span>
+            </div>
+            <div id="commentator-box-3" class="commentator-slot commentator-voice" style="position:absolute; left: 356px; top: 777px; width:246px;height:54px; line-height: 54px;">
+                <span class="commentator-name">LASERTRAP</span><span class="commentator-pronoun">They/Them</span>
+            </div>
+            <div id="commentator-box-2" class="commentator-slot commentator-voice" style="position:absolute; left: 609px; top: 778px; width:245px;height:53px; line-height: 53px;">
+                <span class="commentator-name">P53</span>
+            </div>
+        </div>
+        <div id="event-title-split" class="event-title" style="position:absolute; left: 326px; top: 654px; width:306px;height:117px; line-height:20px;">
+            <span>QUARTERFINAL</span>
+            <span>MATCH 2</span>
+        </div>
+        <div id="timer" class="timer" style="position:absolute; left: 625px; top: 656px; width:260px;height:115px; line-height: 115px;">
+            10:23
+        </div>
+        <div class="infobox-transition show" style="position:absolute; left: 74px; top: 867px; width:812px;height:182px;" id="backup-root">
+            <div class="container commands-box">
+                
+                <div class="row pt-2">
+                    <h2>Ladder Info</h2>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="commands-box-exclaim">!</span> BRACKET
+                    </div>
+                    <div class="col">
+                        <span class="commands-box-exclaim">!</span> PREDICTIONS
+                    </div>
+                    <div class="col">
+                        <span class="commands-box-exclaim">!</span> DISCORD
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <h2>Socials</h2>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <i class="bi bi-twitter"></i> LSpeedruns
+                    </div>
+                    <div class="col">
+                        <i class="bi bi-youtube"></i> TCSSpeedrunning
+                    </div>
+                    <div class="col">
+                        <i class="bi bi-youtube"></i> LegoSpeedruns
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="infobox-transition" style="position:absolute; left: 74px; top: 867px; width:812px;height:182px;" id="live-probability">
+            <div class="container">
+                <div class="row bar-title">
+                    <span>LIVE WIN PREDICTION</span>
+                </div>
+                <div class="row">
+                    <div class="bar-container">
+                        <div class="bar-name" id="bar-name-1">FLUP</div>
+                        <div style="background-color: #2cac63;" class="bar-class" id="bar-display-1"></div>
+                        <div class="bar-percent" data-val="100" id="bar-percent-1"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="bar-container">
+                        <div class="bar-name" id="bar-name-2">CHARZIGHT</div>
+                        <div style="background-color: #436efb;" class="bar-class" id="bar-display-2"></div>
+                        <div class="bar-percent" data-val="0" id="bar-percent-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="infobox-transition show" style="position:absolute; left: 1034px; top: 653px; width:813px;height:392px;" id="data-table-root">
+            <div class="container" id="data-table">
+                <div class="row pt-3">
+                    <div class="data-row-header">
+
+                    </div>
+                    <div class="data-col-runner-name" id="table-runner-0">
+                        P53
+                    </div>
+                    <div class="data-col-runner-name" id="table-runner-1">
+                        SIEDEMNASTEK
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="data-row-header" id="label-split-0">
+                        1-1
+                    </div>
+                    <div class="data-row-split" id="runner-0-split-0">
+                        2:23
+                    </div>
+                    <div class="data-row-split" id="runner-1-split-0">
+                        2:19
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="data-row-header" id="label-split-1">
+                        1-2
+                    </div>
+                    <div class="data-row-split" id="runner-0-split-1">
+                        5:23
+                    </div>
+                    <div class="data-row-split" id="runner-1-split-1">
+                        5:12
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="data-row-header" id="label-split-2">
+                        6-3
+                    </div>
+                    <div class="data-row-split" id="runner-0-split-2">
+                        10:32
+                    </div>
+                    <div class="data-row-split" id="runner-1-split-2">
+                        10:56
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="data-row-header" id="label-split-3">
+                        6-3
+                    </div>
+                    <div class="data-row-split" id="runner-0-split-3">
+                        10:32
+                    </div>
+                    <div class="data-row-split" id="runner-1-split-3">
+                        10:56
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="data-row-header">
+                        BPT
+                    </div>
+                    <div class="data-row-main-time" id="runner-bpt-0">
+                        2:12:23
+                    </div>
+                    <div class="data-row-main-time" id="runner-bpt-1">
+                        2:12:23
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="module" src="/js/ladder_league.js"></script>
+ </html>
