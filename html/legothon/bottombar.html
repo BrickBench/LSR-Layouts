@@ -67,6 +67,59 @@
                 text-align: left;
                 line-height: 32px;
             }
+
+            .target-content{
+                position:absolute;
+                left: 618px;
+                padding-left:10px;
+                top: 990px;
+                width: 971px;
+                height: 77px;
+                display: flex;
+                flex-direction: row;
+                font-family: "Bebas Neue";
+                align-items: center;
+                color: white;
+                gap: 20px;
+                font-size: 40px;
+                line-height: 77px;
+            }
+
+            .donations-content{
+                position:absolute;
+                left: 618px;
+                padding-left:10px;
+                top: 990px;
+                width: 971px;
+                height: 77px;
+                display: flex;
+                flex-direction: row;
+                font-family: "Bebas Neue";
+                align-items: center;
+                color: white;
+                gap: 10px;
+                line-height: 77px;
+                font-size: 50px;
+                white-space: nowrap;
+                overflow: hidden; 
+            }
+
+            .multi-incentive-flow{
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 20px;
+            }
+            .multi-incentive-item{
+                display:flex; 
+                flex-direction: column; 
+                justify-content:space-evenly; 
+                align-items: center;
+                text-align: center;
+                font-size:29px;
+                height: 77px;
+                line-height: 22px;
+            }
         </style>
     </head>
     <body style="width:1920px; height:1080px; background-image: url('4x3\ 1R\ Template.png');">
@@ -74,7 +127,7 @@
             $1500
         </div>
         <div id="bottom-switch" class="bottom-switch">
-            <div id="up-next">
+            <!--<div id="up-next">
                 <div class="bottom-header">
                     UP NEXT
                 </div>
@@ -84,14 +137,136 @@
                             LEGO INDIANA JONES 2: THE ADVENTURE CONTINUES
                         </div>
                         <div id="up-next-category" class="up-next-category">
-                            ALL JOURNAL ARTIFACTS
+                            <i>ALL JOURNAL ARTIFACTS</i>
                         </div>
                     </div>
                     <div id="up-next-time" class="up-next-time">
                         IN 45 MINUTES
                     </div>
                 </div>
+            </div>-->
+            <!--DO NOT FORGOT THE COLOR IN THE STYLE OTHERWISE THE BAR WILL NOT BE CORRECT
+            <div id="target">
+                <div class="bottom-header">
+                    TARGET
+                </div>
+                <div class="target-content">
+                    <div>
+                        LEGOTHON 2024
+                    </div>
+                    <div class="progress" style="height:40px;flex: 1;min-width: 0;">
+                        <div class="progress-bar" style="background-color: #7851a9; width: 50%;" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div>
+                        $1000/$2678
+                    </div>
+                </div>
+            </div>-->
+            
+            
+            <div id="recent-donations">
+                <div class="bottom-header">
+                    DONATIONS
+                </div>
+                <div class="donations-content">
+                    <div class="multi-incentive-item" style="width:22%">
+                        <span>Redbeard</span>
+                        <span>$100</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px"viewBox="0 0 20 77">
+                        <line x1="20" y1="0" x2="0" y2="77" stroke-width="4" stroke="white" />
+                    </svg>
+                    <div class="multi-incentive-item" style="width:22%">
+                        <span>SIEDEMNASTEK</span>
+                        <span>$100</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px"viewBox="0 0 20 77">
+                        <line x1="20" y1="0" x2="0" y2="77" stroke-width="4" stroke="white" />
+                    </svg>
+                    <div class="multi-incentive-item" style="width:22%">
+                        <span>P53</span>
+                        <span>$100</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px;"viewBox="0 0 20 77">
+                        <line x1="20" y1="0" x2="0" y2="77" stroke-width="4" stroke="white" />
+                    </svg>
+                    <div class="multi-incentive-item" style="width:22%">
+                        <span>SIEDEMNASTEK</span>
+                        <span>$100</span>
+                    </div>
+                </div>
             </div>
+            <!--
+            <div id="single-incentive">
+                <div class="bottom-header">
+                    INCENTIVE
+                </div>
+                <div class="target-content">
+                    <div style="display:flex; flex-direction: column; padding-right:10px; justify-content: center; align-content: center;">
+                        <div id="up-next-game" class="up-next-game">
+                            LEGO INDIANE JONES 2: THE ADVENTURE CONTINUES
+                        </div>
+                        <div id="up-next-category" class="up-next-category">
+                            <i>SELECT PLAYER</i>
+                        </div>
+                    </div>
+                    <div class="progress" style="height:40px;flex: 1;min-width: 0;">
+                        <div class="progress-bar" style="background-color: #7851a9; width: 50%;" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div>
+                        $1000/$2678
+                    </div>
+                </div>
+            </div>-->
+            <!--
+            <div id="multi-incentive">
+                <div class="bottom-header">
+                    INCENTIVE
+                </div>
+                <div class="target-content">
+                    <div style="display:flex; flex-direction: column; justify-content: center; align-content: center;">
+                        <div id="up-next-game" class="up-next-game">
+                            FOOTBALL MANIA
+                        </div>
+                        <div id="up-next-category" class="up-next-category">
+                            <i>SELECT PLAYER</i>
+                        </div>
+                    </div>
+                    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" style="flex: 1;min-width: 0;">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active" data-bs-interval="4000">
+                                <div class="multi-incentive-flow">
+                                    <div class="multi-incentive-item" style="width: 33%">
+                                        <span>Redbeard</span>
+                                        <span>$100</span>
+                                    </div>
+                                    <div class="multi-incentive-item" style="width: 33%">
+                                        <span>Rudo Villano</span>
+                                        <span>$100</span>
+                                    </div>
+                                    <div class="multi-incentive-item" style="width: 33%">
+                                        <span>Captain Click</span>
+                                        <span>$100</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-bs-interval="4000">
+                                <div class="multi-incentive-flow">
+                                    <div class="multi-incentive-item" style="width: 33%">
+                                        <span>Sam Sinister</span>
+                                        <span>$100</span>
+                                    </div>
+                                    <div class="multi-incentive-item" style="width: 33%">
+                                        <span>Cedric the Bull</span>
+                                        <span>$100</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            
         </div>
     </body>
 </html>
