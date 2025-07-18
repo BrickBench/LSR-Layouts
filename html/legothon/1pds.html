@@ -62,6 +62,20 @@
                 text-align: center;
                 gap: 13px;
             }
+            .comm {
+                font-family: "Bebas Neue";
+                font-size: 30px;
+                line-height: 38px;
+                color: white;
+                text-align: center;
+            }
+            .comm-pronoun{
+                font-family: "Bebas Neue";
+                font-size: 24px;
+                line-height: 30px;
+                color: white;
+                text-align: center;
+            }
         </style>
     </head>
     <body style="width:1920px; height:1080px; background-image: url('dspdn.png');">
@@ -74,6 +88,19 @@
         <div id="runner1-pronoun" class="runner-pronoun">
             they/them
         </div>
+
+        <!-- Fill in host if we have an empty slot. If we have self commentator fill them in also. If we have two comms, no host. Never have empty slots-->
+        <div id="comm1" class="comm" style="position:absolute; left: 116px; top: 762px; width: 366px; height: 38px;">
+            ZCUBED
+        </div>
+        <div id="comm2" class="comm" style="position:absolute; left: 116px; top: 805px; width: 367px; height: 38px;">
+            ( HOST )&nbsp;&nbsp;JAVSTER101
+        </div>
+        <div id="comm-pronoun" class="comm-pronoun" style="position:absolute; left: 185px; top: 847px; width: 229px; height: 30px;">
+            they/them / he/him
+        </div>
+
+
         <div class="game-box" style="position:absolute; left: 0px; top: 536px; width: 604px; height: 216px; padding-left:15px;padding-right:15px;padding-top:5px;padding-bottom:5px;">
             <div class="game-name">
                 LEGO Indiana Jones 2: The Adventure Continues
