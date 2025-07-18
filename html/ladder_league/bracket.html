@@ -74,43 +74,44 @@
             margin-right: 10px;
         }
     </style>
-    <body style="width:1920px; height:1080px; background-image: url('bracket.png');">
+    <body style="width:1920px; height:1080px; background-image: url('bracket.png');" id="bracket">
         <div class="container" style="position:absolute; left: 200px; top: 31px; width:386px;height:175px;" id="qf-1">
-            <div class="eventHeader"><span>ELIM 1</span><span class="date">6/19 - 3:00 EST</span></div>
-            <div class="runner"><span>(1) Frostbyte</span><span>2:32:23</span></div>
-            <div class="runner-winner"><span>(8) FlamingLazer</span><span>2:32:23</span></div>
+            <div class="eventHeader"><span>ELIM 1</span><span class="date" id="q1-time">TBA</span></div>
+            <div class="runner-undecided" id="q1-r1-root"><span id="q1-r1-name">Seed 1 TBD</span><span id="q1-r1-time">--:--:--</span></div>
+            <div class="runner-undecided" id="q1-r2-root"><span id="q1-r2-name">Seed 8 TBD</span><span id="q1-r2-time">--:--:--</span></div>
         </div>
         <div class="container" style="position:absolute; left: 200px; top: 315px; width:386px;height:175px;" id="qf-2">
-            <div class="eventHeader"><span>Elim 2</span><span class="date">6/19 - 3:00 EST</span></div>
-            <div class="runner"><span>(1) Frostbyte</span><span>2:32:23</span></div>
-            <div class="runner-winner"><span>(8) FlamingLazer</span><span>2:32:23</span></div>
+            <div class="eventHeader"><span>ELIM 2</span><span class="date" id="q2-time">TBA</span></div>
+            <div class="runner-undecided" id="q2-r1-root"><span id="q2-r1-name">Seed 4 TBD</span><span id="q2-r1-time">--:--:--</span></div>
+            <div class="runner-undecided" id="q2-r2-root"><span id="q2-r2-name">Seed 5 TBD</span><span id="q2-r2-time">--:--:--</span></div>
         </div>
         <div class="container" style="position:absolute; left: 200px; top: 595px; width:386px;height:175px;" id="qf-3">
-            <div class="eventHeader"><span>Elim 3</span><span class="date">6/19 - 3:00 EST</span></div>
-            <div class="runner"><span>(1) Frostbyte</span><span>2:32:23</span></div>
-            <div class="runner-winner"><span>(8) FlamingLazer</span><span>2:32:23</span></div>
+            <div class="eventHeader"><span>ELIM 3</span><span class="date" id="q3-time">TBA</span></div>
+            <div class="runner-undecided" id="q3-r1-root"><span id="q3-r1-name">Seed 3 TBD</span><span id="q3-r1-time">--:--:--</span></div>
+            <div class="runner-undecided" id="q3-r2-root"><span id="q3-r2-name">Seed 6 TBD</span><span id="q3-r2-time">--:--:--</span></div>
         </div>
         <div class="container" style="position:absolute; left: 200px; top: 877px; width:386px;height:175px;" id="qf-4">
-            <div class="eventHeader"><span>Elim 4</span><span class="date">6/19 - 3:00 EST</span></div>
-            <div class="runner"><span>(1) Frostbyte</span><span>2:32:23</span></div>
-            <div class="runner-winner"><span>(8) FlamingLazer</span><span>2:32:23</span></div>
+            <div class="eventHeader"><span>ELIM 4</span><span class="date" id="q4-time">TBA</span></div>
+            <div class="runner-undecided" id="q4-r1-root"><span id="q4-r1-name">Seed 2 TBD</span><span id="q4-r1-time">--:--:--</span></div>
+            <div class="runner-undecided" id="q4-r2-root"><span id="q4-r2-name">Seed 7 TBD</span><span id="q4-r2-time">--:--:--</span></div>
         </div>
 
         <div class="container" style="position:absolute; left: 771px; top: 177px; width:386px;height:175px;" id="sf-1">
-            <div class="eventHeader"><span>Semis 1</span><span class="date">6/19 - 3:00 EST</span></div>
-            <div class="runner"><span>(1) Frostbyte</span><span>2:32:23</span></div>
-            <div class="runner-winner"><span>(8) FlamingLazer</span><span>2:32:23</span></div>
+            <div class="eventHeader"><span>SEMIS 1</span><span class="date" id="s1-time">TBA</span></div>
+            <div class="runner-undecided" id="s1-r1-root"><span id="s1-r1-name">ELIM 1 WINNER</span><span id="s1-r1-time">--:--:--</span></div>
+            <div class="runner-undecided" id="s1-r2-root"><span id="s1-r2-name">ELIM 2 WINNER</span><span id="s1-r2-time">--:--:--</span></div>
         </div>
         <div class="container" style="position:absolute; left: 771px; top: 740px; width:386px;height:175px;" id="sf-2">
-            <div class="eventHeader"><span>Semis 2</span><span class="date">TBA</span></div>
-            <div class="runner"><span>(1) Frostbyte</span><span>- : -- : --</span></div>
-            <div class="runner-undecided"><span>Elim 4 Winner</span><span>- : -- : --</span></div>
+            <div class="eventHeader"><span>SEMIS 2</span><span class="date" id="s2-time">TBA</span></div>
+            <div class="runner-undecided" id="s2-r1-root"><span id="s2-r1-name">ELIM 3 WINNER</span><span id="s2-r1-time">--:--:--</span></div>
+            <div class="runner-undecided" id="s2-r2-root"><span id="s2-r2-name">ELIM 4 WINNER</span><span id="s2-r2-time">--:--:--</span></div>
         </div>
 
         <div class="container" style="position:absolute; left: 1341px; top: 450px; width:386px;height:175px;" id="f-1">
-            <div class="eventHeader"><span>Finals</span><span class="date">TBA</span></div>
-            <div class="runner-undecided"><span>Semis 1 Winner</span><span>- : -- : --</span></div>
-            <div class="runner-undecided"><span>Semis 2 Winner</span><span>- : -- : --</span></div>
+            <div class="eventHeader"><span>FINALS</span><span class="date" id="finals-time">TBA</span></div>
+            <div class="runner-undecided" id="finals-r1-root"><span id="finals-r1-name">SEMIS 1 WINNER</span><span id="finals-r1-time">--:--:--</span></div>
+            <div class="runner-undecided" id="finals-r2-root"><span id="finals-r2-name">SEMIS 2 WINNER</span><span id="finals-r2-time">--:--:--</span></div>
         </div>
     </body>
+    <script type="module" src="/js/ladder_league.js"></script>
 </html>

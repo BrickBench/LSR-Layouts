@@ -223,3 +223,10 @@ export function toStringTime(totalMillis, forceHours = false, forceMinutes = fal
 
     return timeOut;
 }
+
+export function setInnerHtml(id, html) {
+    const element = document.getElementById(id);
+    if (element != null) {
+        element.innerHTML = html;
+    }
+}
