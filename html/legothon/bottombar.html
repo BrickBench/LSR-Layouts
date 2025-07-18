@@ -120,6 +120,17 @@
                 height: 77px;
                 line-height: 22px;
             }
+            .infobox-transition {
+                visibility: hidden;
+                opacity: 0;
+                transition: opacity 500ms ease-in, visibility 0ms ease-in 500ms;
+            }
+
+            .infobox-transition.show {
+                visibility: visible;
+                opacity: 1;
+                transition-delay: 0ms;
+            }
         </style>
     </head>
     <body style="width:1920px; height:1080px;">
@@ -127,8 +138,7 @@
             $1500
         </div>
         <div id="bottom-switch" class="bottom-switch">
-            <!--
-            <div id="up-next">
+            <div id="next-event" class="infobox-transition">
                 <div class="bottom-header">
                     UP NEXT
                 </div>
@@ -146,9 +156,7 @@
                     </div>
                 </div>
             </div>
-            -->
-            <!--
-            <div id="target">
+            <div id="total-donation" class="infobox-transition show">
                 <div class="bottom-header">
                     TARGET
                 </div>
@@ -164,9 +172,7 @@
                     </div>
                 </div>
             </div>
-            -->
-            <!--
-            <div id="recent-donations">
+            <div id="recent-donations" class="infobox-transition">
                 <div class="bottom-header">
                     DONATIONS
                 </div>
@@ -198,9 +204,7 @@
                     </div>
                 </div>
             </div>
-            -->
-            <!--
-            <div id="single-incentive-1">
+            <div id="single-incentive-1" class="infobox-transition">
                 <div class="bottom-header">
                     INCENTIVE
                 </div>
@@ -218,9 +222,7 @@
                     </div>
                 </div>
             </div>
-            -->
-            <!--
-            <div id="single-incentive-2">
+            <div id="single-incentive-2" class="infobox-transition">
                 <div class="bottom-header">
                     INCENTIVE
                 </div>
@@ -238,55 +240,40 @@
                     </div>
                 </div>
             </div>
--->
-            <div id="multi-incentive">
+            <div id="multi-incentive-1" class="infobox-transition">
                 <div class="bottom-header">
                     INCENTIVE
                 </div>
                 <div class="target-content">
                     <div style="display:flex; flex-direction: column; justify-content: center; align-content: center;">
                         <div id="multi-incentive-1-game" class="up-next-game">
-                            FOOTBALL MANIA
                         </div>
                         <div id="multi-incentive-1-incentive" class="up-next-category">
-                            <i>SELECT PLAYER</i>
                         </div>
                     </div>
                     <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" style="flex: 1;min-width: 0;">
                         <div class="carousel-inner" id="multi-incentive-1-carousel">
-                            <div class="carousel-item active" data-bs-interval="4000">
-                                <div class="multi-incentive-flow">
-                                    <div class="multi-incentive-item" style="width: 33%">
-                                        <span>Redbeard</span>
-                                        <span>$100</span>
-                                    </div>
-                                    <div class="multi-incentive-item" style="width: 33%">
-                                        <span>Rudo Villano</span>
-                                        <span>$100</span>
-                                    </div>
-                                    <div class="multi-incentive-item" style="width: 33%">
-                                        <span>Captain Click</span>
-                                        <span>$100</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="carousel-item" data-bs-interval="4000">
-                                <div class="multi-incentive-flow">
-                                    <div class="multi-incentive-item" style="width: 33%">
-                                        <span>Sam Sinister</span>
-                                        <span>$100</span>
-                                    </div>
-                                    <div class="multi-incentive-item" style="width: 33%">
-                                        <span>Cedric the Bull</span>
-                                        <span>$100</span>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+            <div id="multi-incentive-2" class="infobox-transition">
+                <div class="bottom-header">
+                    INCENTIVE
+                </div>
+                <div class="target-content">
+                    <div style="display:flex; flex-direction: column; justify-content: center; align-content: center;">
+                        <div id="multi-incentive-2-game" class="up-next-game">
+                        </div>
+                        <div id="multi-incentive-2-incentive" class="up-next-category">
+                        </div>
+                    </div>
+                    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" style="flex: 1;min-width: 0;">
+                        <div class="carousel-inner" id="multi-incentive-2-carousel">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
     <script type="module" src="/js/legothon.js"></script>

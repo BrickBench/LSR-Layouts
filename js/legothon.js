@@ -11,8 +11,8 @@ var state = null;
 const this_host = "main";
 
 var valid_bottom_bar = new Map()
-valid_bottom_bar.set("next-event", true);
 valid_bottom_bar.set("total-donation", true);
+valid_bottom_bar.set("next-event", true);
 valid_bottom_bar.set("recent-donations", true);
 valid_bottom_bar.set("single-incentive-1", true);
 valid_bottom_bar.set("single-incentive-2", true);
@@ -20,6 +20,7 @@ valid_bottom_bar.set("multi-incentive-1", true);
 valid_bottom_bar.set("multi-incentive-2", true);
 
 var next_event = null;
+var this_event = null;
 
 function setRunState(state, event) {
     var runners = getEventRunners(event);
@@ -28,8 +29,8 @@ function setRunState(state, event) {
 
     for (var i = 0; i < runners.length; i++) {
         var participant = state.people[runners[i]];
-        setInnerHtml("runner-" + i, participant.name);
-        setInnerHtml("runner-" + i + "-pronoun", participant.pronouns);
+        setInnerHtml("runner-" + i, participant.name.toUpperCase());
+        setInnerHtml("runner-" + i + "-pronoun", participant.pronouns.toLowerCase());
 
         if (combo_runners != "") {
             combo_runners += " / ";
@@ -46,10 +47,32 @@ function setRunState(state, event) {
     setInnerHtml("runner-combo", combo_runners);
     setInnerHtml("runner-combo-pronoun", combo_pronouns);
 
-    setInnerHtml("game-name", event.name);
+    setInnerHtml("game-name", event.game);
 
     var subtitle = event.category + " | " + event.console + " | " + toStringTime(event.estimate * 1000);
     setInnerHtml("game-subtitle", subtitle);
+
+    if (event.commentators.length == 0) {
+
+    } else if (event.commentators.length == 1) {
+        var comm1 = state.people[event.commentators[0]];
+        var host_name = state.custom_fields["host-name"];
+        var host_pronouns = state.custom_fields["host-pronouns"];
+
+        setInnerHtml("comm1", comm1.name.toUpperCase());
+        setInnerHtml("comm2", "[HOST] " + host_name.toUpperCase());
+        setInnerHtml("comm-pronoun", comm1.pronouns.toLowerCase() + " / " + host_pronouns.toLowerCase());
+    } else {
+        var comm1 = state.people[event.commentators[0]];
+        var comm2 = state.people[event.commentators[1]];
+
+        setInnerHtml("comm1", comm1.name.toUpperCase());
+        setInnerHtml("comm2", comm2.name.toUpperCase());
+        setInnerHtml("comm-pronoun", comm1.pronouns.toLowerCase() + " / " + comm2.pronouns.toLowerCase());
+    }
+
+    var time = getEventTimerValue(event);
+    setInnerHtml("time", toStringTime(time, false, true));
 }
 
 function setBarValue(id, value, max) {
@@ -62,7 +85,7 @@ function setBarValue(id, value, max) {
     }
 }
 
-function setIncentive(state, incentive_text, single, count) {
+function setIncentive(incentive_text, single, count) {
     if (single) {
         var text = incentive_text.split(";");
         if (text.length != 4) {
@@ -105,7 +128,7 @@ function setIncentive(state, incentive_text, single, count) {
         for (var item = 2; item < text.length; item = item + 2) {
             var name = text[item].trim();
             var amount = parseInt(text[item + 1].trim());
-            
+
             console.log("name", name, "amount", amount)
 
             if (isNaN(amount)) {
@@ -129,6 +152,7 @@ function setIncentive(state, incentive_text, single, count) {
         final_text += '</div></div>';
 
         setInnerHtml("multi-incentive-" + count + "-carousel", final_text);
+        return true;
     }
 }
 
@@ -139,9 +163,9 @@ function setAMBottomBarData(state) {
         valid_bottom_bar.set("next-event", true);
         next_event = next_events[0];
         setInnerHtml("up-next-game", next_event.game);
-        setInnerHtml("up-next-category", next_event.category);
+        setInnerHtml("up-next-category", "<i>" + next_event.category + "</i>");
 
-        setInnerHtml("up-next-game", next_event.game);
+        setInnerHtml("up-next-time", next_event.game);
     } else {
         valid_bottom_bar.set("next-event", false);
     }
@@ -170,10 +194,10 @@ function setAMBottomBarData(state) {
     }
 
     valid_bottom_bar.set("recent-donations", recent_donations.length == 4);
-    valid_bottom_bar.set("single-incentive-1", setIncentive(state, cf["single-incentive-1"], true, 1));
-    valid_bottom_bar.set("single-incentive-2", setIncentive(state, cf["single-incentive-2"], true, 2));
-    valid_bottom_bar.set("multi-incentive-1", setIncentive(state, cf["multi-incentive-1"], false, 1));
-    valid_bottom_bar.set("multi-incentive-2", setIncentive(state, cf["multi-incentive-2"], false, 2));
+    valid_bottom_bar.set("single-incentive-1", setIncentive(cf["single-incentive-1"], true, 1));
+    valid_bottom_bar.set("single-incentive-2", setIncentive(cf["single-incentive-2"], true, 2));
+    valid_bottom_bar.set("multi-incentive-1", setIncentive(cf["multi-incentive-1"], false, 1));
+    valid_bottom_bar.set("multi-incentive-2", setIncentive(cf["multi-incentive-2"], false, 2));
 }
 
 connectToSocket('/ws', function(data) {
@@ -186,6 +210,7 @@ connectToSocket('/ws', function(data) {
     }
 
     var event = getEventById(data, event_id);
+    this_event = event;
 
     setRunState(data, event);
     setAMBottomBarData(data);
@@ -224,3 +249,65 @@ $(document).ready(function() {
         });
     }, 30000);
 });
+
+setInterval(function() {
+    if (this_event != null) {
+        var time = getEventTimerValue(this_event);
+        setInnerHtml("timer", toStringTime(time, false, true));
+    }
+
+
+    if (next_event != null) {
+        let time = next_event.event_start_time ? next_event.event_start_time - Date.now() : undefined;
+        var text = "COMING SOON"
+        if (time) {
+            var mins = time / (1000 * 60);
+            if (mins > 2) {
+                if (mins < 60) {
+                    text = "IN " + mins + " MINUTES";
+                } else if (mins < 120) {
+                    text = "IN 1 HOUR";
+                } else {
+                    text = "IN " + Math.floor(mins / 60) + " HOURS";
+                }
+            }
+
+            setInnerHtml("up-next-time", text);
+        }
+    }
+}, 100)
+
+var current_bar_id = 0
+setInterval(function() {
+    if (document.getElementById("bottom-switch") == null) {
+        return;
+    }
+
+    console.log("valid_bottom_bar", valid_bottom_bar)
+    // 0 IS ALWAYS VALID
+    var i = 0;
+    var next_bar_id = 0;
+    for (const key of valid_bottom_bar.keys()) {
+        if (i > current_bar_id) {
+            if (valid_bottom_bar.get(key)) {
+                next_bar_id = i;
+                break;
+            }
+        }
+
+        i++;
+    }
+
+    current_bar_id = next_bar_id;
+
+    var i = 0;
+    for (const key of valid_bottom_bar.keys()) {
+        if (i == current_bar_id) {
+            document.getElementById(key).classList.add("show");
+        } else {
+            document.getElementById(key).classList.remove("show");
+        }
+        i++;
+    }
+
+}, 8000)
