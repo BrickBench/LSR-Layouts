@@ -20,11 +20,29 @@ valid_bottom_bar.set("multi-incentive-1", true);
 valid_bottom_bar.set("multi-incentive-2", true);
 
 var next_event = null;
+var next_event_2 = null;
+var next_event_3 = null;
 var this_event = null;
+
+function getRunnerComboName(state, runners, divider) {
+    var combo_runners = "";
+    for (var i = 0; i < runners.length; i++) {
+        if (combo_runners != "") {
+            combo_runners += " " + divider + " ";
+        }
+
+        combo_runners += state.people[runners[i]].name.toUpperCase();
+    }
+
+    return combo_runners;
+}
+
+function getEventSubtitle(event) {
+    return event.category + " | " + event.console + " | " + toStringTime(event.estimate * 1000);
+}
 
 function setRunState(state, event) {
     var runners = getEventRunners(event);
-    var combo_runners = ""
     var combo_pronouns = ""
 
     for (var i = 0; i < runners.length; i++) {
@@ -32,29 +50,22 @@ function setRunState(state, event) {
         setInnerHtml("runner-" + i, participant.name.toUpperCase());
         setInnerHtml("runner-" + i + "-pronoun", participant.pronouns.toLowerCase());
 
-        if (combo_runners != "") {
-            combo_runners += " / ";
-        }
-
         if (combo_pronouns != "") {
             combo_pronouns += " / ";
         }
 
-        combo_runners += participant.name;
         combo_pronouns += participant.pronouns;
     }
 
-    setInnerHtml("runner-combo", combo_runners);
+    setInnerHtml("runner-combo", getRunnerComboName(state, runners, "/"));
+    setInnerHtml("runner-combo-and", getRunnerComboName(state, runners, "&"));
     setInnerHtml("runner-combo-pronoun", combo_pronouns);
 
     setInnerHtml("game-name", event.game);
 
-    var subtitle = event.category + " | " + event.console + " | " + toStringTime(event.estimate * 1000);
-    setInnerHtml("game-subtitle", subtitle);
+    setInnerHtml("game-subtitle", getEventSubtitle(event));
 
-    if (event.commentators.length == 0) {
-
-    } else if (event.commentators.length == 1) {
+    if (event.commentators.length == 1) {
         var comm1 = state.people[event.commentators[0]];
         var host_name = state.custom_fields["host-name"];
         var host_pronouns = state.custom_fields["host-pronouns"];
@@ -94,10 +105,10 @@ function setIncentive(incentive_text, single, count) {
 
         var amount = parseInt(text[2].trim());
         var target = parseInt(text[3].trim());
+
         if (isNaN(amount)) {
             return false
         }
-
 
         if (isNaN(target)) {
             return false
@@ -140,11 +151,11 @@ function setIncentive(incentive_text, single, count) {
             )
         }
 
-        var final_text = '<div class="carousel-item active" data-bs-interval="8000"><div class="multi-incentive-flow">'
+        var final_text = '<div class="carousel-item active" data-bs-interval="4000"><div class="multi-incentive-flow">'
 
         for (var i = 0; i < item_texts.length; i++) {
             if (i % 3 == 0 && i != 0) {
-                final_text += '</div></div><div class="carousel-item" data-bs-interval="8000"><div class="multi-incentive-flow">';
+                final_text += '</div></div><div class="carousel-item" data-bs-interval="4000"><div class="multi-incentive-flow">';
             }
             final_text += item_texts[i];
         }
@@ -164,10 +175,26 @@ function setAMBottomBarData(state) {
         next_event = next_events[0];
         setInnerHtml("up-next-game", next_event.game);
         setInnerHtml("up-next-category", "<i>" + next_event.category + "</i>");
+        setInnerHtml("up-next-subtitle", getEventSubtitle(next_event));
 
-        setInnerHtml("up-next-time", next_event.game);
+        setInnerHtml("up-next-runners", getRunnerComboName(state, getEventRunners(next_event), "&"));
     } else {
         valid_bottom_bar.set("next-event", false);
+    }
+
+    if (next_events.length > 1) {
+        next_event_2 = next_events[1];
+        setInnerHtml("up-next-game-2", next_event_2.game);
+        setInnerHtml("up-next-subtitle-2", getEventSubtitle(next_event_2));
+        setInnerHtml("up-next-runners-2", getRunnerComboName(state, getEventRunners(next_event_2), "&"));
+    }
+
+
+    if (next_events.length > 2) {
+        next_event_3 = next_events[2];
+        setInnerHtml("up-next-game-3", next_event_3.game);
+        setInnerHtml("up-next-subtitle-3", getEventSubtitle(next_event_3));
+        setInnerHtml("up-next-runners-3", getRunnerComboName(state, getEventRunners(next_event_3), "&"));
     }
 
     var cf = state.custom_fields;
@@ -238,17 +265,36 @@ $.ajax({
         updateDonations(data);
     }
 });
-$(document).ready(function() {
-    setInterval(function() {
-        $.ajax({
-            url: donation_link_base,
-            dataType: 'json',
-            success: function(data) {
-                updateDonations(data);
+
+setInterval(function() {
+    $.ajax({
+        url: donation_link_base,
+        dataType: 'json',
+        success: function(data) {
+            updateDonations(data);
+        }
+    });
+}, 30000);
+
+
+function getRelativeTimeString(unix_time) {
+    var time = unix_time - Date.now();
+    var text = "COMING SOON"
+    if (time) {
+        var mins = time / (1000 * 60);
+        if (mins > 2) {
+            if (mins < 60) {
+                text = "IN " + Math.floor(mins) + " MINUTES";
+            } else if (mins < 120) {
+                text = "IN 1 HOUR";
+            } else {
+                text = "IN " + Math.floor(mins / 60) + " HOURS";
             }
-        });
-    }, 30000);
-});
+        }
+
+    }
+    return text;
+}
 
 setInterval(function() {
     if (this_event != null) {
@@ -258,22 +304,15 @@ setInterval(function() {
 
 
     if (next_event != null) {
-        let time = next_event.event_start_time ? next_event.event_start_time - Date.now() : undefined;
-        var text = "COMING SOON"
-        if (time) {
-            var mins = time / (1000 * 60);
-            if (mins > 2) {
-                if (mins < 60) {
-                    text = "IN " + mins + " MINUTES";
-                } else if (mins < 120) {
-                    text = "IN 1 HOUR";
-                } else {
-                    text = "IN " + Math.floor(mins / 60) + " HOURS";
-                }
-            }
+        setInnerHtml("up-next-time", getRelativeTimeString(next_event.event_start_time));
+    }
 
-            setInnerHtml("up-next-time", text);
-        }
+    if (next_event_2 != null) {
+        setInnerHtml("up-next-time-2", getRelativeTimeString(next_event_2.event_start_time));
+    }
+
+    if (next_event_3 != null) {
+        setInnerHtml("up-next-time-3", getRelativeTimeString(next_event_3.event_start_time));
     }
 }, 100)
 
