@@ -220,6 +220,17 @@ function setAMBottomBarData(state) {
         }
     }
 
+    setInnerHtml(
+        "dono-amount",
+        "$" + cf["total-donations"] + "/$" + Math.ceil(cf["goal-donations"])
+    )
+    setInnerHtml(
+        "donation-total",
+        "$" + cf["total-donations"]
+    )
+
+    setBarValue("dono-bar", cf["total-donations"], cf["goal-donations"]);
+
     valid_bottom_bar.set("recent-donations", recent_donations.length == 4);
     valid_bottom_bar.set("single-incentive-1", setIncentive(cf["single-incentive-1"], true, 1));
     valid_bottom_bar.set("single-incentive-2", setIncentive(cf["single-incentive-2"], true, 2));
@@ -242,40 +253,6 @@ connectToSocket('/ws', function(data) {
     setRunState(data, event);
     setAMBottomBarData(data);
 })
-
-var donation_link_base = "https://extralife.donordrive.com/api/participants/550942"
-
-function updateDonations(data) {
-    setInnerHtml(
-        "dono-amount",
-        "$" + data["sumDonations"] + "/$" + Math.ceil(data["fundraisingGoal"])
-    )
-    setInnerHtml(
-        "donation-total",
-        "$" + data["sumDonations"]
-    )
-
-    setBarValue("dono-bar", data["sumDonations"], data["fundraisingGoal"]);
-}
-
-$.ajax({
-    url: donation_link_base,
-    dataType: 'json',
-    success: function(data) {
-        updateDonations(data);
-    }
-});
-
-setInterval(function() {
-    $.ajax({
-        url: donation_link_base,
-        dataType: 'json',
-        success: function(data) {
-            updateDonations(data);
-        }
-    });
-}, 30000);
-
 
 function getRelativeTimeString(unix_time) {
     var time = unix_time - Date.now();
