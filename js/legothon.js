@@ -47,8 +47,8 @@ function setRunState(state, event) {
 
     for (var i = 0; i < runners.length; i++) {
         var participant = state.people[runners[i]];
-        setInnerHtml("runner-" + i, participant.name.toUpperCase());
-        setInnerHtml("runner-" + i + "-pronoun", participant.pronouns.toLowerCase());
+        setInnerHtml("runner-" + (i + 1), participant.name.toUpperCase());
+        setInnerHtml("runner-" + (i + 1) + "-pronoun", participant.pronouns.toLowerCase());
 
         if (combo_pronouns != "") {
             combo_pronouns += " / ";
