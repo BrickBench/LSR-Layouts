@@ -14,15 +14,16 @@
             .command-box{
                 display: flex;
                 flex-direction: column;
-                justify-content:space-evenly;
-                gap: 10px;
+                justify-content:center;
+                justify-items: center;
+                gap: 5px;
                 position:absolute;
-                left: 1503px;
-                top: 501px;
-                width: 404px;
-                height: 258px;
+                left: 547px;
+                top: 670px;
+                width: 322px;
+                height: 190px;
                 padding-left: 70px;
-                padding-top: 20px;
+                padding-top: 30px;
                 padding-bottom: 30px;
             }
             .command-item{
@@ -31,7 +32,7 @@
                 -webkit-text-stroke: 2px black;
                 paint-order: stroke fill;
                 font-weight: bold;
-                font-size: 45px;
+                font-size: 35px;
             }
             .comm-item{
                 font-family: "Bahnschrift Light";
@@ -71,13 +72,13 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                align-content: space-evenly;
+                justify-content: center;
                 gap: 10px;
                 position:absolute;
-                left: 1430px;
-                top: 641px;
-                width: 490px;
-                height: 294px;
+                left: 0px;
+                top: 595px;
+                width: 547px;
+                height: 339px;
                 padding-top: 15px;
                 padding-bottom: 20px;
             }
@@ -102,13 +103,13 @@
                 padding-left: 30px;
                 text-transform: uppercase;
                 font-weight: bold;
-                width: 1396px;
-                height: 83px;
-                line-height: 83px;
+                width: 955px;
+                height: 57px;
+                line-height: 57px;
                 display: flex;
                 font-family: "Bahnschrift Light";
                 color: white;
-                font-size: 55px;
+                font-size: 45px;
                 -webkit-text-stroke: 2px black;
                 paint-order: stroke fill;
                 padding-top:1px;
@@ -126,9 +127,10 @@
                 padding-top: 2px;
                 padding-left: 18px;
             }
+            
         </style>
     </head>
-    <body style="width:1920px; height:1080px; background-image: url('3Player1Focus.png');">
+    <body style="width:1920px; height:1080px; background-image: url('4Player2Focus.png');">
         <div id="commentators" class="commentators">
             <div class="comm-item">
                 <object class="mic-icon" data="mic.svg"></object><span class="comm-name">P53</span>
@@ -138,13 +140,27 @@
             </div>
 
         </div>
-        <div id="runner-1-name" class="runner-name" style="position:absolute; top: 797px; left:20px;">
+        <div id="commands" class="command-box">
+            <div class="command-item">
+                !runners
+            </div>
+            <div class="command-item">
+                !leaderboard
+            </div>
+            <div class="command-item">
+                !schedule
+            </div>
+        </div>
+        <div id="runner-1-name" class="runner-name" style="position:absolute; top: 539px; left:0px;">
             Phantom
         </div>
-        <div id="runner-2-name" class="runner-name-sm" style="position:absolute; top: 280px; left: 1443px;">
+        <div id="runner-2-name" class="runner-name" style="position:absolute; top: 539px; left: 964px;">
             SABER
         </div>
-        <div id="runner-3-name" class="runner-name-sm" style="position:absolute; top: 602px; left: 1443px;">
+        <div id="runner-3-name" class="runner-name-sm" style="position:absolute; top: 876px; left: 964px;">
+            PHANTOM
+        </div>
+        <div id="runner-3-name" class="runner-name-sm" style="position:absolute; top: 876px; left: 1443px;">
             PHANTOM
         </div>
     </body>
