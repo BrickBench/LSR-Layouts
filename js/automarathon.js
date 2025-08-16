@@ -43,6 +43,52 @@ export function getNextEvent(stateData) {
 }
 
 /**
+ * Return the list of commentators for this event,
+ * starting with the pre-configured commentators and
+ * ending with the Discord users if desired.
+ */
+export function getCommentators(data, event, include_discord = false, allow_non_participants = false, host = "") {
+    var commentators = []
+    for (const commentator of event.commentators) {
+        var participant = data.people[commentator];
+        commentators.push({
+            discord: participant.discord_id,
+            participant: participant.id,
+        })
+    }
+
+    if (include_discord) {
+        for (const discord_user of Object.values(data.hosts[host].discord_users)) {
+            console.log("discord_user", discord_user);
+            if (discord_user.participant != null) {
+                var found = false;
+                for (const commentator of commentators) {
+                    if (commentator.participant == discord_user.participant) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    commentators.push({
+                        discord: discord_user.username,
+                        participant: discord_user.participant,
+                    });
+                }
+            } else if (allow_non_participants) {
+                commentators.push({
+                    discord: discord_user.username,
+                    participant: null,
+                })
+            }
+
+        }
+    }
+
+    return commentators;
+}
+
+/**
  * Return the IDs of the runners present in the provided event.
  */
 export function getEventRunners(event) {
@@ -109,7 +155,11 @@ export function compareTime(a, b) {
         for (var i = 0; i < elements_a.length; i++) {
             var a_num = parseInt(elements_a[i]);
             var b_num = parseInt(elements_b[i]);
-            if (a_num > b_num) {
+            if (a_num == null || isNaN(a_num)) {
+                return 1;
+            } else if (b_num == null || isNaN(b_num)) {
+                return -1;
+            } else if (a_num > b_num) {
                 return 1;
             } else if (a_num < b_num) {
                 return -1;
@@ -142,7 +192,7 @@ export function getRunnerScore(event, runner) {
  * This assumes that the score type is "SingleScore",
  * and times are listed in the format "hh:mm:ss" or "mm:ss".
  */
-export function getRunnersByTime(event) {
+export function getRunnersByTime(event, allow_empty = false) {
     var runners = [];
 
     for (const runner of Object.keys(event.runner_state)) {
@@ -151,6 +201,11 @@ export function getRunnersByTime(event) {
             runners.push({
                 id: runner,
                 time: time
+            })
+        } else if (allow_empty) {
+            runners.push({
+                id: runner,
+                time: "--:--:--"
             })
         }
     }
