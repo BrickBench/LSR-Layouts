@@ -26,8 +26,17 @@ function setEventTimes(state, event) {
 
     for (var i = 0; i < 8; i++) {
         var runner = state.people[times[i].id];
-        setInnerHtml("runner-time-name-" + (i + 1), runner.name);
+        var pos_string = (i + 1) + "th"
+        if (i == 0) {
+            pos_string = "1st"
+        } else if (i == 1) {
+            pos_string = "2nd"
+        } else if (i == 2) {
+            pos_string = "3rd"
+        }
+        setInnerHtml("runner-time-name-" + (i + 1), pos_string + ". " + runner.name);
         setInnerHtml("runner-time-time-" + (i + 1), times[i].time);
+        setInnerHtml("runner-time-both-" + (i + 1), pos_string + ". " + runner.name + ": " + times[i].time);
     }
 }
 

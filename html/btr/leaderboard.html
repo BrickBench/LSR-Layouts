@@ -12,15 +12,19 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
         <style>
                         .command-item{
-                font-family: "Bahnschrift Light";
+                font-family: "Bahnschrift";
                 color: white;
-                -webkit-text-stroke: 2px black;
                 paint-order: stroke fill;
                 font-weight: bold;
                 font-size: 35px;
+                text-shadow:
+                    2px 2px 0 #000,
+                    -2px -2px 0 #000,
+                    2px -2px 0 #000,
+                    -2px 2px 0 #000;
             }
             .comm-item{
-                font-family: "Bahnschrift Light";
+                font-family: "Bahnschrift";
                 color: white;
                 font-weight: bold;
                 font-size: 38px;
@@ -38,9 +42,12 @@
                 -ms-transition: text-shadow 0.3s linear;
                 -o-transition: text-shadow 0.3s linear;
                 transition: text-shadow 0.3s linear;
-                -webkit-text-stroke: 2px black;
                 paint-order: stroke fill;
-                text-shadow: 0 0 0 black; 
+                text-shadow:
+                    2px 2px 0 #000,
+                    -2px -2px 0 #000,
+                    2px -2px 0 #000,
+                    -2px 2px 0 #000;
             }
             .comm-name{
                 padding-top: 4px;
@@ -68,7 +75,7 @@
                 padding-left: 5px;
             }
             .leaderboard{
-                font-family: "Bahnschrift Light";
+                font-family: "Bahnschrift";
                 color: white;
                 font-weight: bold;
                 font-size: 53px;
@@ -80,6 +87,11 @@
                 text-align: center;
                 padding-top: 80px;
                 padding-left: 55px;
+                text-shadow:
+                    2px 2px 0 #000,
+                    -2px -2px 0 #000,
+                    2px -2px 0 #000,
+                    -2px 2px 0 #000;
             }
             .mic-icon{
                 width: 26px;
@@ -126,31 +138,32 @@
             <div class="container leaderboard">
                 <div class="row row-cols-2" style="--bs-gutter-y: 5rem;">
                 <div class="col">
-                    <div id="runner-1-name-time">1st. WiiSuper : 1:23:12</div>
+                    <div id="runner-time-both-1">1st. WiiSuper : 1:23:12</div>
                 </div>
                 <div class="col">
-                    <div id="runner-2-name-time">2nd. Anonymous : -:--:--</div>
+                    <div id="runner-time-both-2">1st. WiiSuper : 1:23:12</div>
                 </div>
                 <div class="col">
-                    <div id="runner-3-name-time">3rd. Evan : 1:23:12</div>
+                    <div id="runner-time-both-3">1st. WiiSuper : 1:23:12</div>
                 </div>
                 <div class="col">
-                    <div id="runner-4-name-time">4th. WiiSuper : 1:23:12</div>
+                    <div id="runner-time-both-4">1st. WiiSuper : 1:23:12</div>
                 </div>
                 <div class="col">
-                    <div id="runner-5-name-time">5th. WiiSuper : 1:23:12</div>
+                    <div id="runner-time-both-5">1st. WiiSuper : 1:23:12</div>
                 </div>
                 <div class="col">
-                    <div id="runner-6-name-time">6th. WiiSuper : 1:23:12</div>
+                    <div id="runner-time-both-6">1st. WiiSuper : 1:23:12</div>
                 </div>
                 <div class="col">
-                    <div id="runner-7-name-time">7th. WiiSuper : 1:23:12</div>
+                    <div id="runner-time-both-7">1st. WiiSuper : 1:23:12</div>
                 </div>
                 <div class="col">
-                    <div id="runner-8-name-time">8th. WiiSuper : 1:23:12</div>
+                    <div id="runner-time-both-8">1st. WiiSuper : 1:23:12</div>
                 </div>
             </div>
         </div>
          </body>
+        <script type="module" src="/js/btr.js"></script>
 </html>
          
