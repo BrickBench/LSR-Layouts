@@ -1,5 +1,5 @@
 import {
-    connectToSocket,
+    connectToSocket, setInnerHtml,
     getStreamById, getEventTimerValue,
     getEventById, getEventForHost, toStringTime,
     getEventRunners,
@@ -73,7 +73,7 @@ function determineSplitInfo(splits, event) {
         if (runner in splits) {
             var split_data = splits[runner];
             var times = {}
-            for (var i = 0; i < 36; i++) {
+            for (var i = 0; i < 5; i++) {
                 if (i < split_data.splits.length) {
                     if (split_data.splits[i].splitTime != null) {
                         times[i] = split_data.splits[i].splitTime;
@@ -86,7 +86,7 @@ function determineSplitInfo(splits, event) {
     }
 
     var runner_splits_deltas = {};
-    for (var i = 0; i < 36; i++) {
+    for (var i = 0; i < 5; i++) {
         // find fastest runner for this split
         var fastest_runner = -1;
         var fastest_time = 10000000000;
@@ -332,21 +332,13 @@ function setCommentatorSlots(data, event) {
     }
 }
 
-function setResults(data, event) {
-    var ordered_runners = getRunnersBySeed(data, event);
-
-    for (var i = 0; i < 4; i++) {
+function setResults(custom_fields) {
+    for (var i = 0; i < 3; i++) {
         var name_box = document.getElementById("view-" + (i + 1) + "-overlay");
         if (name_box != null) {
-            var contents = "";
-            if (i < ordered_runners.length) {
-                var runner = ordered_runners[i];
-                if (runner.toString() in event.runner_state) {
-                    var time = getRunnerScore(event, runner);
-                    if (time != null && time != "") {
-                        contents = '<span>' + time + '</span>';
-                    }
-                }
+            var contents = custom_fields['runner-' + (i + 1) + '-overlay-time'];
+            if (contents != "") {
+                contents = '<span>' + contents + '</span>';
             }
 
             if (contents != "") {
@@ -411,6 +403,14 @@ function setRunnerData(data, event) {
             participant_meta = user_meta.get(participant.name);
             participant_time = getRunnerFastestTime(data, participant.id);
         }
+
+        var score = getRunnerScore(event, runners[i])
+
+        if (score == null || score == "") {
+            score = "0"
+        }
+
+        setInnerHtml("runner-" + (i + 1) + "-points", "POINTS: " + score);
 
         if (name_box != null) {
             if (participant != null) {
@@ -616,7 +616,7 @@ connectToSocket('/ws', function(data) {
 
     setRunnerData(data, event);
     setCommentatorSlots(data, event);
-    setResults(data, event);
+    setResults(data.custom_fields);
     setNextEventData(data);
 
     var event_name_element = document.getElementById("event-title");
