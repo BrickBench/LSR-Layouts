@@ -9,14 +9,14 @@ export function connectToSocket(endpoint, onData) {
 
     socket.onclose = function(_event) {
         setTimeout(function() {
-            connectToSocket(onData);
+            connectToSocket(endpoint, onData);
         }, 5000);
     }
 
     socket.onerror = function(_event) {
         socket.close();
         setTimeout(function() {
-            connectToSocket(onData);
+            connectToSocket(endpoint, onData);
         }, 5000);
     }
 }
