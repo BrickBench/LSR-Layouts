@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"/>
+        <link href="https://fonts.googleapis.com/css2?family=Asar&display=swap" rel="stylesheet">
+    </head>
+    <style>
+        :root {
+            --ladder-white:#C8C8C6;
+        }
+        body {
+            font-family: "Asar"!important;
+        }
+        .player-icon{
+            width: 120px;
+            height: 120px;
+        }
+        .event-players{
+            font-size: 87px;
+            font-weight:bold;
+            color: var(--ladder-white);
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .event-seed{
+            font-size: 37px;
+            font-weight:bold;
+            color: var(--ladder-white);
+            text-transform: uppercase;
+        }
+        .info-box{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 20px;
+        }
+        .vs-box{
+            text-align: center;
+            font-size: 62px;
+            font-weight: bold;
+            color: var(--ladder-white);
+        }
+        .best-time{
+            font-size:22px;
+            color: var(--ladder-white);
+            font-variant-numeric: tabular-nums;
+        }
+        .c-flag{
+            width: 64px;
+            height:64px;
+        }
+         .runner-name{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                font-weight: bold;
+                color: var(--ladder-white);
+                align-items: center;
+                text-transform: uppercase;
+        }
+        .event-name{
+            font-weight: bold;
+            color: #dbc079;
+            text-align: center;
+            font-size: 105px;
+            text-transform: uppercase;
+        }
+        .start-box{
+            font-variant-numeric: tabular-nums;
+            font-weight: bold;
+            font-size: 80px;
+            color: var(--ladder-white);
+            text-shadow: 0px,0px, black, 30px;
+        }
+            
+    </style>
+    <body style="width:1920px; height:1080px; background-image: url('Intro2.jpg');">
+        <div class="start-box" id="starting-soon" style="position: absolute; left: 238px; top:625px; width: 753px; height:200px">
+  
+        </div>
+        <div class="info-box" style="position: absolute; left: 1000px; top:10px; width: 850px; height:900px">
+            <div class="event-name" id="event-title"  style="padding-top: 80px;">LEAGUE PLAYINS</div>
+            <div class="container">
+                <div class="row">
+                    <div class="event-players">Nolan</div>
+                </div>
+            </div>
+            <div class="row vs-box">
+                <div class="col-12">VS</div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="event-players">Acute360</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
