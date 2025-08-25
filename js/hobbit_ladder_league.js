@@ -140,7 +140,7 @@ function displayLiveDeltas(data, event, splits) {
     }
 
     var runners = getRunnersBySeed(data, event);
-    for (var column = 0; column < 2; column++) {
+    for (var column = 0; column < 3; column++) {
         if (column >= runners.length) {
             break;
         }
@@ -187,7 +187,7 @@ function displayLiveDeltas(data, event, splits) {
             }
 
         } else {
-            for (var runner = 0; runner < 2; runner++) {
+            for (var runner = 0; runner < 3; runner++) {
                 document.getElementById("runner-" + runner + "-split-" + row_index).innerHTML = "--";
             }
         }
@@ -388,13 +388,9 @@ function getRunnerFastestTime(data, runner) {
 
 function setRunnerData(data, event) {
     var runners = getRunnersBySeed(data, event);
-    for (var i = 0; i < 2; i++) {
-        var name_box = document.getElementById("runner-" + (i + 1) + "-name");
-        var flag_box = document.getElementById("runner-" + (i + 1) + "-flag");
-        var name_flag_box = document.getElementById("runner-" + (i + 1) + "-name-flag");
+    for (var i = 0; i < 3; i++) {
         var seed_box = document.getElementById("runner-" + (i + 1) + "-seed");
         var pb_box = document.getElementById("runner-" + (i + 1) + "-pb");
-        var img_box = document.getElementById("runner-" + (i + 1) + "-img");
 
         var participant = data.people[runners[i]];
         var participant_meta = null;
@@ -411,39 +407,19 @@ function setRunnerData(data, event) {
         }
 
         setInnerHtml("runner-" + (i + 1) + "-points", "POINTS: " + score);
+        setInnerHtml("runner-" + (i + 1) + "-name", participant != null ? participant.name.toUpperCase() : "");
 
-        if (name_box != null) {
-            if (participant != null) {
-                var content = participant.name.toUpperCase();
-                name_box.innerHTML = content;
-            } else {
-                name_box.innerHTML = "";
+        var flag = ""
+        var name_flag = "";
+        if (participant != null) {
+            name_flag = participant.name.toUpperCase();
+            if (participant.location != null && participant.location != "") {
+                name_flag += '&nbsp;&nbsp;<span class="fi fi-' + participant.location.toLowerCase() + '"></span>';
+                flag = '<span class="c-flag fi fi-' + participant.location.toLowerCase() + '"></span>';
             }
         }
-
-        if (name_flag_box != null) {
-            if (participant != null) {
-                var content = participant.name.toUpperCase();
-                if (participant.location != null && participant.location != "") {
-                    content += '&nbsp;&nbsp;<span class="fi fi-' + participant.location.toLowerCase() + '"></span>';
-                }
-                name_flag_box.innerHTML = content;
-            } else {
-                name_flag_box.innerHTML = "";
-            }
-        }
-
-        if (flag_box != null) {
-            if (participant != null) {
-                if (participant.location != null && participant.location != "") {
-                    flag_box.innerHTML = '<span class="c-flag fi fi-' + participant.location.toLowerCase() + '"></span>';
-                } else {
-                    flag_box.innerHTML = "";
-                }
-            } else {
-                flag_box.innerHTML = "";
-            }
-        }
+        setInnerHtml("runner-" + (i + 1) + "-flag", flag);
+        setInnerHtml("runner-" + (i + 1) + "-name-flag", name_flag);
 
         if (seed_box != null) {
             if (participant_meta != null) {
@@ -458,14 +434,6 @@ function setRunnerData(data, event) {
                 pb_box.innerHTML = 'Event Best: &nbsp;&nbsp;&nbsp;' + participant_time;
             } else {
                 pb_box.innerHTML = "";
-            }
-        }
-
-        if (img_box != null) {
-            if (participant != null) {
-                img_box.src = '/html/ladder_league/icons/' + participant.name + ".png";
-            } else {
-                img_box.src = "";
             }
         }
     }
@@ -606,33 +574,28 @@ connectToSocket('/ws', function(data) {
     state = data;
     console.log("state", state)
 
-    // var event_id = getEventForHost(data, this_host);
-    // if (event_id == null) {
-    //     return;
-    // }
+    var event_id = getEventForHost(data, this_host);
+    if (event_id == null) {
+        return;
+    }
 
-    // var event = getEventById(data, event_id);
-    var event = state.events[0]
+    var event = getEventById(data, event_id);
 
     setRunnerData(data, event);
     setCommentatorSlots(data, event);
     setResults(data.custom_fields);
     setNextEventData(data);
 
-    var event_name_element = document.getElementById("event-title");
+    setInnerHtml("event-title", event.name);
+    var event_name_element = document.getElementById("event-title-split");
     if (event_name_element != null) {
-        event_name_element.innerHTML = event.name;
-    } else {
-        event_name_element = document.getElementById("event-title-split");
-        if (event_name_element != null) {
-            let tokens = event.name.split(" ");
-            if (tokens[0] == "QUARTERFINAL" || tokens[0] == "SEMIFINAL") {
-                event_name_element.innerHTML = "<span>" + tokens[0] + "</span><span>MATCH " + tokens[1] + "</span>";
-            }
-
-            if (tokens[0] == "GRAND") {
-                event_name_element.innerHTML = "<span>GRAND</span><span>FINALS</span>";
-            }
+        let tokens = event.name.split(" ");
+        if (tokens[0] == "QUARTERFINAL" || tokens[0] == "SEMIFINAL") {
+            event_name_element.innerHTML = "<span>" + tokens[0] + "</span><span>MATCH " + tokens[1] + "</span>";
+        } else if (tokens[0] == "GRAND") {
+            event_name_element.innerHTML = "<span>GRAND</span><span>FINALS</span>";
+        } else {
+            event_name_element.innerHTML = "<span>WEEK " + tokens[1] + "</span><span>RUNG " + tokens[3] + "</span>";
         }
     }
 
