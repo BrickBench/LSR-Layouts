@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html style="background-color: transparent;">
+    <head>
+        <style>
+            :root {
+                --main-text-color: #CACACA;
+            }
+            .timer {
+                position: absolute;
+                left: 1472px;
+                top: 616px;
+                width: 410px;
+                height: 112px;
+                text-align: center;
+                font-family: 'Broken Console';
+                font-weight: bold;
+                color: var(--main-text-color);
+                font-size: 5em;
+                line-height: 132px;
+                font-variant-numeric: tabular-nums;
+            }
+            .runner-name {
+                font-family: 'Stopbuck';
+                color: var(--main-text-color);
+                line-height: 66px;
+                font-size: 3em;
+                text-transform: uppercase;
+                padding-left: 12px;
+            }
+            .coach-win {
+                font-family: 'Broken Console';
+                color: var(--main-text-color);
+                line-height: 74px;
+                font-size: 2.3em;
+                text-transform: uppercase;
+                text-align: center;
+                padding-right: 12px;
+            }
+            .runner-box {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .commentators {
+                position: absolute;
+                top: 998px;
+                left: 485px;
+                width: 950px;
+                height: 72px;
+                display: flex;
+                flex-direction: row;
+            }
+            .commentator-box {
+                color: var(--main-text-color);
+                text-align: center;
+                flex: 1;
+                min-width: 0;
+                text-transform: uppercase;
+                font-size: 2.4em;
+                font-family: 'Broken Console';
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+            .dot {
+                height: 25px;
+                width: 25px;
+                background-color: rgba(0,0,0,0);
+                border-width: 2px solid var(--main-text-color);
+                border-radius: 50%;
+            }
+            .dot-f {
+                height: 25px;
+                width: 25px;
+                background-color: #bbb;
+                border-radius: 50%;
+            }
+        </style>
+    </head>
+    <body style="width:1920px; height:1080px; background-image: url('Mariocraft_Main1v1.png');">
+        <div id="timer" class="timer">
+            06:00
+        </div>
+        <div class="runner-box" style="position: absolute; left: 0px; top: 550px; width: 953px; height: 66px;">
+            <div id="runner-1-name" class="runner-name">
+                Dwhatever
+            </div>
+            <div class="coach-win">
+                Coach: 21mustard&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dot">a</span><span class="dot"></span>
+            </div>
+        </div>
+        <div class="runner-box" style="position: absolute; left: 967px; top: 550px; width: 953px; height: 66px;">
+            <div id="runner-2-name" class="runner-name">
+                GTM
+            </div>
+            <div class="coach-win">
+                Coach: Infume&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dot"></span><span class="dot"></span>
+            </div>
+        </div>
+        <div class="commentators">
+            <div id="comm-1" class="commentator-box">
+                Dannyboy
+            </div>
+            <div id="comm-2" class="commentator-box">
+                Poundcake
+            </div>
+        </div>
+    </body>
+</html>
