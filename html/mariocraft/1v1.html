@@ -27,14 +27,25 @@
                 text-transform: uppercase;
                 padding-left: 12px;
             }
-            .coach-win {
+            .coach{
                 font-family: 'Broken Console';
                 color: var(--main-text-color);
-                line-height: 74px;
+                font-size: 2.3em;
+                text-transform: uppercase;
+                text-align: center;
+                line-height: 80px;
+                padding-right: 12px;
+            }
+            .win-num {
+                font-family: 'Broken Console';
+                color: var(--main-text-color);
+                display: flex;
+                align-items: center;
                 font-size: 2.3em;
                 text-transform: uppercase;
                 text-align: center;
                 padding-right: 12px;
+                line-height: 10px;
             }
             .runner-box {
                 display: flex;
@@ -66,15 +77,18 @@
             .dot {
                 height: 25px;
                 width: 25px;
-                background-color: rgba(0,0,0,0);
-                border-width: 2px solid var(--main-text-color);
+                border-style: solid;
+                border-width: 4px;
+                border-color: var(--main-text-color);
                 border-radius: 50%;
+                display: inline-block;
             }
             .dot-f {
-                height: 25px;
-                width: 25px;
+                height: 31px;
+                width: 31px;
                 background-color: #bbb;
                 border-radius: 50%;
+                display: inline-block;
             }
         </style>
     </head>
@@ -86,16 +100,22 @@
             <div id="runner-1-name" class="runner-name">
                 Dwhatever
             </div>
-            <div class="coach-win">
-                Coach: 21mustard&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dot">a</span><span class="dot"></span>
+            <div class="coach">
+                Coach: 21mustard
+            </div>
+            <div class="win-num">
+                <span class="dot-f"></span>&nbsp;<span class="dot"></span>
             </div>
         </div>
         <div class="runner-box" style="position: absolute; left: 967px; top: 550px; width: 953px; height: 66px;">
             <div id="runner-2-name" class="runner-name">
                 GTM
             </div>
-            <div class="coach-win">
-                Coach: Infume&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dot"></span><span class="dot"></span>
+            <div class="coach">
+                Coach: Infume
+            </div>
+            <div class="win-num">
+                <span class="dot"></span>&nbsp;<span class="dot"></span>
             </div>
         </div>
         <div class="commentators">
