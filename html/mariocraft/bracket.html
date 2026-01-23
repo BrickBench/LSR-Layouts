@@ -4,7 +4,9 @@
         <style>
             :root {
                 --main-text-color: #CACACA;
-                --loser-color: #9A9A9A;
+                --loser-color: #8E8E8E;
+                --b-line-width: 4px;
+                --b-line-color: #18738a;
             }
             .round-box{
                 display: flex;
@@ -12,18 +14,20 @@
                 justify-content: space-evenly;
                 background-image: url('boxcropped.png');
                 background-size: cover;  
-                /*width: 936px;
-                height: 224px;*/
-                width: 316px;
-                height: 75px;
+                width: 318px;
+                height: 76px;
+                padding-left: 10px;
+                padding-right: 10px;
+                padding-top: 15px;
+                padding-bottom: 15px;
+                gap: 2px;
+                box-sizing: border-box;
             }
             .name-row{
                 display: flex;
                 flex-direction: row;
                 align-items: center;
                 justify-content: space-between;
-                padding-left: 4%;
-                padding-right: 4%;
                 color: var(--main-text-color);
             }
 
@@ -61,20 +65,20 @@
                 flex-direction: column;
                 justify-content: space-around;
                 position:absolute;
-                top: 60px;
-                left: 440px;
+                top: 90px;
+                left: 420px;
                 gap: 40px;
                 height: 540px;
             }
             .w-3{
                 position:absolute;
                 top: 330px;
-                left: 840px;
+                left: 990px;
             }
             .w-4{
                 position:absolute;
-                top: 520px;
-                left: 1540px;
+                top: 570px;
+                left: 1580px;
             }
             .l-1{
                 display: flex;
@@ -92,23 +96,57 @@
                 align-content: space-around;
                 position:absolute;
                 top: 800px;
-                left: 440px;
+                left: 420px;
                 gap: 40px;
                 height: 540px;
             }
             .l-3{
                 position:absolute;
-                top: 860px;
-                left: 840px;
+                top: 858px;
+                left: 800px;
             }
             .l-4{
                 position:absolute;
-                top: 690px;
-                left: 1220px;
+                top: 858px;
+                left: 1180px;
+            }
+            .round-header{
+                font-family: 'Stopbuck';
+                font-size: 2.40rem;
+                color: var(--main-text-color);
+                width: 317px;
+                text-align: center;
             }
         </style>
     </head>
     <body style="width:1920px; height:1080px; background-image: url('MarioCraftbracket_2.png');">
+
+        <div style="position:absolute; left: 40px; top: 35px;" class="round-header">
+            Round 1
+        </div>
+        <div style="position:absolute; left: 420px; top: 35px;" class="round-header">
+            Round 2
+        </div>
+        <div style="position:absolute; left: 990px; top: 205px;" class="round-header">
+            Round 3
+        </div>
+        <div style="position:absolute; left: 1580px; top: 475px;" class="round-header">
+            Finals
+        </div>
+
+        <div style="position:absolute; left: 40px; top: 725px;" class="round-header">
+            Loser's Round 1
+        </div>
+        <div style="position:absolute; left: 420px; top: 725px;" class="round-header">
+            Loser's Round 2
+        </div>
+        <div style="position:absolute; left: 800px; top: 725px;" class="round-header">
+            Loser's Round 3
+        </div>
+        <div style="position:absolute; left: 1180px; top: 725px;" class="round-header">
+            Loser's Finals
+        </div>
+
         <div class="w-1">
             <div class="round-box">
                 <div class="name-row">
@@ -119,7 +157,7 @@
                         1
                     </div>
                 </div>
-                <div class="name-row">
+                <div class="name-row loser">
                     <div class="name">
                         <small class="seed">8.</small> Treybordo
                     </div>
@@ -137,7 +175,7 @@
                         1
                     </div>
                 </div>
-                <div class="name-row">
+                <div class="name-row loser">
                     <div class="name">
                         <small class="seed">8.</small> Treybordo
                     </div>
@@ -261,7 +299,41 @@
                 </div>
             </div>
         </div>
-        
+
+        <div style="position: absolute; top: 141px; left: 357px; width: 30px; height: 143px;
+                    border-top: var(--b-line-width) solid var(--b-line-color); border-bottom: var(--b-line-width) solid var(--b-line-color); border-right: var(--b-line-width) solid var(--b-line-color);"></div>
+        <div style="position: absolute; top: 215px; left: 389px; width: 32px; height: 155px;
+                    border-top: var(--b-line-width) solid var(--b-line-color);"></div>
+
+        <div style="position: absolute; top: 430px; left: 357px; width: 30px; height: 143px;
+                    border-top: var(--b-line-width) solid var(--b-line-color); border-bottom: var(--b-line-width) solid var(--b-line-color); border-right: var(--b-line-width) solid var(--b-line-color);"></div>
+        <div style="position: absolute; top: 504px; left: 389px; width: 32px; height: 155px;
+                    border-top: var(--b-line-width) solid var(--b-line-color);"></div>
+
+        <div style="position: absolute; top: 215px; left: 737px; width: 130px; height: 285px;
+                    border-top: var(--b-line-width) solid var(--b-line-color); border-bottom: var(--b-line-width) solid var(--b-line-color); border-right: var(--b-line-width) solid var(--b-line-color);"></div>
+        <div style="position: absolute; top: 368px; left: 867px; width: 125px; height: 155px;
+                    border-top: var(--b-line-width) solid var(--b-line-color);"></div>
+
+        <div style="position: absolute; top: 368px; left: 1307px; width: 231px; height: 527px;
+                    border-top: var(--b-line-width) solid var(--b-line-color);  border-right: var(--b-line-width) solid var(--b-line-color);"></div>
+        <div style="position: absolute; top: 608px; left: 1538px; width: 44px; height: 155px;
+                    border-top: var(--b-line-width) solid var(--b-line-color);"></div>
+        <div style="position: absolute; top: 895px; left: 1494px; width: 44px; height: 155px;
+                    border-top: var(--b-line-width) solid var(--b-line-color);"></div>
+
+
+        <!-- Losers -->
+        <div style="position: absolute; top: 834px; left: 357px; width: 64px; height: 113px;
+                    border-top: var(--b-line-width) solid var(--b-line-color); border-bottom: var(--b-line-width) solid var(--b-line-color);"></div>
+        <div style="position: absolute; top: 834px; left: 737px; width: 28px; height: 113px;
+                    border-top: var(--b-line-width) solid var(--b-line-color); border-bottom: var(--b-line-width) solid var(--b-line-color);border-right: var(--b-line-width) solid var(--b-line-color);"></div>
+        <div style="position: absolute; top: 895px; left: 768px; width: 33px; height: 155px;
+                    border-top: var(--b-line-width) solid var(--b-line-color);"></div>
+
+        <div style="position: absolute; top: 895px; left: 1116px; width: 64px; height: 155px;
+                    border-top: var(--b-line-width) solid var(--b-line-color);"></div>
+
         <div class="l-1">
             <div class="round-box">
                 <div class="name-row">
