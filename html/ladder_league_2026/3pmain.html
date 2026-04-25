@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html style="background-color: transparent;">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../../css/ladder_league2026.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"/>
+
+        <style>
+            .runner-bar-name {
+                line-height: 66px;
+                font-size: 3.0em;
+            }
+            .runner-bar-seed {
+                line-height: 66px;
+                font-size: 2.17em;
+            }
+            .flag-scale {
+                font-size: 0.9em;
+            }
+        </style>
+    </head>
+    <body style="width:1920px; height:1080px; background-image: url('LL26_Main3Person_Clean_V4.png');">
+        <div class="timer-title-box" style="position: absolute; left: 999px; top: 571px; width: 774px; height: 115px;">
+            <div class="time-title-spacer"></div>
+            <div id="match-title" class="match-title-box">
+                <div>WEEK 4</div>
+                <div>RUNG 2</div>
+            </div>
+            <div id="timer" class="timer">2:43:23</div>
+        </div>
+
+        <!-- Commentators -->
+        <div class="commentary-box" style="position: absolute; left: 1027px; top: 691px; width: 250px; height: 54px;">
+            <span class="commentator-name">LaserTrap</span><span class="commentator-pronoun">They/Them</span>
+        </div> 
+
+        <div class="commentary-box" style="position: absolute; left: 1494px; top: 691px; width: 249px; height: 54px;">
+            <span class="commentator-name">CaptainPaxo</span>
+        </div> 
+        
+        <!-- Runner 1 -->
+        <div class="runner-bar" style="position:absolute; left: 115px; top: 467px; width: 838px; height: 66px;">
+            <div id="runner-1-name" class="runner-bar-name">
+                <span class="fi fi-fi flag-scale"></span>
+                <span>Dragon67</span>
+            </div>
+            <span id="runner-1-seed" class="runner-bar-seed">Seed 1</span>
+        </div>
+        <div class="runner-overlay" id="view-1-overlay" style="position:absolute; left: 115px; top: 0px; width:838px;height:467px;">
+            <span>2:23:03</span>
+        </div>
+
+        <!-- Runner 2 -->
+        <div class="runner-bar" style="position:absolute; left: 967px; top: 467px; width: 838px; height: 66px;">
+            <div id="runner-2-name" class="runner-bar-name">
+                <span class="fi fi-us flag-scale"></span>
+                <span>MelloVro</span>
+            </div>
+             <span id="runner-2-seed" class="runner-bar-seed">Seed 1</span>
+        </div>
+        <div class="runner-overlay" id="view-2-overlay" style="position:absolute; left: 967px; top: 0px; width:838px;height:467px;">
+            <span>2:23:03</span>
+        </div>
+
+        <!-- Runner 3 -->
+        <div class="runner-bar" style="position:absolute; left: 115px; top: 1014px; width: 838px; height: 66px;">
+            <div id="runner-3-name" class="runner-bar-name">
+                <span class="fi fi-it flag-scale"></span>
+                <span>Dragon67</span>
+            </div>
+            <span id="runner-3-seed" class="runner-bar-seed">Seed 1</span>
+        </div>
+
+        <div class="runner-overlay runner-overlay-show" id="view-3-overlay" style="position:absolute; left: 115px; top: 547px; width:838px;height:467px;">
+            <span>2:23:03</span>
+        </div>
+
+        <!-- Time Table -->
+        <div class="time-table-3p" style="position:absolute; left: 1027px; top: 805px; width: 717px; height: 223px;">
+            <div class="time-table-row">
+                <div class="time-table-3p-left"></div>
+                <div class="time-table-3p-header">Dragon67</div>
+                <div class="time-table-3p-header">GamerOlive</div>
+                <div class="time-table-3p-header">CaptainPaxo</div>
+            </div>
+            <div class="time-table-row">
+                <div class="time-table-3p-left">3-4</div>
+                <div class="time-table-3p-split ahead">11:32</div>
+                <div class="time-table-3p-split behind">12:23</div>
+                <div class="time-table-3p-split behind">12:12</div>
+            </div>
+            <div class="time-table-row">
+                <div class="time-table-3p-left">3-4</div>
+                <div class="time-table-3p-split ahead">11:32</div>
+                <div class="time-table-3p-split behind">12:23</div>
+                <div class="time-table-3p-split behind">12:12</div>
+            </div>
+            <div class="time-table-row">
+                <div class="time-table-3p-left">3-4</div>
+                <div class="time-table-3p-split ahead">1:11:32</div>
+                <div class="time-table-3p-split behind">1:12:23</div>
+                <div class="time-table-3p-split behind">1:12:12</div>
+            </div>
+            <div class="time-table-row">
+                <div class="time-table-3p-left">BPT</div>
+                <div class="time-table-3p-bpt">2:11:32</div>
+                <div class="time-table-3p-bpt">2:12:23</div>
+                <div class="time-table-3p-bpt">2:12:12</div>
+            </div>
+        </div>
+
+         <!-- Win Prob -->
+        <div class="win-prob-3p" style="display:none;position:absolute; left: 1027px; top: 805px; width: 717px; height: 223px;">
+            <div class="win-prob-title">
+                LIVE WIN PREDICTION
+            </div>
+            <div class="bars-container">
+                <div class="bar-container">
+                    <div class="bar-name">
+                        CaptainPaxo
+                    </div>
+                    <div class="win-prob-bar" style="--bar-color: var(--ladder-league-p1-color); width: 65%;"></div>
+                    <div class="bar-percentage">
+                        24%
+                    </div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-name">
+                        P53
+                    </div>
+                    <div class="win-prob-bar" style="--bar-color: var(--ladder-league-p2-color); width: 25%;"></div>
+                    <div class="bar-percentage">
+                        56%
+                    </div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-name">
+                        Dragon67
+                    </div>
+                    <div class="win-prob-bar" style="--bar-color: var(--ladder-league-p3-color); width: 45%;"></div>
+                    <div class="bar-percentage">
+                        20%
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="win-prob-2p" style="display:none;position:absolute; left: 1027px; top: 805px; width: 717px; height: 223px;">
+            <div class="win-prob-title">
+                HEAD-TO-HEAD MATCHUP
+            </div>
+            <div class="bars-container">
+                <div class="bar-container">
+                    <div class="bar-name">
+                        CaptainPaxo
+                    </div>
+                    <div class="win-prob-bar" style="--bar-color: var(--ladder-league-p1-color); width: 65%;"></div>
+                    <div class="bar-percentage">
+                        24%
+                    </div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-name">
+                        P53
+                    </div>
+                    <div class="win-prob-bar" style="--bar-color: var(--ladder-league-p2-color); width: 25%;"></div>
+                    <div class="bar-percentage">
+                        56%
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="win-prob-graph" style="display:none; position:absolute; left: 1027px; top: 805px; width: 717px; height: 223px;">
+            <div class="labels-super-container">
+                <div class="win-prob-graph-labels">
+                    <span class="graph-label" style="color: var(--ladder-league-p1-color);">CaptainPaxo</span>
+                    <span class="graph-label" style="color: var(--ladder-league-p2-color)">GamerOlive</span>
+                    <span class="graph-label" style="color: var(--ladder-league-p3-color)">Cap</span>
+                </div>
+            </div>
+            <div>
+
+            </div>
+            <div id="graph-container" class="win-prob-graph-canvas">
+                <canvas id="winProbChart"></canvas>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+        <script>
+            const xValues = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+
+            var canvasNode = document.getElementById('winProbChart');
+            var div = document.getElementById('graph-container');
+            canvasNode.width = div.clientWidth;
+            canvasNode.height = div.clientHeight;
+
+            function shouldShowAxes(index){
+                return index % 6 == 0;
+            }
+            
+            const EpisodeTitles = ["Ep. I   ","Ep. II","Ep. IV","Ep. VI","Ep. III","Ep. V"];
+
+            const LadderLeagueWhite = "#cacacb";
+
+            const extendLinesPlugin = {
+                id: 'extendGridLines',
+                afterDraw: (chart) => {
+                    const { ctx, scales: { x, y } } = chart;
+                    ctx.save();
+                    ctx.strokeStyle = '#cacacb55';
+                    ctx.lineWidth = 3;
+
+                    x.ticks.forEach((tick, index) => {
+                        if(tick && shouldShowAxes(tick.value)){
+                            const xPos = x.getPixelForTick(index);
+                            ctx.beginPath();
+                            ctx.moveTo(xPos, y.top-2);
+                            ctx.lineTo(xPos, y.bottom + 27);
+                            ctx.stroke();
+                        }
+                    });
+                    ctx.restore();
+                }
+            };
+
+            new Chart("winProbChart", {
+                type: "line",
+                data: {
+                    labels: xValues,
+                    datasets: [{ 
+                    data: [58,48,65,91,69,72,22,24,38,50,49,18,26,92,100,100],
+                    borderColor: "#6cc46c",
+                    fill: false,
+                    pointRadius: 0,
+                    pointHoverRadius: 0  
+                    }, { 
+                    data: [0,10,20,30,40,50,50,60,70,80,70,60,90,80,50,50],
+                    borderColor: "#00a2ff",
+                    fill: false,
+                    pointRadius: 0,
+                    pointHoverRadius: 0  
+                    }, { 
+                    data: [50,80,90,60,70,80,70,70,50,50,40,30,20,10,0,19],
+                    borderColor: "#ffbc09",
+                    fill: false,
+                    pointRadius: 0,
+                    pointHoverRadius: 0,
+                    clip: false  
+                    }]
+                },
+                plugins: [ChartDataLabels, extendLinesPlugin],
+                options: {
+                    scales: {
+                        x: {
+                            grid: {
+                                color: function(context) {
+                                    return 'transparent';
+                                },
+                                lineWidth: function(context) {
+                                    return 0;
+                                },
+                                drawTicks: false,
+                                drawOnChartArea: true, 
+                            },
+                            ticks: {
+                                callback: function(value, index, ticks) {
+                                    return shouldShowAxes(index) ? EpisodeTitles[Math.trunc(index / 6)] : "";
+                                },
+                                font: {
+                                    family: 'Rubik',
+                                    size: 16,
+                                    weight: 'bold'
+                                },
+                                color: '#cacacb55',
+                                minRotation: 0,
+                                maxRotation: 0,
+                                labelOffset: 30,
+                                padding: 10
+                            },
+                            border: {
+                                display: false
+                            },
+                        },
+                        y: {
+                            display: false 
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            top: 20,
+                            right: 75
+                        }
+                    },
+                    plugins: {
+                        legend: {display: false},
+                        datalabels: {
+                            display: function(context) {
+                                return context.dataIndex === context.dataset.data.length - 1;
+                            },
+                            align: 'right',
+                            anchor: 'end',
+                            offset: 10, 
+                            formatter: (value) => {return (String(value) + "%") || value;},
+                            color: function(context) {
+                                return context.dataset.borderColor;
+                            },
+                            font: {
+                                weight: 'bold',
+                                size: 22,
+                                family: 'Rubik'
+                            }
+                        },
+                    }
+                }
+            });
+        </script>
+
+    </body>
+</html>
