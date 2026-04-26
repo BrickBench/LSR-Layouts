@@ -120,6 +120,16 @@ export function getEventById(stateData, eventId) {
     return null;
 }
 
+export function getEventByName(stateData, eventName) {
+    for (const event of stateData.events) {
+        if (event.name == eventName) {
+            return event;
+        }
+    }
+
+    return null;
+}
+
 export function getStreamById(stateData, eventId) {
     for (const stream of stateData.streams) {
         if (stream.event == eventId) {
