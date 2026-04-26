@@ -24,7 +24,7 @@
     <body style="width:1920px; height:1080px; background-image: url('LL26_Main3Person_Clean_V4.png');">
         <div class="timer-title-box" style="position: absolute; left: 999px; top: 571px; width: 774px; height: 115px;">
             <div class="time-title-spacer"></div>
-            <div id="match-title" class="match-title-box">
+            <div id="match-title-split" class="match-title-box">
                 <div>WEEK 4</div>
                 <div>RUNG 2</div>
             </div>
@@ -32,17 +32,17 @@
         </div>
 
         <!-- Commentators -->
-        <div class="commentary-box" style="position: absolute; left: 1027px; top: 691px; width: 250px; height: 54px;">
+        <div class="commentary-box" id="commentator-box-1" style="position: absolute; left: 1027px; top: 691px; width: 250px; height: 54px;">
             <span class="commentator-name">LaserTrap</span><span class="commentator-pronoun">They/Them</span>
         </div> 
 
-        <div class="commentary-box" style="position: absolute; left: 1494px; top: 691px; width: 249px; height: 54px;">
+        <div class="commentary-box" id="commentator-box-2" style="position: absolute; left: 1494px; top: 691px; width: 249px; height: 54px;">
             <span class="commentator-name">CaptainPaxo</span>
         </div> 
         
         <!-- Runner 1 -->
         <div class="runner-bar" style="position:absolute; left: 115px; top: 467px; width: 838px; height: 66px;">
-            <div id="runner-1-name" class="runner-bar-name">
+            <div id="runner-1-name-flag" class="runner-bar-name">
                 <span class="fi fi-fi flag-scale"></span>
                 <span>Dragon67</span>
             </div>
@@ -54,7 +54,7 @@
 
         <!-- Runner 2 -->
         <div class="runner-bar" style="position:absolute; left: 967px; top: 467px; width: 838px; height: 66px;">
-            <div id="runner-2-name" class="runner-bar-name">
+            <div id="runner-2-name-flag" class="runner-bar-name">
                 <span class="fi fi-us flag-scale"></span>
                 <span>MelloVro</span>
             </div>
@@ -66,7 +66,7 @@
 
         <!-- Runner 3 -->
         <div class="runner-bar" style="position:absolute; left: 115px; top: 1014px; width: 838px; height: 66px;">
-            <div id="runner-3-name" class="runner-bar-name">
+            <div id="runner-3-name-flag" class="runner-bar-name">
                 <span class="fi fi-it flag-scale"></span>
                 <span>Dragon67</span>
             </div>
@@ -78,7 +78,7 @@
         </div>
 
         <!-- Time Table -->
-        <div class="time-table-3p" style="position:absolute; left: 1027px; top: 805px; width: 717px; height: 223px;">
+        <div id="time-table" class="time-table-3p" style="position:absolute; left: 1027px; top: 805px; width: 717px; height: 223px;">
             <div class="time-table-row">
                 <div class="time-table-3p-left"></div>
                 <div class="time-table-3p-header">Dragon67</div>
@@ -86,33 +86,33 @@
                 <div class="time-table-3p-header">CaptainPaxo</div>
             </div>
             <div class="time-table-row">
-                <div class="time-table-3p-left">3-4</div>
-                <div class="time-table-3p-split ahead">11:32</div>
-                <div class="time-table-3p-split behind">12:23</div>
-                <div class="time-table-3p-split behind">12:12</div>
+                <div id="label-split-0" class="time-table-3p-left">3-4</div>
+                <div id="runner-0-split-0" class="time-table-3p-split ahead">11:32</div>
+                <div id="runner-1-split-0" class="time-table-3p-split behind">12:23</div>
+                <div id="runner-2-split-0" class="time-table-3p-split behind">12:12</div>
             </div>
             <div class="time-table-row">
-                <div class="time-table-3p-left">3-4</div>
-                <div class="time-table-3p-split ahead">11:32</div>
-                <div class="time-table-3p-split behind">12:23</div>
-                <div class="time-table-3p-split behind">12:12</div>
+                <div id="label-split-1" class="time-table-3p-left">3-4</div>
+                <div id="runner-0-split-1" class="time-table-3p-split ahead">11:32</div>
+                <div id="runner-1-split-1" class="time-table-3p-split behind">12:23</div>
+                <div id="runner-2-split-1" class="time-table-3p-split behind">12:12</div>
             </div>
             <div class="time-table-row">
-                <div class="time-table-3p-left">3-4</div>
-                <div class="time-table-3p-split ahead">1:11:32</div>
-                <div class="time-table-3p-split behind">1:12:23</div>
-                <div class="time-table-3p-split behind">1:12:12</div>
+                <div id="label-split-2" class="time-table-3p-left">3-4</div>
+                <div id="runner-0-split-2" class="time-table-3p-split ahead">1:11:32</div>
+                <div id="runner-1-split-2" class="time-table-3p-split behind">1:12:23</div>
+                <div id="runner-2-split-2" class="time-table-3p-split behind">1:12:12</div>
             </div>
             <div class="time-table-row">
                 <div class="time-table-3p-left">BPT</div>
-                <div class="time-table-3p-bpt">2:11:32</div>
-                <div class="time-table-3p-bpt">2:12:23</div>
-                <div class="time-table-3p-bpt">2:12:12</div>
+                <div id="runner-bpt-0" class="time-table-3p-bpt">2:11:32</div>
+                <div id="runner-bpt-1" class="time-table-3p-bpt">2:12:23</div>
+                <div id="runner-bpt-2" class="time-table-3p-bpt">2:12:12</div>
             </div>
         </div>
 
          <!-- Win Prob -->
-        <div class="win-prob-3p" style="display:none;position:absolute; left: 1027px; top: 805px; width: 717px; height: 223px;">
+        <div id="win-prob-3p" class="win-prob-3p" style="display:none;position:absolute; left: 1027px; top: 805px; width: 717px; height: 223px;">
             <div class="win-prob-title">
                 LIVE WIN PREDICTION
             </div>
@@ -147,7 +147,7 @@
             </div>
         </div>
 
-        <div class="win-prob-2p" style="display:none;position:absolute; left: 1027px; top: 805px; width: 717px; height: 223px;">
+        <div id="win-prob-2p" class="win-prob-2p" style="display:none;position:absolute; left: 1027px; top: 805px; width: 717px; height: 223px;">
             <div class="win-prob-title">
                 HEAD-TO-HEAD MATCHUP
             </div>
@@ -173,7 +173,7 @@
             </div>
         </div>
 
-        <div class="win-prob-graph" style="display:none; position:absolute; left: 1027px; top: 805px; width: 717px; height: 223px;">
+        <div id="win-prob-graph" class="win-prob-graph" style="display:none; position:absolute; left: 1027px; top: 805px; width: 717px; height: 223px;">
             <div class="labels-super-container">
                 <div class="win-prob-graph-labels">
                     <span class="graph-label" style="color: var(--ladder-league-p1-color);">CaptainPaxo</span>
@@ -322,4 +322,5 @@
         </script>
 
     </body>
+    <script type="module" src="/js/ladder_league_2026.js"></script>
 </html>
