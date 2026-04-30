@@ -8,18 +8,18 @@ import {
 } from "./automarathon.js";
 
 const this_host = "main";
-const live_row_count = 4;
+const live_row_count = 3;
 
 var user_meta = new Map();
 user_meta.set("Zac", { seed: 1, pb: "2:18:35" })
 user_meta.set("Evan", { seed: 2, pb: "2:19:23" })
 user_meta.set("Dragon76", { seed: 3, pb: "2:20:34" })
-user_meta.set("Scynor", { seed: 4, pb: "2:22:33" })
-user_meta.set("Eroadhouse", { seed: 5, pb: "2:23:23" })
+user_meta.set("Scynor", { seed: 3, pb: "2:22:33" })
+user_meta.set("Eroadhouse", { seed: 1, pb: "2:23:23" })
 user_meta.set("Anorak", { seed: 6, pb: "2:24:22" })
 user_meta.set("Dragon", { seed: 7, pb: "2:23:14" })
 user_meta.set("FlamingLazer", { seed: 8, pb: "2:24:29" })
-user_meta.set("Dimei", { seed: 9, pb: "2:26:58" })
+user_meta.set("BrickoFett", { seed: 2, pb: "2:26:58" })
 user_meta.set("Flup", { seed: 10, pb: "2:27:20" })
 user_meta.set("Coolisen", { seed: 11, pb: "2:29:01" })
 user_meta.set("Revvylo", { seed: 12, pb: "2:29:52" })
@@ -101,9 +101,12 @@ function determineSplitInfo(splits, event) {
                 if (i < split_data.splits.length) {
                     if (split_data.splits[i].splitTime != null) {
                         var new_time = split_data.splits[i].splitTime;
-                        if (i > 1 && times[i - 1] != null && new_time - times[i - 1] > LEGIT_SPLIT_THRESHOLD) {
-                            times[i] = split_data.splits[i].splitTime;
-                        }
+                        times[i] = new_time;
+                        //if (i > 1 && times[i - 1] != null && new_time - times[i - 1] > LEGIT_SPLIT_THRESHOLD) {
+                        //    times[i] = new_time;
+                        //} else if (i == 0) {
+                        //    times[i] = new_time;
+                        //}
                     }
                 }
             }
@@ -115,6 +118,8 @@ function determineSplitInfo(splits, event) {
             split_times[runner] = times;
         }
     }
+
+    console.log("Split times", split_times);
 
     var runner_splits_deltas = {};
     for (var i = 0; i < 36; i++) {
@@ -173,12 +178,12 @@ function displayLiveDeltas(data, event, splits, run_info) {
     var first_split_to_show = Math.max(0, (last_split - live_row_count) + 1);
 
     var runners = getRunnersBySeed(data, event);
-    for (var column = 0; column < 2; column++) {
+    for (var column = 0; column < 3; column++) {
         if (column >= runners.length) {
             break;
         }
 
-        document.getElementById("table-runner-" + column).innerHTML = data.people[runners[column]].name.toUpperCase();
+        document.getElementById("table-runner-" + column).innerHTML = data.people[runners[column]].name;
         var run = run_info[runners[column]];
         if (run != null && last_real_bpt[runners[column]] != null) {
             document.getElementById("runner-bpt-" + column).innerHTML = toStringTime(last_real_bpt[runners[column]], false, true, false);
@@ -215,10 +220,10 @@ function displayLiveDeltas(data, event, splits, run_info) {
                 var time_element = document.getElementById("runner-" + runner_idx + "-split-" + row_index);
                 if (runner_split == null || runner_split.time == null) {
                     time_element.innerHTML = "--";
-                    time_element.className = "data-row-split";
+                    time_element.className = "time-table-3p-split";
                 } else {
                     time_element.innerHTML = toStringTime(runner_split.time, false, true, false)
-                    let setstyle = "data-row-split";
+                    let setstyle = "time-table-3p-split";
                     if (runner_split.time <= bestTime) {
                         setstyle += " ahead";
                     } else {
@@ -229,7 +234,7 @@ function displayLiveDeltas(data, event, splits, run_info) {
             }
 
         } else {
-            for (var runner = 0; runner < 2; runner++) {
+            for (var runner = 0; runner < 3; runner++) {
                 document.getElementById("runner-" + runner + "-split-" + row_index).innerHTML = "--";
             }
         }
@@ -386,6 +391,10 @@ function animateBar(bar_idx, name, new_value, old_value, largest) {
     const MAX_BAR_SIZE = 350;
     const ANIMATE = true;
 
+    if (1 == 1) {
+return;
+}
+
     document.getElementById("bar-name-" + bar_idx).innerHTML = name.toUpperCase();
     let percent_display = document.getElementById("bar-percent-" + bar_idx);
     let start_value = -1;
@@ -462,7 +471,7 @@ function displayLiveProbabilities(state, event, win_probabilities) {
         return;
     }
 
-    if (document.getElementById("data-table") == null) {
+    if (document.getElementById("time-table") == null) {
         return;
     }
 
@@ -886,7 +895,7 @@ connectToSocket('/ws', function(data) {
         if (table_setting != last_table_setting) {
             if (table_setting == "prob") {
                 timeTable.style.display = "none";
-                winProb3P.style.display = "block";
+                winProb3P.style.display = "flex";
                 winProb2P.style.display = "none";
                 winProbGraph.style.display = "none";
 
@@ -895,7 +904,7 @@ connectToSocket('/ws', function(data) {
             } else if (table_setting.startsWith("h2h")) {
                 timeTable.style.display = "none";
                 winProb3P.style.display = "none";
-                winProb2P.style.display = "block";
+                winProb2P.style.display = "flex";
                 winProbGraph.style.display = "none";
 
                 // clear last probability to trigger bar to extend
@@ -904,12 +913,12 @@ connectToSocket('/ws', function(data) {
                 timeTable.style.display = "none";
                 winProb3P.style.display = "none";
                 winProb2P.style.display = "none";
-                winProbGraph.style.display = "block";
+                winProbGraph.style.display = "flex";
 
                 // clear last probability to trigger bar to extend
                 last_win_probabilities = null;
             } else {
-                timeTable.style.display = "block";
+                timeTable.style.display = "flex";
                 winProb3P.style.display = "none";
                 winProb2P.style.display = "none";
                 winProbGraph.style.display = "none";
@@ -967,7 +976,7 @@ connectToSocket('/ws/runs', function(data) {
 
     var event = getEventById(state, event_id);
 
-    if (document.getElementById("data-table") != null) {
+    if (document.getElementById("time-table") != null) {
         // has live data
         const splitData = determineSplitInfo(data.active_runs, event);
         displayLiveDeltas(state, event, splitData, data.active_runs);
