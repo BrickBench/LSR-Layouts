@@ -2,7 +2,7 @@
   --ladder-league-white: #cacacb;
   --ladder-league-shadow: #131524;
   --ladder-league-green: #6cc46c;
-  --ladder-league-red: #dd6c6c;
+  --ladder-league-red: #e46a6a;
   --ladder-league-split-green: #95d895;
   --ladder-league-split-red: #e67b7b;
   --ladder-league-p1-color: #6cc46c;
@@ -22,6 +22,10 @@
     padding-right: 25px;
     font-weight: bold;
     text-shadow: 2px 2px 5px var(--ladder-league-shadow);
+}
+
+.runner-name{
+    transition: color 300ms ease-in;
 }
 
 .runner-bar-seed {
@@ -324,9 +328,7 @@
 
 .runner-overlay{
     text-align: center;
-    font-weight: bold;
-    font-size: 67px;
-    text-shadow: 0 0 7px rgb(30, 30, 30); 
+    text-shadow: 2px 2px 7px rgb(30, 30, 30); 
     color: var(--ladder-league-bright-white);
     display: flex;
     flex-direction: column;
@@ -335,7 +337,33 @@
     visibility: hidden;
     opacity: 0;
     font-family: 'Rubik';
+    box-sizing: border-box;
+    padding-top: 30px;
     transition: opacity 300ms ease-in, visibility 0ms ease-in 300ms;
+}
+
+.runner-overlay-time{
+    font-weight: bold;
+    font-size: 90px;
+}
+
+.runner-overlay-placement{
+    font-style: italic;
+    font-size: 50px;
+    opacity: 0;
+    transition: opacity 300ms ease-in, visibility 0ms ease-in 300ms;
+}
+
+.runner-overlay-placement.show{
+    opacity: 1;
+}
+
+.ll-green{
+    color: var(--ladder-league-split-green);
+}
+
+.ll-red{
+    color: var(--ladder-league-split-red);
 }
 
 .runner-overlay-show {
