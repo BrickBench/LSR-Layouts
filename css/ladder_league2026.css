@@ -62,7 +62,7 @@
 .lcq-winners-bar {
     font-family: 'Rubik';
     color: var(--ladder-league-white);
-    font-size: 1.7em;
+    font-size: 1.6em;
     font-weight: bold;
     display: flex;
     flex-direction: row;
@@ -74,7 +74,7 @@
 .lcq-runner-up-bar {
     font-family: 'Rubik';
     color: var(--ladder-league-white);
-    font-size: 1.7em;
+    font-size: 1.6em;
     font-weight: bold;
     display:flex;
     flex-direction: row;
@@ -116,7 +116,7 @@
 }
 
 .lcq-runner-name {
-    
+    text-transform: uppercase;
 }
 
 .lcq-runner-name.moveUp{
@@ -125,6 +125,10 @@
 
 .lcq-runner-name.moveDown{
     animation: moveUp 1s reverse;
+}
+
+.lcq-runner-delta {
+    font-variant-numeric: tabular-nums; 
 }
 
 .timer-title-box{

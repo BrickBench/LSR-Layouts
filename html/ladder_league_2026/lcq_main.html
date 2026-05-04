@@ -10,11 +10,13 @@
         <style>
             .runner-bar-name {
                 line-height: 75px;
-                font-size: 3.5em;
+                font-size: 3.3em;
+                text-transform: uppercase;
             }
             .runner-bar-name-small {
                 line-height: 37px;
-                font-size: 1.5em;
+                font-size: 1.4em;
+                text-transform: uppercase;
             }
             .flag-scale {
                 font-size: 0.9em;
@@ -23,9 +25,20 @@
                 font-size: 0.9em;
             }
         </style>
+
+        <script>
+            window.addEventListener('obsSourceActiveChanged', function(event) {
+                var matchBox = document.getElementById("fade-box");
+                matchBox.classList.remove('hide');
+
+                void matchBox.offsetWidth; 
+                    
+                matchBox.classList.add('hide');
+            })
+        </script>
     </head>
     <body style="width:1920px; height:1080px; background-image: url('LL26_LCQ_Clean_V5_ 3Comms.png');">
-
+        <div id="fade-box" class="fade-hider hide" style="background-image: url('LL26_MatchResults_Background.png');"></div>
         <div class="timer-title-box" style="position: absolute; left: 1049px; top: 682px; width: 774px; height: 115px;">
             <div class="time-title-spacer"></div>
             <div id="match-title" class="match-title-box">
@@ -90,7 +103,7 @@
                     <span class="lcq-footer-box-position">2: </span>
                     <span class="lcq-runner-name">GamerOlive</span>
                 </div>
-                <div>+23</div>
+                <div class="lcq-runner-delta">+23</div>
             </div>
             <div class="lcq-footer-box">
                 <div class="lcq-footer-box-top">
@@ -98,7 +111,7 @@
                     <span class="lcq-footer-box-position">3: </span>
                     <span class="lcq-runner-name moveUp">CaptainPaxo</span>
                 </div>
-                <div>+45</div>
+                <div class="lcq-runner-delta">+45</div>
             </div>
         </div>
 
@@ -109,28 +122,28 @@
                     <span class="lcq-footer-box-position">4: </span>
                     <span class="lcq-runner-name moveDown">Coolisen</span>
                 </div>
-                <div>+21</div>
+                <div class="lcq-runner-delta">+21</div>
             </div>
             <div class="lcq-footer-box">
                 <div class="lcq-footer-box-top">
                     <span class="lcq-footer-box-position">5: </span>
                     <span class="lcq-runner-name">GamerOlive</span>
                 </div>
-                <div>+23</div>
+                <div class="lcq-runner-delta">+23</div>
             </div>
             <div class="lcq-footer-box">
                 <div class="lcq-footer-box-top">
                     <span class="lcq-footer-box-position">6: </span>
                     <span class="lcq-runner-name">CaptainPaxo</span>
                 </div>
-                <div>+45</div>
+                <div class="lcq-runner-delta">+45</div>
             </div>
             <div class="lcq-footer-box">
                 <div class="lcq-footer-box-top">
                     <span class="lcq-footer-box-position">7: </span>
                     <span class="lcq-runner-name">CaptainPaxo</span>
                 </div>
-                <div>+1:05</div>
+                <div class="lcq-runner-delta">+1:05</div>
             </div>
         </div>
     </body>
