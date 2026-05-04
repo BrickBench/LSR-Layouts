@@ -21,8 +21,20 @@
                 font-size: 0.9em;
             }
         </style>
+
+        <script>
+            window.addEventListener('obsSourceActiveChanged', function(event) {
+                var matchBox = document.getElementById("fade-box");
+                matchBox.classList.remove('hide');
+
+                void matchBox.offsetWidth; 
+                    
+                matchBox.classList.add('hide');
+            })
+        </script>
     </head>
     <body style="width:1920px; height:1080px; background-image: url('LL26_Main3Person_Clean_V4.png');">
+        <div id="fade-box" class="fade-hider hide" style="background-image: url('LL26_MatchResults_Background.png');"></div>
         <div class="timer-title-box" style="position: absolute; left: 999px; top: 571px; width: 774px; height: 115px;">
             <div class="time-title-spacer"></div>
             <div id="match-title-split" class="match-title-box">
