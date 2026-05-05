@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html style="background-color: transparent;">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../../css/ladder_league2026.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"/>
+        <link href="https://fonts.cdnfonts.com/css/aurebesh" rel="stylesheet">
+        <style>
+            :root{
+                --transition-offset: 8s;
+            }
+            .video-background {
+                position:absolute;
+                top: 0px;
+                left: 0px;
+                width: 1920px;
+                height: 1080px;
+                transform: translate3d(0, 0, 0);
+                filter: blur(0px) brightness(95%);
+                will-change: filter;
+                z-index: -2;
+            }
+
+            @keyframes videoBlur {
+                0% {
+                    filter: blur(0px) brightness(95%);
+                    transform: scale(1.); 
+                }
+                100% {
+                    filter: blur(5px) brightness(85%);
+                    transform: scale(1.01); 
+                }
+            }
+
+            .video-background.stage1 {
+               animation: videoBlur 1.25s ease-in 6s forwards;
+            }
+
+            .intro-timer {
+                opacity: 1;
+                transition: opacity 1s ease-out 4s;
+            }
+
+            .intro-timer.stage1 {
+                opacity: 0;
+            }
+
+            .timer-bug{
+                font-family: 'Rubik';
+                color: var(--ladder-league-white);
+                text-align: center;
+                font-weight: bold;
+                display: flex;
+                flex-direction: row;
+                text-transform: uppercase;
+            }
+
+            .timer-bug-timer{
+                color: var(--ladder-league-white);
+                background-color: var(--ladder-league-dark-blue);
+                font-size: 60px;
+                font-variant-numeric: tabular-nums; 
+                border-bottom-right-radius: 15px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+                padding: 2px;
+                padding-left: 15px;
+                padding-right: 15px;
+                box-shadow: 6px 4px 10px rgb(10,10,10);
+            }
+
+            .match-title-display{
+                display: flex;
+                flex-direction: column;
+                background-color: var(--ladder-league-white);
+                color: var(--ladder-league-dark-blue);
+                border-top-left-radius: 15px;
+                line-height: 1;
+                font-size: 30px;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+                padding: 2px;
+                padding-left: 15px;
+                padding-right: 15px;
+                box-shadow: 8px 5px 10px rgb(10,10,10);
+            }
+
+            .pre-match-info-box {
+                font-family: 'Rubik';
+                color: var(--ladder-league-white);
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                gap: 30px;
+                background-color: rgb(19, 39, 96);
+                border-radius: 15px;
+                box-sizing: border-box;
+                padding: 35px;
+                opacity: 0; 
+            }
+
+            @keyframes moveUpInfo {
+                0% {
+                    transform: translateY(200px);
+                    opacity: 0; 
+                }
+                100% {
+                    transform: translateY(0); 
+                    opacity: 1;
+                }
+                }
+
+            .pre-match-info-box.stage1 {
+                animation: moveUpInfo 0.8s ease-in 8s forwards;
+            }
+
+            .player-col {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 60px;
+                font-size: 50px;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body style="width:1920px; height:1080px; border: solid 1px black;"">
+        <video id="video-background" class="video-background" muted loop playsinline src="./BROLL_VERSION_3.mp4"></video>
+        
+        <div id="match-box" class="ladder-opening-header" style="position: absolute; width: 1920px; height: 258px; top: 0px; left: 0px">
+            <div class="ladder-opening-header-name">
+                Week 1 Rung 1
+            </div>
+            <div class="ladder-opening-header-caption">
+                Player Stats
+            </div>
+        </div>
+
+        <!-- Timer -->
+        <div id="timer" style="position: absolute; top: 53px; left: 51px; display: flex; flex-direction: column; gap: 6px;" class="intro-timer">
+            <div class="timer-bug">
+                <div class="match-title-display">
+                    <div>
+                        Week 2
+                    </div>
+                    <div>
+                        Rung 1
+                    </div>
+                </div>
+                <div class="timer-bug-timer">
+                    <span>2:32</span>
+                </div>
+            </div>
+            <img src="LL_DropShadow.png" style="width: 270px;">
+        </div>
+
+        <!-- Pre Match Info-->
+        <div id ="runner-1-box" class="ladder-opening-left-box" style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px;  background-image: url('LL26_PlayerStats_LeftBox.png');">
+            <div class="ladder-opening-column" style="position: absolute; top: 250px; left: 157px; width: 468px; height: 639px;">
+                <img class="ladder-opening-runner-icon" src="BF.png"/>
+                <div class="ladder-opening-runner-name">Eroadhouse</div>
+                <div class="ladder-opening-runner-seed">Seed 1</div>
+                <div class="ladder-opening-event-time-label">
+                    EVENT BEST
+                </div>
+                <div class="ladder-opening-event-time">
+                    2:18:41
+                </div>
+            </div>
+        </div>
+
+        <div id ="runner-2-box" class="ladder-opening-center-box" style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px;  background-image: url('LL26_PlayerStats_MiddleBox.png');">
+            <div class="ladder-opening-column" style="position: absolute; top: 250px; left: 728px; width: 468px; height: 639px;">
+                <img class="ladder-opening-runner-icon" src="BF.png"/>
+                <div class="ladder-opening-runner-name">Eroadhouse</div>
+                <div class="ladder-opening-runner-seed">Seed 2</div>
+                <div class="ladder-opening-event-time-label">
+                    EVENT BEST
+                </div>
+                <div class="ladder-opening-event-time">
+                    2:18:41
+                </div>
+            </div>
+        </div>
+
+        <div id ="runner-3-box" class="ladder-opening-right-box" style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px;  background-image: url('LL26_PlayerStats_RightBox.png');">
+            <div class="ladder-opening-column" style="position: absolute; top: 250px; left: 1298px; width: 468px; height: 639px;">
+                <img class="ladder-opening-runner-icon" src="BF.png"/>
+                <div class="ladder-opening-runner-name">Eroadhouse</div>
+                <div class="ladder-opening-runner-seed">Seed 3</div>
+                <div class="ladder-opening-event-time-label">
+                    EVENT BEST
+                </div>
+                <div class="ladder-opening-event-time">
+                    2:18:41
+                </div>
+            </div>
+        </div>
+
+        <div id="comms-box" class="ladder-opening-commentators" style="position:absolute; left: 0px; top: 891px; width: 1920px; height: 189px;">
+            <div>Jared</div>
+            <img class="ladder-comms-mic" src="Mic_5.png"/>
+            <div>Zac</div>
+        </div>
+    </body>
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        audioCtx.resume();
+        async function loadBuffer(url) {
+            const response = await fetch(url);
+            const arrayBuffer = await response.arrayBuffer();
+            return await audioCtx.decodeAudioData(arrayBuffer);
+        }
+
+        var audio1;
+        var audio2;
+
+        async function loadAndStart(){
+            const [buffer1, buffer2] = await Promise.all([
+                loadBuffer("./idle.mp3"),
+                loadBuffer("./active.mp3")
+            ]);
+
+            const source1 = audioCtx.createBufferSource();
+            const gainNode1 = audioCtx.createGain();
+            source1.buffer = buffer1;
+            source1.connect(gainNode1).connect(audioCtx.destination);
+            audio1 = {"gainNode": gainNode1, "source":source1};
+
+             const source2 = audioCtx.createBufferSource();
+            const gainNode2 = audioCtx.createGain();
+            source2.buffer = buffer2;
+            source2.connect(gainNode2).connect(audioCtx.destination);
+            audio2 = {"gainNode": gainNode2, "source":source2};
+
+            const startTime = audioCtx.currentTime;
+  
+            source1.start(startTime);
+            gainNode1.gain.setValueAtTime(1, startTime);
+             var video = document.getElementById("video-background");
+             await new Promise(r => setTimeout(r, 3000));
+             video.play();
+
+             //ugly hack to sync video and sync roughly
+        }
+
+        const FADE_TIME = 5.0; 
+
+        async function crossfade(existingTrack, newBuffer) {
+            const now = audioCtx.currentTime;
+            const newTrack = newBuffer;
+
+            existingTrack.gainNode.gain.setValueAtTime(existingTrack.gainNode.gain.value, now);
+            existingTrack.gainNode.gain.exponentialRampToValueAtTime(0.001, now + FADE_TIME*0.8);
+            existingTrack.source.stop(now + FADE_TIME);
+
+            newTrack.gainNode.gain.setValueAtTime(0.05, now);
+            newTrack.source.start(now);
+            newTrack.gainNode.gain.exponentialRampToValueAtTime(0.08, now + FADE_TIME);
+
+            return newTrack;
+        }
+
+        var numClicks = 0;
+        var video = document.getElementById("video-background");
+        document.body.onclick =  function(){
+                if(numClicks == 0){
+                    loadAndStart();
+                    numClicks+=1;
+                }else if(numClicks==1){
+                    crossfade(audio1,audio2);
+                    var infoBox = document.getElementById("comms-box");
+                    var video = document.getElementById("video-background");
+                    var timer = document.getElementById("timer");
+                    var mbox = document.getElementById("match-box");
+                    var e1 = document.getElementById("runner-1-box");
+                    var e2 = document.getElementById("runner-2-box");
+                    var e3 = document.getElementById("runner-3-box");
+
+                    video.classList.add('stage1');
+                    timer.classList.add('stage1');
+                    infoBox.classList.add('moveUp');
+                    mbox.classList.add('moveUp');
+                    e1.classList.add('moveUp');
+                    e2.classList.add('moveUp');
+                    e3.classList.add('moveUp');
+                }    
+            };
+    </script>
+</html>

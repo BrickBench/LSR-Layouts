@@ -12,6 +12,7 @@
   --ladder-league-grey: #A8A8A8;
   --ladder-league-blue: #1562D1;
   --ladder-league-gold: #FFC80B;
+  --ladder-league-dark-blue: #1B243C;
   --transition-offset: 3.1s;
 }
 
@@ -360,6 +361,11 @@
     font-size: 50px;
     opacity: 0;
     transition: opacity 300ms ease-in, visibility 0ms ease-in 300ms;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
 }
 
 .runner-overlay-placement.show{
@@ -763,4 +769,159 @@
 
 .interview-fade-hider.hide{
     animation: fadeIn 0.6s ease-in calc(0.1s + var(--transition-offset)) forwards;
+}
+
+
+/* Ladder Opening */
+.ladder-opening-column {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    align-items: center;
+    padding-top: 47px;
+    padding-left: 57px;
+    padding-right: 57px;
+    padding-bottom: 57px;
+}
+
+.ladder-opening-runner-icon{
+    width: 200px;
+    height: 200px;
+}
+
+.ladder-opening-runner-name{
+    text-shadow: 2px 2px 7px rgb(10, 10, 10); 
+    color: var(--ladder-league-white);
+    text-transform: uppercase;
+    text-align: center;
+    font-family: "Rubik";
+    font-size: 57px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
+}
+.ladder-opening-runner-seed{ 
+    text-shadow: 2px 2px 7px rgb(10, 10, 10); 
+    color: var(--ladder-league-white);
+    text-align: center;
+    font-family: "Rubik";
+    text-align: center;
+    font-style: italic;
+    font-size: 43px;
+    padding-bottom: 25px;
+}
+
+.ladder-opening-event-time-label
+{
+    text-shadow: 4px 4px 7px rgb(10, 10, 10); 
+    font-family: "Rubik";
+    color: var(--ladder-league-blue);
+    font-weight: bold;
+    font-size: 42px;
+    padding-top: 22px;
+    text-align: center;
+}
+.ladder-opening-event-time{
+    text-shadow: 4px 4px 7px rgb(10, 10, 10); 
+    color: var(--ladder-league-white);
+    font-variant-numeric: tabular-nums; 
+    text-transform: uppercase;
+    text-align: center;
+    font-family: "Rubik";
+    font-size: 62px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ladder-opening-header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    box-sizing: border-box;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    justify-content: center;
+    text-shadow: 4px 4px 5px rgb(10, 10, 10); 
+}
+.ladder-opening-header-name{
+    color: var(--ladder-league-white);
+    text-transform: uppercase;
+    text-align: center;
+    font-family: "Rubik";
+    font-weight: bold;
+    font-size: 75px;
+}
+.ladder-opening-header-caption{
+    font-family: "Aurebesh";
+    color: var(--ladder-league-grey);
+    font-size: 37px;
+}
+
+.ladder-opening-commentators{
+    text-shadow: 4px 4px 5px rgb(10, 10, 10); 
+    color: var(--ladder-league-white);
+    font-family: "Rubik";
+    font-size: 64px;
+    font-weight: bold;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    opacity: 0; 
+}
+
+.ladder-comms-mic{
+    width: 100px;
+    height: 100px;
+}
+
+@keyframes moveUpResults {
+  0% {
+    transform: translateY(40px);
+    opacity: 0; 
+  }
+  100% {
+    transform: translateY(0); 
+    opacity: 1;
+  }
+}
+
+.ladder-opening-header{
+    opacity: 0; 
+}
+
+.ladder-opening-header.moveUp{
+    animation: moveUp 0.5s ease-in calc(0s + var(--transition-offset)) forwards;
+}
+
+.ladder-opening-left-box{
+    opacity: 0; 
+}
+
+.ladder-opening-left-box.moveUp{
+    animation: moveUp 0.25s ease-in calc(0.20s + var(--transition-offset)) forwards;
+}
+
+.ladder-opening-center-box{
+    opacity: 0; 
+}
+
+.ladder-opening-center-box.moveUp {
+    animation: moveUp 0.25s ease-in calc(0.32s + var(--transition-offset)) forwards;
+}
+
+.ladder-opening-right-box{
+    opacity: 0; 
+}
+
+.ladder-opening-right-box.moveUp{
+    animation: moveUp 0.25s ease-in calc(0.44s + var(--transition-offset)) forwards;
+}
+
+
+.ladder-opening-commentators.moveUp{
+    animation: moveUp 0.35s ease-in calc(0.55s + var(--transition-offset)) forwards;
 }

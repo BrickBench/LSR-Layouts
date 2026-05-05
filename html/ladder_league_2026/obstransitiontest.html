@@ -1,0 +1,38 @@
+<head>
+    <style>
+        @keyframes moveUpInfo {
+                0% {
+                    transform: translateY(200px);
+                    opacity: 0; 
+                }
+                100% {
+                    transform: translateY(0); 
+                    opacity: 1;
+                }
+                }
+        .testclass{
+            animation: moveUpInfo 1s forwards;
+        }
+    </style>  
+</head>
+
+
+<script>
+    window.addEventListener('obsSceneChanged', function(event) {
+        var element = document.getElementById("test");
+          element.classList.remove('testclass');
+  
+            // This line forces the browser to recalculate styles (voiding the cache)
+            void element.offsetWidth; 
+            
+            element.classList.add('testclass');
+    })
+</script>
+
+
+
+<body>
+    <div id="test" style="font-size: 40px; color:white; " class="testclass">
+        Hello
+    </div>
+</body>
