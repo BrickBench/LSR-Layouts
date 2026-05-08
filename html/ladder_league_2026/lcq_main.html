@@ -38,10 +38,10 @@
         </script>
     </head>
     <body style="width:1920px; height:1080px; background-image: url('LL26_LCQ_Clean_V5_ 3Comms.png');">
-        <div id="fade-box" class="fade-hider hide" style="background-image: url('LL26_MatchResults_Background.png');"></div>
+        <!--<div id="fade-box" class="fade-hider hide" style="background-image: url('LL26_MatchResults_Background.png');"></div> -->
         <div class="timer-title-box" style="position: absolute; left: 1049px; top: 682px; width: 774px; height: 115px;">
             <div class="time-title-spacer"></div>
-            <div id="match-title" class="match-title-box">
+            <div id="match-title-split" class="match-title-box">
                 <div>LCQ</div>
                 <div>Race 1</div>
             </div>
@@ -49,69 +49,69 @@
         </div>
 
         <!-- Commentators -->
-        <div class="commentary-box" style="position: absolute; left: 1077px; top: 802px; width: 237px; height: 54px;">
+        <div id="commentator-box-1" class="commentary-box" style="position: absolute; left: 1077px; top: 802px; width: 237px; height: 54px;">
             <span class="commentator-name">LaserTrap</span><span class="commentator-pronoun">They/Them</span>
         </div> 
 
-        <div class="commentary-box" style="position: absolute; left: 1319px; top: 802px; width: 234px; height: 54px;">
+        <div  id="commentator-box-3"class="commentary-box" style="position: absolute; left: 1319px; top: 802px; width: 234px; height: 54px;">
             <span class="commentator-name">CaptainPaxo</span>
         </div> 
 
-        <div class="commentary-box" style="position: absolute; left: 1558px; top: 802px; width: 235px; height: 54px;">
+        <div id="commentator-box-2" class="commentary-box" style="position: absolute; left: 1558px; top: 802px; width: 235px; height: 54px;">
             <span class="commentator-name">P53</span>
         </div> 
 
         <!-- Runner 1 -->
         <div class="runner-bar" style="position:absolute; left: 0px; top: 531px; width: 952px; height: 75px;">
-            <div id="runner-1-name" class="runner-bar-name">
+            <div id="runner-1-name-flag" class="runner-bar-name">
                 <span class="fi fi-gr flag-scale"></span>
                 <span>Dragon67</span>
             </div>
         </div>
         <!-- Runner 2 -->
         <div class="runner-bar" style="position:absolute; left: 968px; top: 531px; width: 952px; height: 75px;">
-            <div id="runner-2-name" class="runner-bar-name">
+            <div id="runner-2-name-flag" class="runner-bar-name">
                 <span class="fi fi-us flag-scale"></span>
                 <span>MelloVro</span>
             </div>
         </div>
         <!-- Runner 3 -->
         <div class="runner-bar" style="position:absolute; left: 0px; top: 880px; width: 470px; height: 37px;">
-            <div id="runner-3-name" class="runner-bar-name-small">
+            <div id="runner-3-name-flag" class="runner-bar-name-small">
                 <span class="fi fi-ch flag-scale-small"></span>
                 <span>Dragon67</span>
             </div>
         </div>
         <!-- Runner 4 -->
         <div class="runner-bar" style="position:absolute; left: 482px; top: 880px; width: 470px; height: 37px;">
-            <div id="runner-4-name" class="runner-bar-name-small">
+            <div id="runner-4-name-flag" class="runner-bar-name-small">
                 <span class="fi fi-ir flag-scale-small"></span>
                 <span>MelloVro</span>
             </div>
         </div>
         <!-- Bottom Bar -->
-        <div class="lcq-winners-bar" style="position:absolute; left: 76px; top: 949px; width: 717px; height: 101px;">
+        <div id="bottom-lcq-bar" class="lcq-winners-bar" style="position:absolute; left: 76px; top: 949px; width: 717px; height: 101px;">
             <div class="lcq-footer-box">
                 <div class="lcq-footer-box-top">
                     <span class="lcq-footer-box-position">1: </span>
-                    <span class="lcq-runner-name">Dragon67</span>
+                    <span id="lcq-p1" class="lcq-runner-name">Dragon67</span>
                 </div>
                 <div style="color: var(--ladder-league-green)">Leader</div>
             </div>
             <div class="lcq-footer-box">
                 <div class="lcq-footer-box-top">
                     <span class="lcq-footer-box-position">2: </span>
-                    <span class="lcq-runner-name">GamerOlive</span>
+                    <span id="lcq-p2" class="lcq-runner-name">GamerOlive</span>
                 </div>
-                <div class="lcq-runner-delta">+23</div>
+                <div id="lcq-p2-delta" class="lcq-runner-delta">+23</div>
             </div>
             <div class="lcq-footer-box">
                 <div class="lcq-footer-box-top">
                     <!-- Remove the temp moveUp. This is to demonstrate the animation-->
                     <span class="lcq-footer-box-position">3: </span>
-                    <span class="lcq-runner-name moveUp">CaptainPaxo</span>
+                    <span id="lcq-p3" class="lcq-runner-name">CaptainPaxo</span>
                 </div>
-                <div class="lcq-runner-delta">+45</div>
+                <div id="lcq-p3-delta" class="lcq-runner-delta">+45</div>
             </div>
         </div>
 
@@ -120,31 +120,32 @@
                 <div class="lcq-footer-box-top">
                     <!-- Remove the temp moveDown. This is to demonstrate the animation-->
                     <span class="lcq-footer-box-position">4: </span>
-                    <span class="lcq-runner-name moveDown">Coolisen</span>
+                    <span id="lcq-p4" class="lcq-runner-name">Coolisen</span>
                 </div>
-                <div class="lcq-runner-delta">+21</div>
+                <div id="lcq-p4-delta" class="lcq-runner-delta">+21</div>
             </div>
             <div class="lcq-footer-box">
                 <div class="lcq-footer-box-top">
                     <span class="lcq-footer-box-position">5: </span>
-                    <span class="lcq-runner-name">GamerOlive</span>
+                    <span id="lcq-p5" class="lcq-runner-name">GamerOlive</span>
                 </div>
-                <div class="lcq-runner-delta">+23</div>
+                <div id="lcq-p5-delta" class="lcq-runner-delta">+23</div>
             </div>
             <div class="lcq-footer-box">
                 <div class="lcq-footer-box-top">
                     <span class="lcq-footer-box-position">6: </span>
-                    <span class="lcq-runner-name">CaptainPaxo</span>
+                    <span id="lcq-p6" class="lcq-runner-name">CaptainPaxo</span>
                 </div>
-                <div class="lcq-runner-delta">+45</div>
+                <div id="lcq-p6-delta" class="lcq-runner-delta">+45</div>
             </div>
             <div class="lcq-footer-box">
                 <div class="lcq-footer-box-top">
                     <span class="lcq-footer-box-position">7: </span>
-                    <span class="lcq-runner-name">CaptainPaxo</span>
+                    <span id="lcq-p7" class="lcq-runner-name">CaptainPaxo</span>
                 </div>
-                <div class="lcq-runner-delta">+1:05</div>
+                <div id="lcq-p7-delta" class="lcq-runner-delta">+1:05</div>
             </div>
         </div>
     </body>
+    <script type="module" src="/js/ladder_league_2026.js"></script>
 </html>

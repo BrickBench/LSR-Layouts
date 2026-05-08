@@ -130,6 +130,16 @@ export function getEventByName(stateData, eventName) {
     return null;
 }
 
+export function getParticipantByName(stateData, name) {
+    for (const participant of Object.values(stateData.people)) {
+        if (participant.name == name) {
+            return participant;
+        }
+    }
+
+    return null;
+}
+
 export function getStreamById(stateData, eventId) {
     for (const stream of stateData.streams) {
         if (stream.event == eventId) {
@@ -192,6 +202,8 @@ export function getRunnerScore(event, runner) {
         state.result.SingleScore.score != null
     ) {
         return state.result.SingleScore.score;
+    } else if (state != null && state.result != null && state.result.SplitTimes != null) {
+        return state.result.SplitTimes;
     } else {
         return null;
     }
