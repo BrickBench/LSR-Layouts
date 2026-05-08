@@ -11,15 +11,17 @@ const this_host = "main";
 const live_row_count = 3;
 
 var user_meta = new Map();
-user_meta.set("Zac", { seed: 1, pb: "2:18:35" })
-user_meta.set("Evan", { seed: 2, pb: "2:19:23" })
-user_meta.set("Dragon76", { seed: 3, pb: "2:20:34" })
-user_meta.set("Scynor", { seed: 3, pb: "2:22:33" })
-user_meta.set("Eroadhouse", { seed: 1, pb: "2:23:23" })
-user_meta.set("Anorak", { seed: 6, pb: "2:24:22" })
-user_meta.set("Dragon", { seed: 7, pb: "2:23:14" })
-user_meta.set("FlamingLazer", { seed: 8, pb: "2:24:29" })
-user_meta.set("BrickoFett", { seed: 2, pb: "2:26:58" })
+user_meta.set("Zac", { seed: 1, pb: "2:16:33" })
+user_meta.set("Dragon76", { seed: 2, pb: "2:17:02" })
+user_meta.set("Jared", {seed: 3, pb: "2:17:24"})
+user_meta.set("Eroadhouse", { seed: 4, pb: "2:17:31" })
+user_meta.set("Anorak", { seed: 5, pb: "2:18:03" })
+user_meta.set("Bricko", { seed: 6, pb: "2:17:42" })
+user_meta.set("Scynor", { seed: 7, pb: "2:18:19" })
+user_meta.set("Wiisuper", {seed: 8, pb: "2:19:45"})
+user_meta.set("FlamingLazer", { seed: 10, pb: "2:24:29" })
+user_meta.set("Dimei", { seed: 11, pb: "2:22:05" })
+user_meta.set("ejpman", { seed: 12, pb: "2:22:16" })
 user_meta.set("Flup", { seed: 10, pb: "2:27:20" })
 user_meta.set("Coolisen", { seed: 11, pb: "2:29:01" })
 user_meta.set("Revvylo", { seed: 12, pb: "2:29:52" })
@@ -716,7 +718,7 @@ function setRunnerData(data, event) {
 }
 
 function setNextEventData(data) {
-    if (document.getElementById("next-event-1") == null) {
+    if (document.getElementById("event-1-box") == null) {
         return;
     }
 
@@ -725,14 +727,23 @@ function setNextEventData(data) {
     for (var i = 0; i < 3; i++) {
         if (i < next_events.length) {
             var event = next_events[i];
-            document.getElementById("next-event-" + (i + 1)).innerHTML = event.name;
+
+            if(event.name.toLowerCase().startsWith("week")){
+                var tokens = event.name.split(" ");
+                document.getElementById("next-event-" + (i + 1)).innerHTML = tokens[0] + " " + tokens[1] + " &#183; " + tokens[2] + " " + tokens[3];
+            }else{
+                document.getElementById("next-event-" + (i + 1)).innerHTML = event.name;
+            }
 
             var event_start = event.event_start_time;
 
+            var separator = "<div class=\"ll-blue\">VS</div>";
+
             var event_runners = getRunnersBySeed(data, event);
+            
             var names_str = event_runners.map(
-                (r) => '<span class="event-player-larger">' + data.people[r].name + '</span>'
-            ).join(" vs ");
+                (r) => '<div>' + data.people[r].name + '</div>'
+            ).join(separator);
 
             document.getElementById("next-event-names-" + (i + 1)).innerHTML = names_str;
 
