@@ -116,16 +116,28 @@
   }
 }
 
+@keyframes moveDown2 {
+  100% {
+    transform: translateY(20px);
+    opacity: 0; 
+  }
+  0% {
+    transform: translateY(0); 
+    opacity: 1;
+  }
+}
+
 .lcq-runner-name {
     text-transform: uppercase;
+    display: inline-block; 
 }
 
 .lcq-runner-name.moveUp{
-    animation: moveUp 1s forwards;
+    animation: moveUp 1s ease forwards;
 }
 
 .lcq-runner-name.moveDown{
-    animation: moveUp 1s reverse;
+    animation: moveDown2 1s ease forwards ;
 }
 
 .lcq-runner-delta {

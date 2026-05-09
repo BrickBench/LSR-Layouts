@@ -276,13 +276,15 @@ function displayLCQDeltas(data, event, splits) {
             var runner_ahead = new_lcq_order.length > 0 ? new_lcq_order[new_lcq_order.length - 1] : null;
             if (!new_lcq_order.includes(this_runner)) {
                 new_lcq_order.push(this_runner);
-
+                
+                console.log(runner_ahead, this_runner, split_runners, sorted_runners);
                 if (runner_ahead == null) {
                     relative_deltas[this_runner] = 0;
                 } else {
                     // determine delta between this runner and the runner ahead of them
                     // if the runner ahead has a worse time than this runner, delta is zero
-                    var ahead_idx = split_runners.indexOf(runner_ahead);
+                    var ahead_idx = sorted_runners.indexOf(runner_ahead.toString());
+                    console.log(ahead_idx);
                     if (ahead_idx == -1 || ahead_idx > i) {
                         relative_deltas[this_runner] = 0;
                     } else {
@@ -303,43 +305,57 @@ function displayLCQDeltas(data, event, splits) {
         }
     }
 
+    var changedSlots = [];
+
+    //Move down all slots that changed.
     for (var i = 0; i < new_lcq_order.length; i++) {
-        setInnerHtml("lcq-p" + (i + 1), data.people[new_lcq_order[i]].name);
-
-        var delta_time = relative_deltas[new_lcq_order[i]];
-        if (delta_time == null || delta_time <= 0) {
-            setInnerHtml("lcq-p" + (i + 1) + "-delta", "-");
-        } else {
-            if (delta_time < 1000 * 60) {
-                var delta_str = "+" + toStringTime(delta_time, false, false, true, 1);
-            } else {
-                var delta_str = "+" + toStringTime(delta_time, false, false, false);
-            }
-            setInnerHtml("lcq-p" + (i + 1) + "-delta", delta_str);
-        }
-
         var old_position = last_lcq_order.indexOf(new_lcq_order[i]);
-        if (old_position != -1) {
-            var position_change = old_position - i;
+        if(old_position == -1 || old_position != i){
+            changedSlots.push(i);
             var name_elem = document.getElementById("lcq-p" + (i + 1));
             if (name_elem != null) {
-                if (position_change > 0) {
-                    // went down in pos
-                    name_elem.classList.add("moveDown");
-                    name_elem.classList.remove("moveUp");
-                } else if (position_change < 0) {
-                    // went up in pos
-                    name_elem.classList.remove("moveDown");
-                    name_elem.classList.add("moveUp");
-                } else {
-                    name_elem.classList.remove("moveDown");
-                    name_elem.classList.remove("moveUp");
-                }
+                name_elem.classList.add("moveDown");
+                name_elem.classList.remove("moveUp");
+                void name_elem.offsetWidth; 
             }
         }
     }
 
-    last_lcq_order = new_lcq_order;
+    var newLCQCopy = [...new_lcq_order];
+    var lastLCQCopy = [...last_lcq_order];
+
+    setTimeout(() => {
+        for (var i = 0; i < newLCQCopy.length; i++) {
+            setInnerHtml("lcq-p" + (i + 1), data.people[newLCQCopy[i]].name);
+
+            var delta_time = relative_deltas[newLCQCopy[i]];
+            if (delta_time == null || delta_time <= 0) {
+                setInnerHtml("lcq-p" + (i + 1) + "-delta", "-");
+            } else {
+                if (delta_time < 1000 * 60) {
+                    var delta_str = "+" + toStringTime(delta_time, false, false, true, 1);
+                } else {
+                    var delta_str = "+" + toStringTime(delta_time, false, false, false);
+                }
+                setInnerHtml("lcq-p" + (i + 1) + "-delta", delta_str);
+            }
+
+            //Reveal slots that changed
+            var old_position = lastLCQCopy.indexOf(newLCQCopy[i]);
+            if(old_position == -1 || old_position != -1){
+                var name_elem = document.getElementById("lcq-p" + (i + 1));
+                if (name_elem != null) {
+                    void name_elem.offsetWidth; 
+                    name_elem.classList.add("moveUp");
+                    name_elem.classList.remove("moveDown");
+                }
+            }
+        }
+    }, 1000); 
+
+    
+
+    last_lcq_order = newLCQCopy;
 }
 
 function displayFinalTimes(data, event, times) {
