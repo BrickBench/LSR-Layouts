@@ -21,26 +21,26 @@ user_meta.set("Anorak", { seed: 5, pb: "2:18:03" })
 user_meta.set("Bricko", { seed: 6, pb: "2:17:42" })
 user_meta.set("Scynor", { seed: 7, pb: "2:18:19" })
 user_meta.set("Wiisuper", { seed: 8, pb: "2:19:45" })
+user_meta.set("Wazzip", { seed: 9, pb: "2:24:29" })
 user_meta.set("FlamingLazer", { seed: 10, pb: "2:24:29" })
 user_meta.set("Dimei", { seed: 11, pb: "2:22:05" })
 user_meta.set("ejpman", { seed: 12, pb: "2:22:16" })
-user_meta.set("Flup", { seed: 10, pb: "2:27:20" })
-user_meta.set("Coolisen", { seed: 11, pb: "2:29:01" })
-user_meta.set("Revvylo", { seed: 12, pb: "2:29:52" })
-user_meta.set("TwiceLyte", { seed: 13, pb: "2:29:54" })
-user_meta.set("Phantom", { seed: 14, pb: "2:30:16" })
-user_meta.set("Tfresh", { seed: 15, pb: "2:30:58" })
-user_meta.set("Thenzota", { seed: 16, pb: "2:35:07" })
-user_meta.set("Charzight", { seed: 17, pb: "2:35:21" })
-user_meta.set("kwazrr", { seed: 18, pb: "2:34:17" })
-user_meta.set("Anonymous", { seed: 19, pb: "2:38:52" })
-user_meta.set("Biksel", { seed: 20, pb: "2:40:57" })
-user_meta.set("yahootles", { seed: 21, pb: "2:43:30" })
-user_meta.set("Nolan", { seed: 22, pb: "2:43:37" })
-user_meta.set("Gamer_Olive", { seed: 23, pb: "2:44:07" })
-user_meta.set("Chroma_Q", { seed: 24, pb: "2:46:27" })
-user_meta.set("AppleMan", { seed: 25, pb: "2:48:42" })
-user_meta.set("Bennymoon", { seed: 26, pb: "2:45:29" })
+user_meta.set("Colten", { seed: 13, pb: "2:27:20" })
+user_meta.set("Kwazzr", { seed: 14, pb: "2:29:01" })
+user_meta.set("Phantom", { seed: 15, pb: "2:29:52" })
+user_meta.set("Charzight", { seed: 16, pb: "2:29:54", icon: "Jango.png"})
+user_meta.set("Coolisen", { seed: 17, pb: "2:30:16", icon: "Indy.png" })
+user_meta.set("MelloVro", { seed: 18, pb: "2:30:58", icon: "Kit_Fisto.png" })
+user_meta.set("Gamer_Olive", { seed: 19, pb: "2:35:07", icon: "Leia_Hoth.png" })
+user_meta.set("Thenzota", { seed: 20, pb: "2:35:21", icon: "Bespin_Guard.png" })
+user_meta.set("Wytew", { seed: 21, pb: "2:34:17", icon: "Luminara.png" })
+user_meta.set("ChessWiz", { seed: 22, pb: "2:38:52", icon: "Tarkin.png" })
+user_meta.set("Nolan", { seed: 23, pb: "2:40:57", icon: "Vader.png" })
+user_meta.set("AppleMan", { seed: 24, pb: "2:43:30", icon: "Anakin_boy.png" })
+user_meta.set("CaptainPaxo", { seed: 25, pb: "2:43:37", icon: "Han_Carbonite.png" })
+user_meta.set("Doubtt", { seed: 26, pb: "2:44:07", icon: "Anakin_Episode3.png" })
+user_meta.set("Chroma_Q", { seed: 27, pb: "2:46:27", icon: "Han_Hoth.png" })
+user_meta.set("Staunch", { seed: 28, pb: "2:48:42", icon: "Panaka.png" })
 
 var state = null;
 var commentator_slots = {}
@@ -643,6 +643,8 @@ function setFinalResultsView(data, event) {
             return;
         }
 
+        var meta = user_meta.get(data.people[runners_time[i].id].name);
+
         const eps_ids = ["-ep-1", "-ep-2", "-ep-4", "-ep-6", "-ep-3"];
 
         var runner_results = getRunnerScore(event, runners_time[i].id);
@@ -654,6 +656,11 @@ function setFinalResultsView(data, event) {
 
         setInnerHtml("result-name-" + (i + 1), data.people[runners_time[i].id].name);
         setInnerHtml("result-" + (i + 1) + "-ep-5", runners_time[i].time);
+
+        var icon = document.getElementById("runner-" + (i+1) + "-icon");
+        if(icon && meta && meta.icon){
+            icon.src="./icons/"+meta.icon;
+        }
     }
 }
 
