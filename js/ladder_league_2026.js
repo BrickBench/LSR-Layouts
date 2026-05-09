@@ -227,7 +227,6 @@ function displayLiveDeltas(data, event, splits, run_info) {
                     time_element.className = setstyle;
                 }
             }
-
         } else {
             for (var runner = 0; runner < 3; runner++) {
                 setInnerHtml("runner-" + runner + "-split-" + row_index, "--");
@@ -618,8 +617,8 @@ function setResults(data, event) {
                 var runner = ordered_runners[i];
                 if (runner.toString() in event.runner_state) {
                     var time = getRunnerScore(event, runner);
-                    if (time != null && time != "") {
-                        contents = '<span>' + time + '</span>';
+                    if (time != null && time.final_time != null && time.final_time != "") {
+                        contents = '<span>' + time.final_time + '</span>';
                     }
                 }
             }
