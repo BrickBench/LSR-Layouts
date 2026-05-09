@@ -303,9 +303,6 @@ function displayLCQDeltas(data, event, splits) {
         }
     }
 
-    console.log("LCQ order", new_lcq_order);
-    console.log("Relative deltas", relative_deltas);
-
     for (var i = 0; i < new_lcq_order.length; i++) {
         setInnerHtml("lcq-p" + (i + 1), data.people[new_lcq_order[i]].name);
 
@@ -313,7 +310,11 @@ function displayLCQDeltas(data, event, splits) {
         if (delta_time == null || delta_time <= 0) {
             setInnerHtml("lcq-p" + (i + 1) + "-delta", "-");
         } else {
-            var delta_str = "+" + toStringTime(delta_time, false, true, false);
+            if (delta_time < 1000 * 60) {
+                var delta_str = "+" + toStringTime(delta_time, false, false, true, 1);
+            } else {
+                var delta_str = "+" + toStringTime(delta_time, false, false, false);
+            }
             setInnerHtml("lcq-p" + (i + 1) + "-delta", delta_str);
         }
 
@@ -323,15 +324,15 @@ function displayLCQDeltas(data, event, splits) {
             var name_elem = document.getElementById("lcq-p" + (i + 1));
             if (name_elem != null) {
                 if (position_change > 0) {
-                    name_elem.classList.remove("moveDown");
+                    // went down in pos
+                    name_elem.classList.add("moveDown");
                     name_elem.classList.remove("moveUp");
                 } else if (position_change < 0) {
                     // went up in pos
                     name_elem.classList.remove("moveDown");
                     name_elem.classList.add("moveUp");
                 } else {
-                    // went down in pos
-                    name_elem.classList.add("moveDown");
+                    name_elem.classList.remove("moveDown");
                     name_elem.classList.remove("moveUp");
                 }
             }
@@ -634,6 +635,28 @@ function setResults(data, event) {
     }
 }
 
+function setFinalResultsView(data, event) {
+    var runners_time = getRunnersByTime(event);
+    console.log("Runners by time", runners_time);
+    for (var i = 0; i < 3; i++) {
+        if (i >= runners_time.length) {
+            return;
+        }
+
+        const eps_ids = ["-ep-1", "-ep-2", "-ep-4", "-ep-6", "-ep-3"];
+
+        var runner_results = getRunnerScore(event, runners_time[i].id);
+        for (var s = 0; s < 5; s++) {
+            var result = runner_results.splits[s * 6 + 5];
+            var time_str = result != null ? toStringTime(result, false, true, false) : "--";
+            setInnerHtml("result-" + (i + 1) + eps_ids[s], time_str);
+        }
+
+        setInnerHtml("result-name-" + (i + 1), data.people[runners_time[i].id].name);
+        setInnerHtml("result-" + (i + 1) + "-ep-5", runners_time[i].time);
+    }
+}
+
 function getRunnersBySeed(data, event) {
     var runners = [];
     for (const runner of Object.keys(event.runner_state)) {
@@ -931,6 +954,7 @@ connectToSocket('/ws', function(data) {
     setResults(data, event);
     setNextEventData(data);
     setInterviewData(data, event);
+    setFinalResultsView(data, event);
 
     const splitData = determineSplitInfo(event);
     if (document.getElementById("time-table") != null) {

@@ -164,6 +164,18 @@ export function getEventForHost(stateData, host) {
  * Compare two times in the format "hh:mm:ss" or "mm:ss"
  */
 export function compareTime(a, b) {
+    if (a == '' && b == '') {
+        return 0;
+    }
+
+    if (a == '') {
+        return 1;
+    }
+
+    if (b == '') {
+        return -1;
+    }
+
     var elements_a = a.split(":");
     var elements_b = b.split(":");
 
@@ -222,7 +234,7 @@ export function getRunnersByTime(event, allow_empty = false) {
         if (time != null) {
             runners.push({
                 id: runner,
-                time: time
+                time: time.final_result
             })
         } else if (allow_empty) {
             runners.push({
