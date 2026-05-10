@@ -28,7 +28,7 @@ user_meta.set("ejpman", { seed: 12, pb: "2:22:16" })
 user_meta.set("Colten", { seed: 13, pb: "2:27:20" })
 user_meta.set("Kwazzr", { seed: 14, pb: "2:29:01" })
 user_meta.set("Phantom", { seed: 15, pb: "2:29:52" })
-user_meta.set("Charzight", { seed: 16, pb: "2:29:54", icon: "Jango.png"})
+user_meta.set("Charzight", { seed: 16, pb: "2:29:54", icon: "Jango.png" })
 user_meta.set("Coolisen", { seed: 17, pb: "2:30:16", icon: "Indy.png" })
 user_meta.set("MelloVro", { seed: 18, pb: "2:30:58", icon: "Kit_Fisto.png" })
 user_meta.set("Gamer_Olive", { seed: 19, pb: "2:35:07", icon: "Leia_Hoth.png" })
@@ -276,7 +276,7 @@ function displayLCQDeltas(data, event, splits) {
             var runner_ahead = new_lcq_order.length > 0 ? new_lcq_order[new_lcq_order.length - 1] : null;
             if (!new_lcq_order.includes(this_runner)) {
                 new_lcq_order.push(this_runner);
-                
+
                 console.log(runner_ahead, this_runner, split_runners, sorted_runners);
                 if (runner_ahead == null) {
                     relative_deltas[this_runner] = 0;
@@ -310,13 +310,13 @@ function displayLCQDeltas(data, event, splits) {
     //Move down all slots that changed.
     for (var i = 0; i < new_lcq_order.length; i++) {
         var old_position = last_lcq_order.indexOf(new_lcq_order[i]);
-        if(old_position == -1 || old_position != i){
+        if (old_position == -1 || old_position != i) {
             changedSlots.push(i);
             var name_elem = document.getElementById("lcq-p" + (i + 1));
             if (name_elem != null) {
                 name_elem.classList.add("moveDown");
                 name_elem.classList.remove("moveUp");
-                void name_elem.offsetWidth; 
+                void name_elem.offsetWidth;
             }
         }
     }
@@ -337,23 +337,24 @@ function displayLCQDeltas(data, event, splits) {
                 } else {
                     var delta_str = "+" + toStringTime(delta_time, false, false, false);
                 }
+                delta_str = delta_str.replace("+0", "+");
                 setInnerHtml("lcq-p" + (i + 1) + "-delta", delta_str);
             }
 
             //Reveal slots that changed
             var old_position = lastLCQCopy.indexOf(newLCQCopy[i]);
-            if(old_position == -1 || old_position != -1){
+            if (old_position == -1 || old_position != -1) {
                 var name_elem = document.getElementById("lcq-p" + (i + 1));
                 if (name_elem != null) {
-                    void name_elem.offsetWidth; 
+                    void name_elem.offsetWidth;
                     name_elem.classList.add("moveUp");
                     name_elem.classList.remove("moveDown");
                 }
             }
         }
-    }, 1000); 
+    }, 1000);
 
-    
+
 
     last_lcq_order = newLCQCopy;
 }
@@ -673,9 +674,9 @@ function setFinalResultsView(data, event) {
         setInnerHtml("result-name-" + (i + 1), data.people[runners_time[i].id].name);
         setInnerHtml("result-" + (i + 1) + "-ep-5", runners_time[i].time);
 
-        var icon = document.getElementById("runner-" + (i+1) + "-icon");
-        if(icon && meta && meta.icon){
-            icon.src="./icons/"+meta.icon;
+        var icon = document.getElementById("runner-" + (i + 1) + "-icon");
+        if (icon && meta && meta.icon) {
+            icon.src = "./icons/" + meta.icon;
         }
     }
 }
