@@ -253,6 +253,10 @@ function displayLiveDeltas(data, event, splits, run_info) {
         } else {
             for (var runner = 0; runner < 3; runner++) {
                 setInnerHtml("runner-" + runner + "-split-" + row_index, "--");
+                var time_element = document.getElementById("runner-" + runner + "-split-" + row_index);
+                if (time_element != null) {
+                    time_element.className = "time-table-3p-split";
+                }
             }
         }
     }
