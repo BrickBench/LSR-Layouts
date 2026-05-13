@@ -673,7 +673,11 @@ function setCommentatorSlots(data, event) {
 function setResults(data, event) {
     var ordered_runners = getRunnersBySeed(data, event);
 
-    for (var i = 0; i < 4; i++) {
+    var allset = true;
+
+    var placementStrings = ["1st Place","2nd Place", "3rd Place"];
+
+    for (var i = 0; i < 3; i++) {
         var name_box = document.getElementById("view-" + (i + 1) + "-overlay");
         if (name_box != null) {
             var contents = "";
@@ -681,18 +685,43 @@ function setResults(data, event) {
                 var runner = ordered_runners[i];
                 if (runner.toString() in event.runner_state) {
                     var time = getRunnerScore(event, runner);
-                    if (time != null && time.final_time != null && time.final_time != "") {
-                        contents = '<span>' + time.final_time + '</span>';
+                    if (time != null && time.final_result != null && time.final_result != "") {
+                        setInnerHtml("view-" + (i+1) + "-overlay-time", time.final_result);
+                        contents = '<span>';
+                    }else{
+                        allset = false;
                     }
                 }
             }
 
             if (contents != "") {
-                name_box.innerHTML = contents;
                 name_box.classList.add("runner-overlay-show");
             } else {
-                name_box.innerHTML = "";
                 name_box.classList.remove("runner-overlay-show");
+            }
+        }
+    }
+
+    if(allset){
+        setTimeout(() => {
+            var runners_time = getRunnersByTime(event);
+            for (var i = 0; i < 3; i++) {
+                var seed_order = ordered_runners.indexOf(runners_time[i].id);
+                if(seed_order >= 0){
+                    setInnerHtml("view-" + (seed_order + 1) + "-overlay-placement", placementStrings[i]);
+                    var p = document.getElementById("view-" + (i+1)+ "-overlay-placement-parent");
+                    if(p){
+                        void p.offsetWidth;
+                        p.classList.add("show");
+                    }
+                }
+            }
+        }, 400);
+    }else{
+        for (var i = 0; i < 3; i++) {
+            var p = document.getElementById("view-" + (i+1)+ "-overlay-placement-parent");
+            if(p){
+                p.classList.remove("show");
             }
         }
     }
@@ -759,7 +788,7 @@ function getRunnerFastestTime(data, runner) {
     var time = "99:99:99";
     for (const event of Object.values(data.events)) {
         if (event.runner_state[runner] != null) {
-            var newTime = getRunnerScore(event, runner).final_time;
+            var newTime = getRunnerScore(event, runner).final_result;
             if (newTime != null && newTime != "") {
                 if (compareTime(newTime, time) < 0) {
                     time = newTime;
@@ -850,6 +879,60 @@ function setRunnerData(data, event, stream) {
                 img_box.src = "";
             }
         }
+    }
+}
+
+function setOpenerData(data, event){
+    var event_name_opener_stats = document.getElementById("match-name-opener-stats");
+
+    if(!event_name_opener_stats){
+        return;
+    }
+
+    setInnerHtml("match-name-opener-stats", event.name);
+
+    var event_name_element = document.getElementById("scorebug-event-title");
+    if (event_name_element != null) {
+        let tokens = event.name.split(" ");
+        if (tokens[0] == "QUARTERFINAL" || tokens[0] == "SEMIFINAL") {
+            event_name_element.innerHTML = "<div>" + tokens[0] + "</div><div>MATCH " + tokens[1] + "</div>";
+        } else if (tokens[0] == "GRAND") {
+            event_name_element.innerHTML = "<div>GRAND</div><div>FINALS</div";
+        } else if (tokens[0] == "LCQ") {
+            event_name_element.innerHTML = "<div>LCQ</div><div>Race " + tokens[1] + "</div>";
+        } else if (tokens.length >= 4) {
+            event_name_element.innerHTML = "<div>WEEK " + tokens[1] + "</div><div>RUNG " + tokens[3] + "</div>";
+
+            for(var i = 0; i < 3; i++){
+                setInnerHtml("stat-label-opening-" + (i+1), parseInt(tokens[1]) > 1 ? "EVENT BEST" : "PERSONAL BEST");
+            }
+        } else {
+            event_name_element.innerHTML = event.name;
+        }
+    }
+
+    var runners = getRunnersBySeed(data, event);
+    for(var i = 0; i < 3; i++){
+        var runner = data.people[runners[i]];
+        var meta = user_meta.get(runner.name);
+        setInnerHtml("ladder-opening-runner-name-"+(i+1), runner.name);
+        setInnerHtml("ladder-opening-runner-seed-"+(i+1), "Seed " + meta.seed);
+        //Change after week 1
+        setInnerHtml("stat-opening-"+(i+1), meta.pb);
+        var icon = document.getElementById("ladder-opening-runner-icon-"+(i+1));
+        if (icon && meta && meta.icon) {
+            icon.src = "./icons/" + meta.icon;
+        }
+    }
+
+    var commentators = getCommentatorsOrdered(data, event);
+
+    if(commentators.length == 2){
+        setInnerHtml("comms-box", "<div>" + data.people[commentators[0].participant].name
+            + "</div><img class=\"ladder-comms-mic\" src=\"Mic_5.png\"/><div>"+ data.people[commentators[1].participant].name
+            +"</div>");
+    }else{
+        setInnerHtml("comms-box", "");
     }
 }
 
@@ -1038,6 +1121,7 @@ connectToSocket('/ws', function(data) {
     setCommentatorSlots(data, event);
     setResults(data, event);
     setNextEventData(data);
+    setOpenerData(data, event);
     setInterviewData(data, event);
     setFinalResultsView(data, event);
 
@@ -1195,9 +1279,9 @@ setInterval(function() {
             let timer = cf['countdown-end-time'] ? parseInt(cf['countdown-end-time']) : undefined;
             let time = timer ? timer - Date.now() : undefined;
             if (time && time >= 0 && cf) {
-                starter_element.innerHTML = "<span style=\"font-size:123px;\">" + toStringTime(time, false, true) + "</span>";
+                starter_element.innerHTML = toStringTime(time, false, true);
             } else {
-                starter_element.innerHTML = "<span style=\"font-size:87px;\">Starting Soon...</span>"
+                starter_element.innerHTML = "<span style=\"font-size:34px;\">Starting</span><span style=\"font-size:34px;\">Soon</span>";
             }
 
         }
