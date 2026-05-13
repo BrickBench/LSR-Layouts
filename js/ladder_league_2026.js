@@ -9,6 +9,7 @@ import {
     setInnerHtml
 } from "./automarathon.js";
 
+const odds_endpoint = "http://localhost:8080/calculate"
 const this_host = "main";
 const live_row_count = 3;
 
@@ -43,6 +44,7 @@ user_meta.set("Chroma_Q", { seed: 27, pb: "2:46:27", icon: "Han_Hoth.png" })
 user_meta.set("Staunch", { seed: 28, pb: "2:48:42", icon: "Panaka.png" })
 
 var state = null;
+var last_event = null;
 var commentator_slots = {}
 
 var last_real_bpt = {}
@@ -102,9 +104,8 @@ QUALS_DATA.set("SEMIFINAL 1", { id: "s1", top_seeds: [1, 8], bottom_seeds: [4, 5
 QUALS_DATA.set("SEMIFINAL 2", { id: "s2", top_seeds: [3, 6], bottom_seeds: [2, 7] });
 QUALS_DATA.set("GRAND FINALS", { id: "finals", top_seeds: [1, 8, 4, 5], bottom_seeds: [3, 6, 2, 7] });
 
-var last_win_probabilities = null;
-
 var raw_predictions = null;
+var last_win_probabilities = null;
 var h2h_1 = 1;
 var h2h_2 = 2;
 var last_table_setting = "off";
@@ -136,8 +137,6 @@ function determineSplitInfo(event) {
             split_times[runner] = times;
         }
     }
-
-    console.log("Split times", split_times);
 
     var runner_splits_deltas = {};
     for (var i = 0; i < 36; i++) {
@@ -300,14 +299,12 @@ function displayLCQDeltas(data, event, splits) {
             if (!new_lcq_order.includes(this_runner)) {
                 new_lcq_order.push(this_runner);
 
-                console.log(runner_ahead, this_runner, split_runners, sorted_runners);
                 if (runner_ahead == null) {
                     relative_deltas[this_runner] = 0;
                 } else {
                     // determine delta between this runner and the runner ahead of them
                     // if the runner ahead has a worse time than this runner, delta is zero
                     var ahead_idx = sorted_runners.indexOf(runner_ahead.toString());
-                    console.log(ahead_idx);
                     if (ahead_idx == -1 || ahead_idx > i) {
                         relative_deltas[this_runner] = 0;
                     } else {
@@ -440,23 +437,13 @@ function displayFinalTimes(data, event, times) {
     }
 }
 
-function normalizeWinProbability(predictions) {
-    let largest = 0
-    let largest_runner = 0
-    let remaining = 100;
-
+function normalizeWinProbability(state, predictions) {
     let new_predictions = {};
-    for (const [runner, prediction] of Object.entries(predictions.win_probabilities)) {
-        if (largest < prediction) {
-            largest = prediction;
-            largest_runner = runner;
-        }
-
-        remaining -= Math.floor(prediction * 100);
-        new_predictions[runner] = Math.floor(prediction * 100);
+    for (var i = 0; i < predictions.runners.length; i++) {
+        let participant = getParticipantByName(state, predictions.runners[i]);
+        new_predictions[participant.id] =
+            predictions.probabilities[i][0];
     }
-
-    new_predictions[largest_runner] += remaining;
 
     return new_predictions;
 }
@@ -467,16 +454,17 @@ function animateBar(bar_idx, name, new_value, old_value, largest) {
     const MAX_BAR_SIZE = 350;
     const ANIMATE = true;
 
-    if (1 == 1) {
+    setInnerHtml("bar-name-" + bar_idx, name.toUpperCase());
+    let percent_display = document.getElementById("bar-percent-" + bar_idx);
+    if (percent_display == null) {
         return;
     }
-
-    document.getElementById("bar-name-" + bar_idx).innerHTML = name.toUpperCase();
-    let percent_display = document.getElementById("bar-percent-" + bar_idx);
+    new_value = Math.round(new_value);
     let start_value = -1;
     let end_value = new_value;
 
     if (old_value != null) {
+        old_value = Math.round(old_value);
         start_value = old_value;
     }
 
@@ -525,7 +513,7 @@ function displayLivePredictions(data, event, raw_predictions) {
     // TODO normalize predictions
     let runners = getRunnersBySeed(data, event);
 
-    let predictions = normalizeWinProbability(raw_predictions);
+    let predictions = normalizeWinProbability(data, raw_predictions);
 
     // set bars
     let largest = 0;
@@ -535,25 +523,23 @@ function displayLivePredictions(data, event, raw_predictions) {
         }
     }
 
-    for (let i = 0; i < 2; i++) {
-        animateBar(i + 1, data.people[runners[i]].name, predictions[runners[i]], last_win_probabilities ? last_win_probabilities[runners[i]] : null, largest);
+    for (let i = 0; i < 3; i++) {
+        animateBar(i + 1, data.people[runners[i]].name, predictions[runners[i]] * 100, last_win_probabilities ? last_win_probabilities[runners[i]] * 100 : null, largest);
     }
 
     last_win_probabilities = predictions;
 }
 
-function displayLiveProbabilities(state, event, win_probabilities) {
-    if (win_probabilities == null) {
+function displayLiveProbabilities(state, event) {
+    if (raw_predictions == null) {
         return;
     }
 
-    if (document.getElementById("time-table") == null) {
+    if (document.getElementById("win-prob-3p") == null) {
         return;
     }
 
-    if (win_probabilities[event.id] != null) {
-        displayLivePredictions(state, event, win_probabilities[event.id]);
-    }
+    displayLivePredictions(state, event, raw_predictions);
 }
 
 function getRungLabels(event) {
@@ -579,7 +565,7 @@ function getRungLabels(event) {
 function getRungColors(event) {
     if (event.name.startsWith("QUARTERFINAL") ||
         event.name.startsWith("SEMIFINAL")) {
-        return PLAYOFF_RUNG_LABELS;
+        return PLAYOFF_RUNG_COLORS;
     }
 
     var name_elements = event.name.split(" ");
@@ -733,7 +719,6 @@ function setFinalResultsView(data, event) {
     var rung_colors = getRungColors(event);
     var placements = ["1st Place","2nd Place","3rd Place"];
 
-    console.log("Runners by time", runners_time);
     for (var i = 0; i < 3; i++) {
         if (i >= runners_time.length) {
             return;
@@ -1060,7 +1045,6 @@ function setBracketData(data, event) {
             timeZone: 'America/New_York',
         }
 
-        console.log("Bracket name prefix", bracket_name_prefix);
         document.getElementById(bracket_name_prefix.id + "-time").innerHTML =
             date.toLocaleString("en-US", date_options) + " EST";
     }
@@ -1105,6 +1089,48 @@ function setBracketData(data, event) {
     setRunnerBracketData(event, bottom_runner, bracket_name_prefix, false, compared_time > 0);
 }
 
+function queryProbabilities(data, event) {
+    let query = [];
+
+    let runners = getEventRunners(event);
+
+    for (const runner of runners) {
+        let participant = data.people[runner];
+        let results = getRunnerScore(event, runner).splits;
+        let results_no_null = []
+
+        for (const result of results) {
+            if (result != null) {
+                results_no_null.push(result / 1000);
+            }
+        }
+
+        query.push({
+            name: participant.name,
+            times: results_no_null,
+        });
+    }
+
+    console.log(query)
+
+    // query server
+    fetch(odds_endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(query)
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return response.json();
+    }).then(data => {
+        raw_predictions = data;
+        displayLivePredictions(state, last_event, data)
+    })
+}
+
 connectToSocket('/ws', function(data) {
     state = data;
     console.log("state", state)
@@ -1117,6 +1143,8 @@ connectToSocket('/ws', function(data) {
     var event = getEventById(data, event_id);
     var stream = getStreamById(data, event_id);
 
+    last_event = event;
+
     setRunnerData(data, event, stream);
     setCommentatorSlots(data, event);
     setResults(data, event);
@@ -1124,6 +1152,7 @@ connectToSocket('/ws', function(data) {
     setOpenerData(data, event);
     setInterviewData(data, event);
     setFinalResultsView(data, event);
+    queryProbabilities(data, event);
 
     const splitData = determineSplitInfo(event);
     if (document.getElementById("time-table") != null) {
@@ -1164,7 +1193,6 @@ connectToSocket('/ws', function(data) {
 
     if (timeTable && winProbGraph && winProb3P && winProb2P && cf && cf['table-setting'] != null && cf['table-setting'] != undefined) {
         let table_setting = cf['table-setting'].toLowerCase();
-        console.log("table_setting", table_setting);
 
         if (table_setting != last_table_setting) {
             if (table_setting == "prob") {
@@ -1197,10 +1225,9 @@ connectToSocket('/ws', function(data) {
                 winProb2P.style.display = "none";
                 winProbGraph.style.display = "none";
             }
-
-            last_table_setting = table_setting;
-            displayLiveProbabilities(state, event, raw_predictions, h2h_1, h2h_2);
         }
+
+        last_table_setting = table_setting;
     }
 
     if (document.getElementById("bracket") != null) {
@@ -1213,45 +1240,7 @@ connectToSocket('/ws', function(data) {
         }
     }
 
-})
-
-connectToSocket('/ws/voice', function(data) {
-    if (data == null) {
-        return;
-    }
-
-    for (const voice_user of Object.keys(data.voice_users)) {
-        if (voice_user in state.hosts[this_host].discord_users) {
-            var discord_user = state.hosts[this_host].discord_users[voice_user];
-            if (discord_user.username in commentator_slots) {
-                var box_id = "commentator-box-" + (commentator_slots[discord_user.username] + 1);
-                var slot = document.getElementById(box_id);
-                if (slot != null) {
-                    if (data.voice_users[voice_user].active) {
-                        slot.classList.add("commentator-voice-active");
-                    } else {
-                        slot.classList.remove("commentator-voice-active");
-                    }
-                }
-            }
-        }
-    }
-})
-
-connectToSocket('/ws/runs', function(data) {
-    if (state == null) {
-        return;
-    }
-
-    var event_id = getEventForHost(state, this_host);
-    if (event_id == null) {
-        return;
-    }
-
-    var event = getEventById(state, event_id);
-
-    raw_predictions = data.win_probabilities;
-    displayLiveProbabilities(state, event, raw_predictions, h2h_1, h2h_2);
+    displayLiveProbabilities(state, event);
 })
 
 let timer_element = document.getElementById("timer");

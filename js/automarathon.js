@@ -8,6 +8,7 @@ export function connectToSocket(endpoint, onData) {
     });
 
     socket.onclose = function(_event) {
+        socket.close();
         setTimeout(function() {
             connectToSocket(endpoint, onData);
         }, 5000);
