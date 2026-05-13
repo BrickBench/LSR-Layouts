@@ -811,10 +811,15 @@ function setInterviewData(data, event) {
     var final_time = getRunnerScore(event, runner.id);
 
     setInnerHtml("interview-name", runner.name);
+    var video = document.getElementById("video-background");
+    if(video && runner.name){
+        video.src="../../../videos/"+runner.name.toLowerCase()+".mp4";
+    }
+    
 
-    if (final_time != null && final_time.final_time != null && final_time.final_time != "") {
+    if (final_time != null && final_time.final_result != null && final_time.final_result != "") {
         setInnerHtml("final-time-label", "FINAL TIME");
-        setInnerHtml("final-time", final_time.final_time);
+        setInnerHtml("final-time", final_time.final_result);
     } else {
         setInnerHtml("final-time-label", "");
         setInnerHtml("final-time", "");
