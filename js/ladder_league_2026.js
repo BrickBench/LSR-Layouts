@@ -9,12 +9,12 @@ import {
     setInnerHtml
 } from "./automarathon.js";
 
-const odds_endpoint = "http://localhost:8080/calculate"
+const odds_endpoint = "https://ladderleague.run/stats/calculate"
 const this_host = "main";
 const live_row_count = 3;
 
 var user_meta = new Map();
-user_meta.set("Zac", { seed: 1, pb: "2:16:33", icon: "Zac-Emperor.png"})
+user_meta.set("Zac", { seed: 1, pb: "2:16:33", icon: "Zac-Emperor.png" })
 user_meta.set("Dragon76", { seed: 2, pb: "2:17:02", icon: "Dragon-Maul.png" })
 user_meta.set("Jared", { seed: 3, pb: "2:17:24", icon: "Jared-Obiwan.png" })
 user_meta.set("Eroadhouse", { seed: 4, pb: "2:17:31" })
@@ -106,8 +106,9 @@ QUALS_DATA.set("GRAND FINALS", { id: "finals", top_seeds: [1, 8, 4, 5], bottom_s
 
 var raw_predictions = null;
 var last_win_probabilities = null;
-var h2h_1 = 1;
-var h2h_2 = 2;
+var last_h2h = null;
+var h2h_1 = "Zac";
+var h2h_2 = "Dragon76";
 var last_table_setting = "off";
 
 var last_lcq_order = []
@@ -411,7 +412,7 @@ function displayFinalTimes(data, event, times) {
         name_box.innerHTML = participant.name.toUpperCase();
         img_box.src = '/html/ladder_league/icons/' + participant.name + ".png";
 
-        placement_box.innerHTML 
+        placement_box.innerHTML
 
         for (var s = 0; s < 6; s++) {
             var split_idx = (s * 6) + 5
@@ -446,6 +447,42 @@ function normalizeWinProbability(state, predictions) {
     }
 
     return new_predictions;
+}
+
+function getHeadToHead(state, predictions, h2h1, h2h2) {
+    let h2h1_data = null;
+    let h2h2_data = null;
+
+    for (var i = 0; i < predictions.runners.length; i++) {
+        let participant = getParticipantByName(state, predictions.runners[i]);
+        if (participant.name == h2h1) {
+            h2h1_data = {
+                runner: participant,
+                index: i,
+                percent: null
+            }
+        }
+
+        if (participant.name == h2h2) {
+            h2h2_data = {
+                runner: participant,
+                index: i,
+                percent: null
+            }
+        }
+    }
+
+    if (h2h1_data != null && h2h2_data != null) {
+        h2h1_data.percent = predictions.h2h[h2h1_data.index][h2h2_data.index];
+        h2h2_data.percent = predictions.h2h[h2h2_data.index][h2h1_data.index];
+
+        return {
+            runner1: h2h1_data,
+            runner2: h2h2_data
+        }
+    } else {
+        return null
+    }
 }
 
 function animateBar(bar_idx, name, new_value, old_value, largest) {
@@ -501,33 +538,16 @@ function animateBar(bar_idx, name, new_value, old_value, largest) {
 
     bar.style.width = new_bar_width.toString() + "px";
     if (ANIMATE) {
+        if (bar_idx == 5) {
+            console.log(old_value, new_value);
+            console.log(old_bar_width, new_bar_width);
+        }
         bar.animate(
             [{ width: old_bar_width.toString() + "px" }, { width: new_bar_width.toString() + "px" }],
             { duration: 600, forwards: 1 }
         );
     }
 
-}
-
-function displayLivePredictions(data, event, raw_predictions) {
-    // TODO normalize predictions
-    let runners = getRunnersBySeed(data, event);
-
-    let predictions = normalizeWinProbability(data, raw_predictions);
-
-    // set bars
-    let largest = 0;
-    for (const [_runner, prediction] of Object.entries(predictions)) {
-        if (prediction > largest) {
-            largest = prediction;
-        }
-    }
-
-    for (let i = 0; i < 3; i++) {
-        animateBar(i + 1, data.people[runners[i]].name, predictions[runners[i]] * 100, last_win_probabilities ? last_win_probabilities[runners[i]] * 100 : null, largest);
-    }
-
-    last_win_probabilities = predictions;
 }
 
 function displayLiveProbabilities(state, event) {
@@ -539,7 +559,39 @@ function displayLiveProbabilities(state, event) {
         return;
     }
 
-    displayLivePredictions(state, event, raw_predictions);
+    // TODO normalize predictions
+    let runners = getRunnersBySeed(state, event);
+
+    let predictions = normalizeWinProbability(state, raw_predictions);
+
+    // set bars
+    let largest = 0;
+    for (const [_runner, prediction] of Object.entries(predictions)) {
+        if (prediction > largest) {
+            largest = prediction;
+        }
+    }
+
+    for (let i = 0; i < 3; i++) {
+        animateBar(i + 1, state.people[runners[i]].name, predictions[runners[i]] * 100, last_win_probabilities ? last_win_probabilities[runners[i]] * 100 : null, largest);
+    }
+    last_win_probabilities = predictions;
+
+    let h2h = getHeadToHead(state, raw_predictions, h2h_1, h2h_2);
+
+    if (h2h != null) {
+        if (last_h2h != null &&
+            (last_h2h.runner1.runner.id == h2h.runner1.runner.id &&
+                last_h2h.runner2.runner.id == h2h.runner2.runner.id &&
+                last_h2h.runner1.percent == h2h.runner1.percent &&
+                last_h2h.runner2.percent == h2h.runner2.percent)) {
+            return;
+        }
+
+        animateBar(4, h2h.runner1.runner.name, h2h.runner1.percent * 100, last_h2h ? last_h2h.runner1.percent * 100 : null, false);
+        animateBar(5, h2h.runner2.runner.name, h2h.runner2.percent * 100, last_h2h ? last_h2h.runner2.percent * 100 : null, false);
+        last_h2h = h2h;
+    }
 }
 
 function getRungLabels(event) {
@@ -661,7 +713,7 @@ function setResults(data, event) {
 
     var allset = true;
 
-    var placementStrings = ["1st Place","2nd Place", "3rd Place"];
+    var placementStrings = ["1st Place", "2nd Place", "3rd Place"];
 
     for (var i = 0; i < 3; i++) {
         var name_box = document.getElementById("view-" + (i + 1) + "-overlay");
@@ -672,9 +724,9 @@ function setResults(data, event) {
                 if (runner.toString() in event.runner_state) {
                     var time = getRunnerScore(event, runner);
                     if (time != null && time.final_result != null && time.final_result != "") {
-                        setInnerHtml("view-" + (i+1) + "-overlay-time", time.final_result);
+                        setInnerHtml("view-" + (i + 1) + "-overlay-time", time.final_result);
                         contents = '<span>';
-                    }else{
+                    } else {
                         allset = false;
                     }
                 }
@@ -688,25 +740,25 @@ function setResults(data, event) {
         }
     }
 
-    if(allset){
+    if (allset) {
         setTimeout(() => {
             var runners_time = getRunnersByTime(event);
             for (var i = 0; i < 3; i++) {
                 var seed_order = ordered_runners.indexOf(runners_time[i].id);
-                if(seed_order >= 0){
+                if (seed_order >= 0) {
                     setInnerHtml("view-" + (seed_order + 1) + "-overlay-placement", placementStrings[i]);
-                    var p = document.getElementById("view-" + (i+1)+ "-overlay-placement-parent");
-                    if(p){
+                    var p = document.getElementById("view-" + (i + 1) + "-overlay-placement-parent");
+                    if (p) {
                         void p.offsetWidth;
                         p.classList.add("show");
                     }
                 }
             }
         }, 400);
-    }else{
+    } else {
         for (var i = 0; i < 3; i++) {
-            var p = document.getElementById("view-" + (i+1)+ "-overlay-placement-parent");
-            if(p){
+            var p = document.getElementById("view-" + (i + 1) + "-overlay-placement-parent");
+            if (p) {
                 p.classList.remove("show");
             }
         }
@@ -717,7 +769,7 @@ function setFinalResultsView(data, event) {
     var runners_time = getRunnersByTime(event);
     var rung_labels = getRungLabels(event);
     var rung_colors = getRungColors(event);
-    var placements = ["1st Place","2nd Place","3rd Place"];
+    var placements = ["1st Place", "2nd Place", "3rd Place"];
 
     for (var i = 0; i < 3; i++) {
         if (i >= runners_time.length) {
@@ -739,7 +791,7 @@ function setFinalResultsView(data, event) {
         setInnerHtml("result-" + (i + 1) + "-ep-5", runners_time[i].time);
 
         var placement_box = document.getElementById("runner-" + (i + 1) + "-placement");
-        if(placement_box){
+        if (placement_box) {
             placement_box.innerHTML = placements[i] + rung_labels[i];
             placement_box.classList.add(rung_colors[i]);
         }
@@ -867,10 +919,10 @@ function setRunnerData(data, event, stream) {
     }
 }
 
-function setOpenerData(data, event){
+function setOpenerData(data, event) {
     var event_name_opener_stats = document.getElementById("match-name-opener-stats");
 
-    if(!event_name_opener_stats){
+    if (!event_name_opener_stats) {
         return;
     }
 
@@ -888,8 +940,8 @@ function setOpenerData(data, event){
         } else if (tokens.length >= 4) {
             event_name_element.innerHTML = "<div>WEEK " + tokens[1] + "</div><div>RUNG " + tokens[3] + "</div>";
 
-            for(var i = 0; i < 3; i++){
-                setInnerHtml("stat-label-opening-" + (i+1), parseInt(tokens[1]) > 1 ? "EVENT BEST" : "PERSONAL BEST");
+            for (var i = 0; i < 3; i++) {
+                setInnerHtml("stat-label-opening-" + (i + 1), parseInt(tokens[1]) > 1 ? "EVENT BEST" : "PERSONAL BEST");
             }
         } else {
             event_name_element.innerHTML = event.name;
@@ -897,14 +949,14 @@ function setOpenerData(data, event){
     }
 
     var runners = getRunnersBySeed(data, event);
-    for(var i = 0; i < 3; i++){
+    for (var i = 0; i < 3; i++) {
         var runner = data.people[runners[i]];
         var meta = user_meta.get(runner.name);
-        setInnerHtml("ladder-opening-runner-name-"+(i+1), runner.name);
-        setInnerHtml("ladder-opening-runner-seed-"+(i+1), "Seed " + meta.seed);
+        setInnerHtml("ladder-opening-runner-name-" + (i + 1), runner.name);
+        setInnerHtml("ladder-opening-runner-seed-" + (i + 1), "Seed " + meta.seed);
         //Change after week 1
-        setInnerHtml("stat-opening-"+(i+1), meta.pb);
-        var icon = document.getElementById("ladder-opening-runner-icon-"+(i+1));
+        setInnerHtml("stat-opening-" + (i + 1), meta.pb);
+        var icon = document.getElementById("ladder-opening-runner-icon-" + (i + 1));
         if (icon && meta && meta.icon) {
             icon.src = "./icons/" + meta.icon;
         }
@@ -912,11 +964,11 @@ function setOpenerData(data, event){
 
     var commentators = getCommentatorsOrdered(data, event);
 
-    if(commentators.length == 2){
+    if (commentators.length == 2) {
         setInnerHtml("comms-box", "<div>" + data.people[commentators[0].participant].name
-            + "</div><img class=\"ladder-comms-mic\" src=\"Mic_5.png\"/><div>"+ data.people[commentators[1].participant].name
-            +"</div>");
-    }else{
+            + "</div><img class=\"ladder-comms-mic\" src=\"Mic_5.png\"/><div>" + data.people[commentators[1].participant].name
+            + "</div>");
+    } else {
         setInnerHtml("comms-box", "");
     }
 }
@@ -936,10 +988,10 @@ function setInterviewData(data, event) {
 
     setInnerHtml("interview-name", runner.name);
     var video = document.getElementById("video-background");
-    if(video && runner.name){
-        video.src="../../../videos/"+runner.name.toLowerCase()+".mp4";
+    if (video && runner.name) {
+        video.src = "../../../videos/" + runner.name.toLowerCase() + ".mp4";
     }
-    
+
 
     if (final_time != null && final_time.final_result != null && final_time.final_result != "") {
         setInnerHtml("final-time-label", "FINAL TIME");
@@ -1111,8 +1163,6 @@ function queryProbabilities(data, event) {
         });
     }
 
-    console.log(query)
-
     // query server
     fetch(odds_endpoint, {
         method: 'POST',
@@ -1127,13 +1177,12 @@ function queryProbabilities(data, event) {
         return response.json();
     }).then(data => {
         raw_predictions = data;
-        displayLivePredictions(state, last_event, data)
+        displayLiveProbabilities(state, last_event)
     })
 }
 
 connectToSocket('/ws', function(data) {
     state = data;
-    console.log("state", state)
 
     var event_id = getEventForHost(data, this_host);
     if (event_id == null) {
@@ -1191,7 +1240,10 @@ connectToSocket('/ws', function(data) {
     let winProb2P = document.getElementById("win-prob-2p");
     let winProbGraph = document.getElementById("win-prob-graph");
 
-    if (timeTable && winProbGraph && winProb3P && winProb2P && cf && cf['table-setting'] != null && cf['table-setting'] != undefined) {
+    h2h_1 = cf['head-to-head-1'] ? cf['head-to-head-1'] : null;
+    h2h_2 = cf['head-to-head-2'] ? cf['head-to-head-2'] : null;
+
+    if (timeTable && winProbGraph && winProb3P && winProb2P) {
         let table_setting = cf['table-setting'].toLowerCase();
 
         if (table_setting != last_table_setting) {
@@ -1203,22 +1255,19 @@ connectToSocket('/ws', function(data) {
 
                 // clear last probability to trigger bar to extend
                 last_win_probabilities = null;
-            } else if (table_setting.startsWith("h2h")) {
+            } else if (table_setting == "h2h") {
                 timeTable.style.display = "none";
                 winProb3P.style.display = "none";
                 winProb2P.style.display = "flex";
                 winProbGraph.style.display = "none";
 
                 // clear last probability to trigger bar to extend
-                last_win_probabilities = null;
+                last_h2h = null;
             } else if (table_setting == "graph") {
                 timeTable.style.display = "none";
                 winProb3P.style.display = "none";
                 winProb2P.style.display = "none";
                 winProbGraph.style.display = "flex";
-
-                // clear last probability to trigger bar to extend
-                last_win_probabilities = null;
             } else {
                 timeTable.style.display = "flex";
                 winProb3P.style.display = "none";
@@ -1247,7 +1296,7 @@ let timer_element = document.getElementById("timer");
 let starter_element = document.getElementById("starting-soon");
 
 setInterval(function() {
-    
+
     if (state == null) {
         return;
     }
