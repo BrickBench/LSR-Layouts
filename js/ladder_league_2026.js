@@ -13,28 +13,28 @@ const this_host = "main";
 const live_row_count = 3;
 
 var user_meta = new Map();
-user_meta.set("Zac", { seed: 1, pb: "2:16:33" })
-user_meta.set("Dragon76", { seed: 2, pb: "2:17:02" })
-user_meta.set("Jared", { seed: 3, pb: "2:17:24" })
+user_meta.set("Zac", { seed: 1, pb: "2:16:33", icon: "Zac-Emperor.png"})
+user_meta.set("Dragon76", { seed: 2, pb: "2:17:02", icon: "Dragon-Maul.png" })
+user_meta.set("Jared", { seed: 3, pb: "2:17:24", icon: "Jared-Obiwan.png" })
 user_meta.set("Eroadhouse", { seed: 4, pb: "2:17:31" })
 user_meta.set("Anorak", { seed: 5, pb: "2:18:03" })
 user_meta.set("Bricko", { seed: 6, pb: "2:17:42" })
 user_meta.set("Scynor", { seed: 7, pb: "2:18:19" })
 user_meta.set("Wiisuper", { seed: 8, pb: "2:19:45" })
-user_meta.set("Wazzip", { seed: 9, pb: "2:24:29" })
-user_meta.set("FlamingLazer", { seed: 10, pb: "2:24:29" })
+user_meta.set("Wazzip", { seed: 9, pb: "2:21:52" })
+user_meta.set("FlamingLazer", { seed: 10, pb: "2:22:02" })
 user_meta.set("Dimei", { seed: 11, pb: "2:22:05" })
 user_meta.set("ejpman", { seed: 12, pb: "2:22:16" })
-user_meta.set("Colten", { seed: 13, pb: "2:27:20" })
-user_meta.set("Kwazzr", { seed: 14, pb: "2:29:01" })
-user_meta.set("Phantom", { seed: 15, pb: "2:29:52" })
-user_meta.set("Charzight", { seed: 16, pb: "2:29:54", icon: "Jango.png" })
-user_meta.set("Coolisen", { seed: 17, pb: "2:30:16", icon: "Indy.png" })
-user_meta.set("MelloVro", { seed: 18, pb: "2:30:58", icon: "Kit_Fisto.png" })
-user_meta.set("Gamer_Olive", { seed: 19, pb: "2:35:07", icon: "Leia_Hoth.png" })
-user_meta.set("Thenzota", { seed: 20, pb: "2:35:21", icon: "Bespin_Guard.png" })
-user_meta.set("Wytew", { seed: 21, pb: "2:34:17", icon: "Luminara.png" })
-user_meta.set("ChessWiz", { seed: 22, pb: "2:38:52", icon: "Tarkin.png" })
+user_meta.set("Colten", { seed: 13, pb: "2:19:58" })
+user_meta.set("Kwazzr", { seed: 14, pb: "2:23:00" })
+user_meta.set("Phantom", { seed: 15, pb: "2:24:24" })
+user_meta.set("Charzight", { seed: 16, pb: "2:26:08", icon: "Jango.png" })
+user_meta.set("Coolisen", { seed: 17, pb: "2:25:50", icon: "Indy.png" })
+user_meta.set("MelloVro", { seed: 18, pb: "2:27:04", icon: "Kit_Fisto.png" })
+user_meta.set("Gamer_Olive", { seed: 19, pb: "2:28:06", icon: "Leia_Hoth.png" })
+user_meta.set("Thenzota", { seed: 20, pb: "2:28:26", icon: "Bespin_Guard.png" })
+user_meta.set("Wytew", { seed: 21, pb: "2:32:04", icon: "Luminara.png" })
+user_meta.set("ChessWiz", { seed: 22, pb: "2:30:12", icon: "Tarkin.png" })
 user_meta.set("Nolan", { seed: 23, pb: "2:40:57", icon: "Vader.png" })
 user_meta.set("AppleMan", { seed: 24, pb: "2:43:30", icon: "Anakin_boy.png" })
 user_meta.set("CaptainPaxo", { seed: 25, pb: "2:43:37", icon: "Han_Carbonite.png" })
@@ -52,22 +52,45 @@ const PLAYOFF_RUNG_LABELS = [
     "Eliminated",
 ]
 
+const PLAYOFF_RUNG_COLORS = [
+    "Advancing",
+    "Eliminated",
+]
+
 const TOP_RUNG_LABELS = [
-    "Qualified",
+    " - Qualified",
     "",
-    "Demoted"
+    " - Demoted"
+]
+
+const TOP_RUNG_COLORS = [
+    "ll-gold",
+    "ll-green",
+    "ll-red"
 ]
 
 const MIDDLE_RUNG_LABELS = [
-    "Promoted",
+    " - Promoted",
     "",
-    "Demoted"
+    " - Demoted"
+]
+
+const MIDDLE_RUNG_COLORS = [
+    "ll-green",
+    "",
+    "ll-red"
 ]
 
 const BOTTOM_RUNG_LABELS = [
-    "Promoted",
-    "Eliminated",
-    "Eliminated"
+    " - Promoted",
+    " - Eliminated",
+    " - Eliminated"
+]
+
+const BOTTOM_RUNG_COLORS = [
+    "ll-green",
+    "ll-green",
+    "ll-red"
 ]
 
 const QUALS_DATA = new Map();
@@ -361,6 +384,7 @@ function displayLCQDeltas(data, event, splits) {
 
 function displayFinalTimes(data, event, times) {
     var rung_labels = getRungLabels(event);
+    var rung_label_colors = getRungColors(event);
     var runners = getRunnersByTime(event);
 
     for (var i = 0; i < runners.length; i++) {
@@ -389,6 +413,8 @@ function displayFinalTimes(data, event, times) {
         label_box.innerHTML = rung_labels[i];
         name_box.innerHTML = participant.name.toUpperCase();
         img_box.src = '/html/ladder_league/icons/' + participant.name + ".png";
+
+        placement_box.innerHTML 
 
         for (var s = 0; s < 6; s++) {
             var split_idx = (s * 6) + 5
@@ -550,6 +576,26 @@ function getRungLabels(event) {
     }
 }
 
+function getRungColors(event) {
+    if (event.name.startsWith("QUARTERFINAL") ||
+        event.name.startsWith("SEMIFINAL")) {
+        return PLAYOFF_RUNG_LABELS;
+    }
+
+    var name_elements = event.name.split(" ");
+    var week = parseInt(name_elements[1]);
+    var rung = parseInt(name_elements[3]);
+    var week_max_rungs = 7 - (week - 1)
+
+    if (rung == 1) {
+        return TOP_RUNG_COLORS
+    } else if (rung == week_max_rungs) {
+        return BOTTOM_RUNG_COLORS
+    } else {
+        return MIDDLE_RUNG_COLORS
+    }
+}
+
 /**
     * Return the name of the level this zero-indexed split corresponds to
     */
@@ -654,6 +700,10 @@ function setResults(data, event) {
 
 function setFinalResultsView(data, event) {
     var runners_time = getRunnersByTime(event);
+    var rung_labels = getRungLabels(event);
+    var rung_colors = getRungColors(event);
+    var placements = ["1st Place","2nd Place","3rd Place"];
+
     console.log("Runners by time", runners_time);
     for (var i = 0; i < 3; i++) {
         if (i >= runners_time.length) {
@@ -673,6 +723,12 @@ function setFinalResultsView(data, event) {
 
         setInnerHtml("result-name-" + (i + 1), data.people[runners_time[i].id].name);
         setInnerHtml("result-" + (i + 1) + "-ep-5", runners_time[i].time);
+
+        var placement_box = document.getElementById("runner-" + (i + 1) + "-placement");
+        if(placement_box){
+            placement_box.innerHTML = placements[i] + rung_labels[i];
+            placement_box.classList.add(rung_colors[i]);
+        }
 
         var icon = document.getElementById("runner-" + (i + 1) + "-icon");
         if (icon && meta && meta.icon) {
@@ -1118,6 +1174,7 @@ let timer_element = document.getElementById("timer");
 let starter_element = document.getElementById("starting-soon");
 
 setInterval(function() {
+    
     if (state == null) {
         return;
     }
