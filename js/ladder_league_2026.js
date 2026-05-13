@@ -203,8 +203,8 @@ function displayLiveDeltas(data, event, splits, run_info) {
 
         document.getElementById("table-runner-" + column).innerHTML = data.people[runners[column]].name;
         var run = run_info[runners[column]];
-        if (run != null && last_real_bpt[runners[column]] != null) {
-            document.getElementById("runner-bpt-" + column).innerHTML = toStringTime(last_real_bpt[runners[column]], false, true, false);
+        if (run != null && run.currentSplitIndex <= 34) {
+            document.getElementById("runner-bpt-" + column).innerHTML = toStringTime(run.bestPossible, false, true, false);
         } else {
             document.getElementById("runner-bpt-" + column).innerHTML = "--";
         }
@@ -1197,6 +1197,8 @@ connectToSocket('/ws', function(data) {
     var stream = getStreamById(data, event_id);
 
     last_event = event;
+
+    console.log(data)
 
     setRunnerData(data, event, stream);
     setCommentatorSlots(data, event);
