@@ -812,7 +812,7 @@ function getRunnersBySeed(data, event) {
     for (const runner of Object.keys(event.runner_state)) {
         var meta = user_meta.get(data.people[runner].name);
         if (meta != null) {
-            var seed = meta.top8_seed;
+            var seed = meta.seed;
             runners.push({
                 id: runner,
                 seed
