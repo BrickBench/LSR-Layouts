@@ -23,9 +23,9 @@ user_meta.set("Bricko", { seed: 6, pb: "2:17:42" })
 user_meta.set("Scynor", { seed: 7, pb: "2:18:19" })
 user_meta.set("Wiisuper", { seed: 8, pb: "2:19:45" })
 user_meta.set("Wazzip", { seed: 9, pb: "2:21:52" })
-user_meta.set("FlamingLazer", { seed: 10, pb: "2:22:02" })
-user_meta.set("Dimei", { seed: 11, pb: "2:22:05" })
-user_meta.set("ejpman", { seed: 12, pb: "2:22:16" })
+user_meta.set("FlamingLazer", { seed: 10, pb: "2:22:02", icon: "lazericon.png" })
+user_meta.set("Dimei", { seed: 11, pb: "2:22:05", icon: "dimeiicon.png" })
+user_meta.set("ejpman", { seed: 12, pb: "2:22:16", icon: "ejpmanicon.png" })
 user_meta.set("Colten", { seed: 13, pb: "2:19:58" })
 user_meta.set("Kwazzr", { seed: 14, pb: "2:23:00" })
 user_meta.set("Phantom", { seed: 15, pb: "2:24:24" })
@@ -797,7 +797,9 @@ function setFinalResultsView(data, event) {
         var placement_box = document.getElementById("runner-" + (i + 1) + "-placement");
         if (placement_box) {
             placement_box.innerHTML = placements[i] + rung_labels[i];
-            placement_box.classList.add(rung_colors[i]);
+            if(rung_colors[i] && rung_colors[i].length > 0){
+                placement_box.classList.add(rung_colors[i]);
+            }
         }
 
         var icon = document.getElementById("runner-" + (i + 1) + "-icon");
