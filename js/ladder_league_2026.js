@@ -797,7 +797,7 @@ function setFinalResultsView(data, event) {
         var placement_box = document.getElementById("runner-" + (i + 1) + "-placement");
         if (placement_box) {
             placement_box.innerHTML = placements[i] + rung_labels[i];
-            if(rung_colors[i] && rung_colors[i].length > 0){
+            if (rung_colors[i] && rung_colors[i].length > 0) {
                 placement_box.classList.add(rung_colors[i]);
             }
         }
@@ -1184,10 +1184,10 @@ function queryProbabilities(data, event) {
     }).then(data => {
         raw_predictions = data;
         displayLiveProbabilities(state, last_event)
-    })
+    }).catch(reject => { })
 }
 
-connectToSocket('/ws', function(data) {
+connectToSocket('/ws?high_rate=true', function(data) {
     state = data;
 
     var event_id = getEventForHost(data, this_host);
