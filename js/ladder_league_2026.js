@@ -492,7 +492,7 @@ function getHeadToHead(state, predictions, h2h1, h2h2) {
 function animateBar(bar_idx, name, new_value, old_value, largest) {
     const INTERVAL = 650;
     const MIN_BAR_SIZE = 5;
-    const MAX_BAR_SIZE = 350;
+    const MAX_BAR_SIZE = 380;
     const ANIMATE = true;
 
     setInnerHtml("bar-name-" + bar_idx, name.toUpperCase());
