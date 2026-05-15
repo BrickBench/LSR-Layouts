@@ -27,7 +27,7 @@ user_meta.set("FlamingLazer", { seed: 10, pb: "2:22:02", icon: "lazericon.png" }
 user_meta.set("Dimei", { seed: 11, pb: "2:22:05", icon: "dimeiicon.png" })
 user_meta.set("ejpman", { seed: 12, pb: "2:22:16", icon: "ejpmanicon.png" })
 user_meta.set("Colten", { seed: 13, pb: "2:19:58" })
-user_meta.set("Kwazzr", { seed: 14, pb: "2:23:00" })
+user_meta.set("Kwazrr", { seed: 14, pb: "2:23:00" })
 user_meta.set("Phantom", { seed: 15, pb: "2:24:24" })
 user_meta.set("Charzight", { seed: 16, pb: "2:26:08", icon: "Jango.png" })
 user_meta.set("Coolisen", { seed: 17, pb: "2:25:50", icon: "Indy.png" })
