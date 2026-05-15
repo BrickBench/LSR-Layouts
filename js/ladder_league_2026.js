@@ -91,7 +91,7 @@ const BOTTOM_RUNG_LABELS = [
 
 const BOTTOM_RUNG_COLORS = [
     "ll-green",
-    "ll-green",
+    "ll-red",
     "ll-red"
 ]
 
