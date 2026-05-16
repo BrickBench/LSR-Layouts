@@ -133,7 +133,7 @@ export function getEventByName(stateData, eventName) {
 
 export function getParticipantByName(stateData, name) {
     for (const participant of Object.values(stateData.people)) {
-        if (participant.name == name) {
+        if (participant.name.toLowerCase() == name.toLowerCase()) {
             return participant;
         }
     }
@@ -272,15 +272,32 @@ export function getUpcomingEvents(stateData) {
     var events = [];
 
     for (const event of stateData.events) {
-        if (event.event_start_time != null && !event.complete) {
+        if (!event.complete) {
             var diff = event.event_start_time - current_millis;
-            if (diff > 0) {
+            if (diff > 0 || !event.event_start_time) {
                 events.push(event);
             }
         }
     }
 
-    events.sort((a, b) => { return a.event_start_time - b.event_start_time });
+    events.sort((a, b) => { 
+        if(a.complete && !b.complete){
+            return -1;
+        }else if(!a.complete && b.complete){
+            return 1;
+        }
+        else if(a.event_start_time && !b.event_start_time){
+            return -1;
+        }else if(!a.event_start_time && b.event_start_time){
+            return 1;
+        }
+
+        if(!a.event_start_time && !b.event_start_time){
+            return a.name.localeCompare(b.name);
+        }
+
+        return a.event_start_time - b.event_start_time;
+    });
 
     return events;
 }

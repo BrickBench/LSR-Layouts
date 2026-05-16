@@ -1038,17 +1038,24 @@ function setNextEventData(data) {
 
             document.getElementById("next-event-names-" + (i + 1)).innerHTML = names_str;
 
-            var date = new Date(event_start);
-            var date_options = {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-                hour: "numeric",
-                minute: "2-digit",
-                timeZone: 'America/New_York',
+            if(event_start){
+                var date = new Date(event_start);
+                var date_options = {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                    timeZone: 'America/New_York',
+                }
+
+
+                document.getElementById("next-event-date-" + (i + 1)).innerHTML =
+                    date.toLocaleString("en-US", date_options) + " EST";
+            }else{
+                document.getElementById("next-event-date-" + (i + 1)).innerHTML =
+                    "TO BE ANNOUNCED";
             }
-            document.getElementById("next-event-date-" + (i + 1)).innerHTML =
-                date.toLocaleString("en-US", date_options) + " EST";
         }
     }
 }
