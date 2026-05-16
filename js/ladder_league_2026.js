@@ -1219,7 +1219,7 @@ connectToSocket('/ws?high_rate=true', function(data) {
         displayFinalTimes(state, event, splitData);
     } else if (document.getElementById("bottom-lcq-bar" != null)) {
     }
-    displayLCQDeltas(state, event, splitData);
+    //displayLCQDeltas(state, event, splitData);
 
     var event_name_element = document.getElementById("match-title");
     if (event_name_element != null) {
