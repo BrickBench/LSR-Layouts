@@ -459,7 +459,7 @@ function getHeadToHead(state, predictions, h2h1, h2h2) {
 
     for (var i = 0; i < predictions.runners.length; i++) {
         let participant = getParticipantByName(state, predictions.runners[i]);
-        if (participant.name == h2h1) {
+        if (participant && participant.name.toLowerCase() == h2h1.toLowerCase()) {
             h2h1_data = {
                 runner: participant,
                 index: i,
@@ -467,7 +467,7 @@ function getHeadToHead(state, predictions, h2h1, h2h2) {
             }
         }
 
-        if (participant.name == h2h2) {
+        if (participant && participant.name.toLowerCase() == h2h2.toLowerCase()) {
             h2h2_data = {
                 runner: participant,
                 index: i,
@@ -1270,7 +1270,7 @@ connectToSocket('/ws?high_rate=true', function(data) {
 
                 // clear last probability to trigger bar to extend
                 last_win_probabilities = null;
-            } else if (table_setting == "h2h") {
+            } else if (table_setting == "h2h" && h2h_1 && h2h_2 && getParticipantByName(state, h2h_1) && getParticipantByName(state, h2h_2)) {
                 timeTable.style.display = "none";
                 winProb3P.style.display = "none";
                 winProb2P.style.display = "flex";
