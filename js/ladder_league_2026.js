@@ -17,16 +17,16 @@ var user_meta = new Map();
 user_meta.set("Zac", { seed: 1, pb: "2:16:33", icon: "Zac-Emperor.png" })
 user_meta.set("Dragon76", { seed: 2, pb: "2:17:02", icon: "Dragon-Maul.png" })
 user_meta.set("Jared", { seed: 3, pb: "2:17:24", icon: "Jared-Obiwan.png" })
-user_meta.set("Eroadhouse", { seed: 4, pb: "2:17:31", icon: "Eroadhouse-LukeHoth.png"})
-user_meta.set("Anorak", { seed: 5, pb: "2:18:03", icon: "Anorak.png"})
-user_meta.set("Bricko", { seed: 6, pb: "2:17:42", icon: "Bricko-Boba.png"})
-user_meta.set("Scynor", { seed: 7, pb: "2:18:19", icon: "Scynor-Yoda.png"})
+user_meta.set("Eroadhouse", { seed: 4, pb: "2:17:31", icon: "Eroadhouse-LukeHoth.png" })
+user_meta.set("Anorak", { seed: 5, pb: "2:18:03", icon: "Anorak.png" })
+user_meta.set("Bricko", { seed: 6, pb: "2:17:42", icon: "Bricko-Boba.png" })
+user_meta.set("Scynor", { seed: 7, pb: "2:18:19", icon: "Scynor-Yoda.png" })
 user_meta.set("WiiSuper", { seed: 8, pb: "2:19:45", icon: "WiiSuper-ImperialGuard.png" })
-user_meta.set("Wazzip", { seed: 9, pb: "2:21:52", icon: "Wazzip-IG88.png"})
+user_meta.set("Wazzip", { seed: 9, pb: "2:21:52", icon: "Wazzip-IG88.png" })
 user_meta.set("FlamingLazer", { seed: 10, pb: "2:19:26", icon: "lazericon.png" })
 user_meta.set("Dimei", { seed: 11, pb: "2:22:05", icon: "dimeiicon.png" })
 user_meta.set("ejpman", { seed: 12, pb: "2:22:16", icon: "ejpmanicon.png" })
-user_meta.set("Colten", { seed: 13, pb: "2:19:58", icon: "Colten-LukeBespin.png"})
+user_meta.set("Colten", { seed: 13, pb: "2:19:58", icon: "Colten-LukeBespin.png" })
 user_meta.set("Kwazrr", { seed: 14, pb: "2:23:00", icon: "Kwazrr-Gamorrean.png" })
 user_meta.set("Phantom", { seed: 15, pb: "2:23:24", icon: "Phantom-PitDroid.png" })
 user_meta.set("Charzight", { seed: 16, pb: "2:23:59", icon: "Jango.png" })
@@ -107,8 +107,6 @@ QUALS_DATA.set("GRAND FINALS", { id: "finals", top_seeds: [1, 8, 4, 5], bottom_s
 var raw_predictions = null;
 var last_win_probabilities = null;
 var last_h2h = null;
-var h2h_1 = "Zac";
-var h2h_2 = "Dragon76";
 var last_table_setting = "off";
 
 var last_lcq_order = []
@@ -453,13 +451,35 @@ function normalizeWinProbability(state, predictions) {
     return new_predictions;
 }
 
-function getHeadToHead(state, predictions, h2h1, h2h2) {
+function getHeadToHead(state, event, predictions, h2h) {
+    if (h2h == null || h2h.length != 2) {
+        return;
+    }
+
+    let h2h_1 = parseInt(h2h[0]);
+    let h2h_2 = parseInt(h2h[1]);
+
+    if (isNaN(h2h_1) || isNaN(h2h_2)) {
+        return;
+    }
+
+    if (h2h_1 == h2h_2) {
+        return;
+    }
+
+    if (h2h_1 < 1 || h2h_1 > predictions.runners.length || h2h_2 < 1 || h2h_2 > predictions.runners.length) {
+        return;
+    }
+
+
     let h2h1_data = null;
     let h2h2_data = null;
 
+    let seed_runners = getRunnersBySeed(state, event);
+
     for (var i = 0; i < predictions.runners.length; i++) {
         let participant = getParticipantByName(state, predictions.runners[i]);
-        if (participant && participant.name.toLowerCase() == h2h1.toLowerCase()) {
+        if (participant && participant.id == seed_runners[h2h_1 - 1]) {
             h2h1_data = {
                 runner: participant,
                 index: i,
@@ -467,7 +487,7 @@ function getHeadToHead(state, predictions, h2h1, h2h2) {
             }
         }
 
-        if (participant && participant.name.toLowerCase() == h2h2.toLowerCase()) {
+        if (participant && participant.id == seed_runners[h2h_2 - 1]) {
             h2h2_data = {
                 runner: participant,
                 index: i,
@@ -581,7 +601,8 @@ function displayLiveProbabilities(state, event) {
     }
     last_win_probabilities = predictions;
 
-    let h2h = getHeadToHead(state, raw_predictions, h2h_1, h2h_2);
+    let h2h_setting = state.custom_fields["head-to-head"]
+    let h2h = getHeadToHead(state, event, raw_predictions, h2h_setting);
 
     if (h2h != null) {
         if (last_h2h != null &&
@@ -1038,7 +1059,7 @@ function setNextEventData(data) {
 
             document.getElementById("next-event-names-" + (i + 1)).innerHTML = names_str;
 
-            if(event_start){
+            if (event_start) {
                 var date = new Date(event_start);
                 var date_options = {
                     month: "long",
@@ -1052,7 +1073,7 @@ function setNextEventData(data) {
 
                 document.getElementById("next-event-date-" + (i + 1)).innerHTML =
                     date.toLocaleString("en-US", date_options) + " EST";
-            }else{
+            } else {
                 document.getElementById("next-event-date-" + (i + 1)).innerHTML =
                     "TO BE ANNOUNCED";
             }
@@ -1255,9 +1276,6 @@ connectToSocket('/ws?high_rate=true', function(data) {
     let winProb2P = document.getElementById("win-prob-2p");
     let winProbGraph = document.getElementById("win-prob-graph");
 
-    h2h_1 = cf['head-to-head-1'] ? cf['head-to-head-1'] : null;
-    h2h_2 = cf['head-to-head-2'] ? cf['head-to-head-2'] : null;
-
     if (timeTable && winProbGraph && winProb3P && winProb2P) {
         let table_setting = cf['table-setting'].toLowerCase();
 
@@ -1270,7 +1288,7 @@ connectToSocket('/ws?high_rate=true', function(data) {
 
                 // clear last probability to trigger bar to extend
                 last_win_probabilities = null;
-            } else if (table_setting == "h2h" && h2h_1 && h2h_2 && getParticipantByName(state, h2h_1) && getParticipantByName(state, h2h_2)) {
+            } else if (table_setting == "h2h") {
                 timeTable.style.display = "none";
                 winProb3P.style.display = "none";
                 winProb2P.style.display = "flex";
