@@ -982,7 +982,14 @@ function setOpenerData(data, event) {
         setInnerHtml("ladder-opening-runner-name-" + (i + 1), runner.name);
         setInnerHtml("ladder-opening-runner-seed-" + (i + 1), "Seed " + meta.seed);
         //Change after week 1
-        setInnerHtml("stat-opening-" + (i + 1), meta.pb);
+
+        var bestTime = getRunnerFastestTime(data, runners[i]);
+
+        if(bestTime == "99:99:99"){
+            bestTime == meta.pb;
+        }
+
+        setInnerHtml("stat-opening-" + (i + 1), bestTime);
         var icon = document.getElementById("ladder-opening-runner-icon-" + (i + 1));
         if (icon && meta && meta.icon) {
             icon.src = "./icons/" + meta.icon;
