@@ -42,6 +42,7 @@ user_meta.set("CaptainPaxo", { seed: 25, pb: "2:37:27", icon: "Han_Carbonite.png
 user_meta.set("Doubtt", { seed: 26, pb: "2:44:07", icon: "Anakin_Episode3.png" })
 user_meta.set("Chroma_Q", { seed: 27, pb: "2:46:27", icon: "Han_Hoth.png" })
 user_meta.set("Staunch", { seed: 28, pb: "2:48:42", icon: "Panaka.png" })
+user_meta.set("TBA", {seed: 99, pb: "2:49:23", icon: "Tarkin.png"});
 
 var state = null;
 var last_event = null;
