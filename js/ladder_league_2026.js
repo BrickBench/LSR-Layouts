@@ -209,6 +209,8 @@ function displayLiveDeltas(data, event, splits, run_info) {
         }
     }
 
+    var rowClass = runners.entries().length > 2 ? "time-table-3p-split": "time-table-2p-split";
+
     for (var row_index = 0; row_index < live_row_count; row_index++) {
         var split_index = first_split_to_show + row_index;
         document.getElementById("label-split-" + row_index).innerHTML = getSplitName(split_index);
@@ -237,10 +239,10 @@ function displayLiveDeltas(data, event, splits, run_info) {
                 var time_element = document.getElementById("runner-" + runner_idx + "-split-" + row_index);
                 if (runner_split == null || runner_split.time == null) {
                     time_element.innerHTML = "--";
-                    time_element.className = "time-table-3p-split";
+                    time_element.className = rowClass;
                 } else {
                     time_element.innerHTML = toStringTime(runner_split.time, false, true, false)
-                    let setstyle = "time-table-3p-split";
+                    let setstyle = rowClass;
                     if (runner_split.time <= bestTime) {
                         setstyle += " ahead";
                     } else {
@@ -254,7 +256,7 @@ function displayLiveDeltas(data, event, splits, run_info) {
                 setInnerHtml("runner-" + runner + "-split-" + row_index, "--");
                 var time_element = document.getElementById("runner-" + runner + "-split-" + row_index);
                 if (time_element != null) {
-                    time_element.className = "time-table-3p-split";
+                    time_element.className = rowClass;
                 }
             }
         }

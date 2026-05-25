@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html style="background-color: transparent;">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../../css/ladder_league2026.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="https://fonts.cdnfonts.com/css/aurebesh" rel="stylesheet">
+        
+        <script>
+            window.addEventListener('obsSourceActiveChanged', function(event) {
+                var matchBox = document.getElementById("match-box");
+                var runner1Box = document.getElementById("runner-1-box");
+                var runner2Box = document.getElementById("runner-2-box");
+                var runner3Box = document.getElementById("runner-3-box");
+                matchBox.classList.remove('moveUp');
+                runner1Box.classList.remove('moveUp');
+                runner2Box.classList.remove('moveUp');
+                runner3Box.classList.remove('moveUp');
+
+                void matchBox.offsetWidth; 
+                void runner1Box.offsetWidth; 
+                void runner2Box.offsetWidth; 
+                void runner3Box.offsetWidth; 
+                    
+                matchBox.classList.add('moveUp');
+                runner1Box.classList.add('moveUp');
+                runner2Box.classList.add('moveUp');
+                runner3Box.classList.add('moveUp');
+            })
+        </script>
+
+    
+    </head>
+    <body style="width:1920px; height:1080px; background-image: url('LL26_MatchResults_Background.png');">
+        <div id="match-box" class="match-3p-results-header moveUp" style="position: absolute; width: 1920px; height: 258px; top: 0px; left: 0px">
+            <div class="match-3p-results-header-name">
+                <span id="match-title"></span> Results
+            </div>
+            <div class="match-3p-results-header-caption">
+                Match Results
+            </div>
+        </div>
+        <!-- Runner 1 -->
+        <div id ="runner-1-box" class="match-3p-results-left-box moveUp" style="position: absolute; top: 0px; left: 200px; width: 1920px; height: 1080px;  background-image: url('LL26_MatchResults_RightBox.png');">
+            <div class="match-3p-results-column" style="position: absolute; top: 250px; left: 157px; width: 468px; height: 770px;"">
+                <img id="runner-1-icon" class="results-runner-icon" src="BF.png"/>
+                <div id="result-name-1" class="results-runner-name">Eroadhouse</div>
+                <div id="runner-1-placement" class="results-placement">1st Place - Qualified</div>
+                   <div class="results-time-row">
+                    <div class="results-episode-label">I</div>
+                    <div id="result-1-ep-1" class="results-episode-time">12:32</div>
+                </div>
+                <div class="results-time-row">
+                    <div class="results-episode-label">II</div>
+                    <div id="result-1-ep-2" class="results-episode-time">22:32</div>
+                </div>
+                <div class="results-time-row">
+                    <div class="results-episode-label">IV</div>
+                    <div id="result-1-ep-4" class="results-episode-time">22:32</div>
+                </div>
+                <div class="results-time-row">
+                    <div class="results-episode-label">VI</div>
+                    <div id="result-1-ep-6" class="results-episode-time">1:32:43</div>
+                </div>
+                <div class="results-time-row">
+                    <div class="results-episode-label">III</div>
+                    <div id="result-1-ep-3" class="results-episode-time">2:32:23</div>
+                </div>
+                <div class="results-final-time-label">
+                    FINAL TIME
+                </div>
+                <div id="result-1-ep-5" class="results-final-time">
+                    2:18:41
+                </div>
+            </div>
+        </div>
+
+        <!-- Runner 2 -->
+        <div id ="runner-2-box" class="match-3p-results-center-box moveUp" style="position: absolute; top: 0px; left: 367px; width: 1920px; height: 1080px;  background-image: url('LL26_MatchResults_MiddleBox.png');">
+            <div class="match-3p-results-column" style="position: absolute; top: 250px; left: 728px; width: 468px; height: 770px;"">
+                <img id="runner-2-icon" class="results-runner-icon" src="BF.png"/>
+                <div id="result-name-2" class="results-runner-name">Eroadhouse</div>
+                <div id="runner-2-placement" class="results-placement">2nd Place - Qualified</div>
+                <div class="results-time-row">
+                    <div class="results-episode-label">I</div>
+                    <div id="result-2-ep-1" class="results-episode-time">12:32</div>
+                </div>
+                <div class="results-time-row">
+                    <div class="results-episode-label">II</div>
+                    <div id="result-2-ep-2" class="results-episode-time">22:32</div>
+                </div>
+                <div class="results-time-row">
+                    <div class="results-episode-label">IV</div>
+                    <div id="result-2-ep-4" class="results-episode-time">22:32</div>
+                </div>
+                <div class="results-time-row">
+                    <div class="results-episode-label">VI</div>
+                    <div id="result-2-ep-6" class="results-episode-time">1:32:43</div>
+                </div>
+                <div class="results-time-row">
+                    <div class="results-episode-label">III</div>
+                    <div id="result-2-ep-3" class="results-episode-time">2:32:23</div>
+                </div>
+                <div class="results-final-time-label">
+                    FINAL TIME
+                </div>
+                <div id="result-2-ep-5" class="results-final-time">
+                    2:18:41
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="module" src="../../js/ladder_league_2026.js"></script>
+</html>
