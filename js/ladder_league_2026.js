@@ -775,7 +775,7 @@ function setResults(data, event) {
     if (allset) {
         setTimeout(() => {
             var runners_time = getRunnersByTime(event);
-            for (var i = 0; i < 3; i++) {
+            for (var i = 0; i < runners_time.length; i++) {
                 var seed_order = ordered_runners.indexOf(runners_time[i].id);
                 if (seed_order >= 0) {
                     setInnerHtml("view-" + (seed_order + 1) + "-overlay-placement", placementStrings[i]);
@@ -983,7 +983,7 @@ function setOpenerData(data, event) {
     }
 
     var runners = getRunnersBySeed(data, event);
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < 3 && i < runners.length; i++) {
         var runner = data.people[runners[i]];
         var meta = user_meta.get(runner.name);
         setInnerHtml("ladder-opening-runner-name-" + (i + 1), runner.name);
