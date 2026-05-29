@@ -200,12 +200,12 @@ function displayLiveDeltas(data, event, splits, run_info) {
             break;
         }
 
-        document.getElementById("table-runner-" + column).innerHTML = data.people[runners[column]].name;
+        setInnerHtml("table-runner-" + column, data.people[runners[column]].name);
         var run = run_info[runners[column]];
         if (run != null && run.currentSplitIndex <= 34) {
-            document.getElementById("runner-bpt-" + column).innerHTML = toStringTime(run.bestPossible, false, true, false);
+            setInnerHtml("runner-bpt-" + column, toStringTime(run.bestPossible, false, true, false));
         } else {
-            document.getElementById("runner-bpt-" + column).innerHTML = "--";
+            setInnerHtml("runner-bpt-" + column, "--");
         }
     }
 
@@ -237,6 +237,10 @@ function displayLiveDeltas(data, event, splits, run_info) {
             for (const [runner_idx, runner] of runners.entries()) {
                 var runner_split = split_data[runner];
                 var time_element = document.getElementById("runner-" + runner_idx + "-split-" + row_index);
+                if (time_element == null) {
+                    continue;
+                }
+
                 if (runner_split == null || runner_split.time == null) {
                     time_element.innerHTML = "--";
                     time_element.className = rowClass;
@@ -599,7 +603,7 @@ function displayLiveProbabilities(state, event) {
         }
     }
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < runners.length; i++) {
         animateBar(i + 1, state.people[runners[i]].name, predictions[runners[i]] * 100, last_win_probabilities ? last_win_probabilities[runners[i]] * 100 : null, largest);
     }
     last_win_probabilities = predictions;
