@@ -209,7 +209,7 @@ function displayLiveDeltas(data, event, splits, run_info) {
         }
     }
 
-    var rowClass = runners.entries().length > 2 ? "time-table-3p-split": "time-table-2p-split";
+    var rowClass = runners.length > 2 ? "time-table-3p-split": "time-table-2p-split";
 
     for (var row_index = 0; row_index < live_row_count; row_index++) {
         var split_index = first_split_to_show + row_index;
