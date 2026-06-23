@@ -286,6 +286,18 @@ export function getUpcomingEvents(stateData) {
         }else if(!a.complete && b.complete){
             return 1;
         }
+        else if(a.name.toLowerCase().includes("wildcard") && b.name.toLowerCase().includes("week")){
+            return 1;
+        }
+        else if(a.name.toLowerCase().includes("week") && b.name.toLowerCase().includes("wildcard")){
+            return -1;
+        }
+        else if(a.name.toLowerCase().includes("wildcard") && b.name.toLowerCase().includes("quarter")){
+            return -1;
+        }
+        else if(a.name.toLowerCase().includes("quarter") && b.name.toLowerCase().includes("wildcard")){
+            return 1;
+        }
         else if(a.event_start_time && !b.event_start_time){
             return -1;
         }else if(!a.event_start_time && b.event_start_time){
