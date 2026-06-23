@@ -72,6 +72,18 @@ const TOP_RUNG_COLORS = [
     "ll-red"
 ]
 
+const LAST_WEEK_RUNG_LABELS = [
+    " - Qualified",
+    " - Wildcard",
+    " - Wildcard"
+]
+
+const LAST_WEEK_RUNG_COLORS = [
+    "ll-gold",
+    "ll-green",
+    "ll-green"
+]
+
 const MIDDLE_RUNG_LABELS = [
     " - Promoted",
     "",
@@ -637,7 +649,9 @@ function getRungLabels(event) {
     var rung = parseInt(name_elements[3]);
     var week_max_rungs = 7 - (week - 1)
 
-    if (rung == 1) {
+    if(week == 7){
+        return LAST_WEEK_RUNG_LABELS;
+    } else if (rung == 1) {
         return TOP_RUNG_LABELS
     } else if (rung == week_max_rungs) {
         return BOTTOM_RUNG_LABELS
@@ -657,7 +671,9 @@ function getRungColors(event) {
     var rung = parseInt(name_elements[3]);
     var week_max_rungs = 7 - (week - 1)
 
-    if (rung == 1) {
+    if(week == 7){
+        return LAST_WEEK_RUNG_COLORS;
+    } else if (rung == 1) {
         return TOP_RUNG_COLORS
     } else if (rung == week_max_rungs) {
         return BOTTOM_RUNG_COLORS
