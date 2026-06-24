@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html style="background-color: transparent;">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                --ladder-league-white: #cacacb;
+                --ladder-league-shadow: #131524;
+                --ladder-league-green: #6cc46c;
+                --ladder-league-red: #e46a6a;
+                --ladder-league-split-green: #95d895;
+                --ladder-league-split-red: #e67b7b;
+                --ladder-league-p1-color: #6cc46c;
+                --ladder-league-p2-color: #00a2ff;
+                --ladder-league-p3-color: #ffbc09;
+                --ladder-league-bright-white: #dadadb;
+                --ladder-league-grey: #A8A8A8;
+                --ladder-league-blue: #1562D1;
+                --ladder-league-gold: #FFC80B;
+                --ladder-league-dark-blue: #1B243C;
+                --ladder-league-teal: #193952;
+                --transition-offset: 3.1s;
+            }
+        </style>
+    </head>
+    <body style="width:1920px; height:1080px;">
+        <countdown-bug></countdown-bug>
+    </body>
+    <script type="module">
+        import { LitElement, html, css } from 'https://esm.run/lit';
+        import {connectToSocket, getEventForHost, toStringTime} from '../../../js/automarathon.js'
+
+        connectToSocket('/ws?high_rate=true', function(data) {
+            const countdownElement = document.querySelector('countdown-bug');
+
+            let cf = data.custom_fields;
+            countdownElement.countdownEndtime = cf['countdown-end-time'] ? parseInt(cf['countdown-end-time']) : 0;
+
+            /*var event_id = getEventForHost(data, this_host);
+            if (event_id == null) {
+                return;
+            }*/
+        });
+
+        class CountdownBug extends LitElement {
+            static styles = css`
+                :host {
+                    font-family: Rubik;
+                }
+                .playerIconRegion{
+                    display: flex; 
+                    flex-direction: row; 
+                    border-top-left-radius: 15px; 
+                    background-color: var(--ladder-league-dark-blue);
+                    color: var(--ladder-league-white);
+                    box-sizing: border-box;
+                    padding: 10px;
+                }
+                .countdownRegion{
+                    border-bottom-right-radius: 15px; 
+                    color: var(--ladder-league-dark-blue);
+                    background-color: var(--ladder-league-white);
+                    box-sizing: border-box;
+                    padding: 5px;
+                    font-variant-numeric: tabular-nums; 
+                    font-weight: bold;
+                    font-size: 1.2em;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                }
+                .matchTitleRegion{
+                    border-bottom-left-radius: 15px; 
+                    border-bottom-right-radius: 15px; 
+                    color: var(--ladder-league-white);
+                    background-color: var(--ladder-league-teal);
+                    box-sizing: border-box;
+                    padding: 10px;
+                    width: 50%;
+                }
+            `;
+
+            static properties = {
+                countdownEndtime: { type: Number },
+                _time: {type: Number},
+            };
+
+            constructor() {
+                super();
+                this._time = 0;
+                this.countdownEndtime = 0;
+                window.setInterval(() => {
+                    this._time = this.countdownEndtime ? this.countdownEndtime - Date.now() : -1;
+                }, 100);
+            }
+
+            get _formattedTime() {
+                let countDownStr = toStringTime(this._time, false, true);
+                if(!this._time || this._time < 0){
+                    countDownStr = "Starting Soon";
+                }
+                return `${countDownStr}`;
+            }
+
+            render() {
+                return html`
+                    <div style="display: flex; flex-direction: column; width: 600px;">
+                        <div style="display: flex; flex-direction: row;">
+                            <div class="playerIconRegion">
+                                <img/>
+                                <span>VS.</span>
+                                <img/>
+                            </div>
+                            <div class="countdownRegion">
+                                ${this._formattedTime}
+                            </div>
+                        </div>
+                        <div class="matchTitleRegion">
+                            UP NEXT: SEMIFINAL 1
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        customElements.define('countdown-bug', CountdownBug);
+  </script>
+</html>
