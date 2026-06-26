@@ -644,6 +644,10 @@ function getRungLabels(event) {
         return PLAYOFF_RUNG_LABELS;
     }
 
+    if(event.name.toLowerCase().includes("wildcard")){
+        return BOTTOM_RUNG_LABELS;
+    }
+
     var name_elements = event.name.split(" ");
     var week = parseInt(name_elements[1]);
     var rung = parseInt(name_elements[3]);
@@ -664,6 +668,10 @@ function getRungColors(event) {
     if (event.name.startsWith("QUARTERFINAL") ||
         event.name.startsWith("SEMIFINAL")) {
         return PLAYOFF_RUNG_COLORS;
+    }
+
+    if(event.name.toLowerCase().includes("wildcard")){
+        return BOTTOM_RUNG_COLORS;
     }
 
     var name_elements = event.name.split(" ");
@@ -987,6 +995,12 @@ function setOpenerData(data, event) {
             event_name_element.innerHTML = "<div>GRAND</div><div>FINALS</div";
         } else if (tokens[0] == "LCQ") {
             event_name_element.innerHTML = "<div>LCQ</div><div>Race " + tokens[1] + "</div>";
+        } else if (tokens[0].toLowerCase().includes("wildcard")) {
+            event_name_element.innerHTML = "<div>WILDCARD</div><div>MATCH</div>";
+
+            for (var i = 0; i < 3; i++) {
+                setInnerHtml("stat-label-opening-" + (i + 1), "EVENT BEST");
+            }
         } else if (tokens.length >= 4) {
             event_name_element.innerHTML = "<div>WEEK " + tokens[1] + "</div><div>RUNG " + tokens[3] + "</div>";
 
