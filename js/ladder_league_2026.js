@@ -108,6 +108,18 @@ const BOTTOM_RUNG_COLORS = [
     "ll-red"
 ]
 
+const WILDCARD_LABELS = [
+    " - Qualified",
+    " - Eliminated",
+    " - Eliminated"
+]
+
+const WILDCARD_COLORS = [
+    "ll-gold",
+    "ll-red",
+    "ll-red"
+]
+
 const QUALS_DATA = new Map();
 QUALS_DATA.set("QUARTERFINAL 1", { id: "q1", top_seeds: [1], bottom_seeds: [8] });
 QUALS_DATA.set("QUARTERFINAL 2", { id: "q2", top_seeds: [4], bottom_seeds: [5] });
@@ -645,7 +657,7 @@ function getRungLabels(event) {
     }
 
     if(event.name.toLowerCase().includes("wildcard")){
-        return BOTTOM_RUNG_LABELS;
+        return WILDCARD_LABELS;
     }
 
     var name_elements = event.name.split(" ");
@@ -671,7 +683,7 @@ function getRungColors(event) {
     }
 
     if(event.name.toLowerCase().includes("wildcard")){
-        return BOTTOM_RUNG_COLORS;
+        return WILDCARD_COLORS;
     }
 
     var name_elements = event.name.split(" ");

@@ -2,6 +2,26 @@
 <html style="background-color: transparent;">
     <head>
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+        <style>
+            :root {
+                --ladder-league-white: #cacacb;
+                --ladder-league-shadow: #131524;
+                --ladder-league-green: #6cc46c;
+                --ladder-league-red: #e46a6a;
+                --ladder-league-split-green: #95d895;
+                --ladder-league-split-red: #e67b7b;
+                --ladder-league-p1-color: #6cc46c;
+                --ladder-league-p2-color: #00a2ff;
+                --ladder-league-p3-color: #ffbc09;
+                --ladder-league-bright-white: #dadadb;
+                --ladder-league-grey: #A8A8A8;
+                --ladder-league-blue: #1562D1;
+                --ladder-league-gold: #FFC80B;
+                --ladder-league-dark-blue: #1B243C;
+                --ladder-league-teal: #193952;
+                --transition-offset: 3.1s;
+            }
+        </style>
     </head>
 
     <script>
@@ -10,4 +30,185 @@
         // gsap code here!
         });
     </script>
+
+    <script type="module" defer>
+        import { LitElement, html, css, nothing } from 'https://esm.run/lit';
+
+        class LowerThirds2 extends LitElement {
+            static styles = css`
+                :host {
+                    font-family: Rubik;
+                }
+            `;
+
+            static properties = {
+                top: { type: Number },
+                left: { type: Number },
+                name: { type: String },
+            };
+
+            constructor() {
+                super();
+            }
+            render() {
+                return html`
+                    <div style="display: flex; flex-direction: column; width: 600px;">
+                        ${this.name}
+                    </div>
+                `;
+            }
+        }
+
+        const LOWER_THIRDS_RADIUS = 120;
+        const LOWER_THIRDS_RADIUS_PADDING = 20; 
+
+        class LowerThirds extends LitElement {
+            static styles = css`
+                :host {
+                    font-family: Rubik;
+                }
+
+                .main-box{
+                    display: flex;
+                    flex-direction: column;
+                }
+                .lower-thirds{
+                    display: flex;
+                    flex-direction: column;
+                }
+                .lower-thirds-header{
+                    background-color: var(--ladder-league-white);
+                    align-self: flex-start; 
+                    font-size: 2em;
+                    text-transform: uppercase;
+                    padding: 10px;
+                    padding-right: 30px;
+                    border-top-right-radius: 40px;
+                    box-sizing: border-box;
+                    font-weight: bold;
+                    color: var(--ladder-league-dark-blue);
+                }
+                .main-box{
+                    background-color: var(--ladder-league-dark-blue);
+                    display: flex;
+                    flex-direction: column;
+                    color: var(--ladder-league-white);
+                    border-bottom-right-radius: 40px;
+                    justify-content: space-evenly;
+                }
+                .main-box-header{
+                    font-size: 3em;
+                    font-weight: bold;
+                }
+                .main-box-content{
+                    font-size: 2.4em;
+                }
+                .lower-thirds-side{
+                    height: ${LOWER_THIRDS_RADIUS * 2}px;
+                    width: ${LOWER_THIRDS_RADIUS * 2}px;
+                    border-radius: ${LOWER_THIRDS_RADIUS}px;
+                    background-color: var(--ladder-league-dark-blue);
+                    border: 5px solid var(--ladder-league-white);
+                    z-index: 2;
+                    margin-top: ${LOWER_THIRDS_RADIUS * 0.10}px;
+                }
+            `;
+
+            static properties = {
+                top: { type: Number },
+                left: { type: Number },
+                name: { type: String },
+                width: {type: Number},
+                contentBoxHeight: {type: Number},
+                lowerThirdsHeader: {type: String}
+            };
+
+            constructor() {
+                super();
+            }
+            render() {
+                return html`
+                    <div style="display: flex; flex-direction: row; width: 1920px; justify-content: center; align-items: center; position: absolute; top: ${this.top}px;">
+                        <div class="lower-thirds-side">
+                        </div>
+                        <div class="lower-thirds" style="width: ${this.width}px; margin-left: -${LOWER_THIRDS_RADIUS}px;">
+                            <div class="lower-thirds-header" style="padding-left: ${LOWER_THIRDS_RADIUS+LOWER_THIRDS_RADIUS_PADDING}px;">
+                                ${this.lowerThirdsHeader}
+                            </div>
+                            <div class="main-box" style="height: ${this.contentBoxHeight}px; padding-left: ${LOWER_THIRDS_RADIUS+LOWER_THIRDS_RADIUS_PADDING}px;">
+                                <div class="main-box-header">
+                                    Header Text
+                                </div>
+                                <div class="main-box-content">
+                                    Test text
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        customElements.define('lower-thirds', LowerThirds);
+
+        class CommentatorNames extends LitElement {
+            static styles = css`
+                :host {
+                    font-family: Rubik;
+                }
+                .commentator-row{
+                    display: flex; 
+                    flex-direction: row; 
+                    align-items: center;
+                    justify-content: space-evenly;
+                }
+                .commentator-entry{
+                    color: white;
+                    background-color: var(--ladder-league-dark-blue);
+                    font-size: 4em;
+                    width: 500px;
+                    border-bottom-right-radius: 25px;
+                    border-top-left-radius: 25px;
+                    text-align: center;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 10px;
+                    border: 5px solid var(--ladder-league-white);
+                    box-shadow: 10px 10px 30px var(--ladder-league-dark-blue);
+                }
+            `;
+
+            static properties = {
+                top: { type: Number },
+                height: {type: Number },
+                names: { type: Array },
+                enable: { type: Boolean }
+            };
+
+            constructor() {
+                super();
+            }
+            render() {
+                return html`
+                    <div class="commentator-row" style="position: absolute; top: ${this.top}px; width: 1920px;">
+                        ${this.names.map((entry, index) => { return html`
+                            <div class="commentator-entry" style="height: ${this.height}px;">
+                                <img src="./microphone.png" width=70/>${entry}    
+                            </div>
+                        `})}
+                    </div>
+                `;
+            }
+        }
+        customElements.define('commentator-names', CommentatorNames);
+    </script>
+
+    <body style="width:1920px; height:1080px; background-image: url('image.png');">
+        <commentator-names names='["ERoadhouse","Anonymous"]' top="770" height="120"></commentator-names>
+        <!--<lower-thirds top="700" width="1600" contentBoxHeight="150" lowerThirdsHeader="itsjared97"></lower-thirds>-->
+    </body>
+
+
 </html>
