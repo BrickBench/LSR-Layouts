@@ -76,8 +76,8 @@
                 return html`
                     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"/>
                     <div class="name-container" style="top: ${this.top}px; left: ${this.left}px; justify-content: center;">
-                         <span class="fi fi-${this.flag} flag-scale"></span>
-                         <span class="runner-name">${this.name}</span>
+                         ${this.flip ? html`<span class="runner-name">${this.name}</span><span class="fi fi-${this.flag} flag-scale"></span>` : html`<span class="fi fi-${this.flag} flag-scale"></span>
+                         <span class="runner-name">${this.name}</span>`}
                     </div>
                 `;
             }
@@ -154,17 +154,18 @@
                     align-items: center;
                 }
                 .row-header{
-                    width: 20%;
+                    width: 16%;
                     color: var(--ladder-league-white);
                     text-align: center;
                     font-weight: bold;
                     font-size: 2.1em;
                 }
                 .splits-entry{
-                    width: 40%;
+                    width: 42%;
                     color: var(--ladder-league-white);
                     text-align: center;
                     font-size: 2.27em;
+                    font-variant-numeric: tabular-nums;
                 }
 
                 .splits-entry.ahead{
@@ -176,11 +177,12 @@
                 }
 
                 .bpt-entry{
-                    width: 40%;
+                    width: 42%;
                     color: var(--ladder-league-white);
                     text-align: center;
                     font-weight: bold;
                     font-size: 2.1em;
+                    font-variant-numeric: tabular-nums;
                 }
             `;
 
@@ -226,7 +228,7 @@
                 let cleanSplitIndex = Math.min(Math.max(this.splitIndex, 0), Math.min(32,this.splits.length));
 
                 return html`
-                    <div class="splits-table" style="position: absolute; left: ${this.left}px; top: ${this.top}px; width: 757px; height: 236px;">
+                    <div class="splits-table" style="position: absolute; left: ${this.left}px; top: ${this.top}px; width: 771px; height: 236px;">
                         ${this.splits.slice(cleanSplitIndex, cleanSplitIndex + 3).map((entry, index) => { console.log(entry,this.splits); return html`
                              <div class="splits-row">
                                 <div class="splits-entry ${entry[0] <= entry[1] ? "ahead" : "behind"}">
@@ -280,9 +282,10 @@
                     justify-content: center;
                     text-align: center;
                     text-transform: uppercase;
-                    font-size: 28px;
+                    font-size: 30px;
                     gap: 1px;
                     flex: 1;
+                    margin-left: -26px;
                 }
 
                 .timer{
@@ -327,7 +330,7 @@
                 }
 
                 return html`
-                   <div class="timer-title-box" style="position: absolute; left: ${this.left}px; top: ${this.top}px; width: 758px; height: 100px;">
+                   <div class="timer-title-box" style="position: absolute; left: ${this.left}px; top: ${this.top}px; width: 771px; height: 100px;">
                         <div class="time-title-spacer"></div>
                         <div id="match-title-split" class="match-title-box">
                             ${matchElements}
@@ -344,12 +347,13 @@
                 :host {
                     font-family: Rubik;
                 }
-            `;
+            `; 
 
             static properties = {
                 top: { type: Number },
                 left: { type: Number },
-                name: { type: String },
+                names: { type: Array },
+                probs: { type: Array}
             };
 
             constructor() {
@@ -357,19 +361,21 @@
             }
             render() {
                 return html`
-                    <div style="display: flex; flex-direction: column; width: 600px;">
+                    <div style="display: flex; flex-direction: column; width: 771px; height: 236px;">
                         ${this.name}
                     </div>
                 `;
             }
         }
+        customElements.define('win-prob', WinProb);
     </script>
-    <body style="width:1920px; height:1080px; background-image: url('Top8v9.png');">
+    <body style="width:1920px; height:1080px; background-image: url('LL26_Top8_2P_V6.png');">
         <title-bar id="title-bar" left="577" top="606" matchTitle="quarterfinals"></title-bar>
         <runner-plate id="runner-1" left=30 top=572 name="flaminglazer" flag="ca"></runner-plate>
-        <runner-plate id="runner-2" left=1428 top=572 name="eroadhouse" flag="us"></runner-plate>
+        <runner-plate id="runner-2" left=1428 top=572 name="eroadhouse" flag="us" flip="true"></runner-plate>
         <commentator-plate id="comm-1" name="LaserTrap" pronoun="They/Them" top="977" left="622"></commentator-plate>
         <commentator-plate id="comm-2" name="P53" top="977" left="1056"></commentator-plate>
         <splits-table top="735" left="577"></splits-table>
+        <win-prob top="735" left="577"></win-prob>
     </body>
 </html>
