@@ -4,6 +4,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
         <style>
             :root {
                 --ladder-league-white: #cacacb;
@@ -25,18 +26,19 @@
             }
         </style>
     </head>
-    <body style="width:1920px; height:1080px;">
-        <countdown-bug></countdown-bug>
+    <body style="width:1920px; height:1080px; background-image: url('image.png')">
+        <countdown-bug eventName="QUARTERFINAL 1" top="66" left="84" p1Name="Eroadhouse" p2Name="Jared" p1Seed="3" p2Seed="5" ></countdown-bug>
     </body>
     <script type="module">
         import { LitElement, html, css } from 'https://esm.run/lit';
         import {connectToSocket, getEventForHost, toStringTime} from '../../../js/automarathon.js'
+        import { gsap } from "https://esm.sh/gsap";
 
         connectToSocket('/ws?high_rate=true', function(data) {
             const countdownElement = document.querySelector('countdown-bug');
 
             let cf = data.custom_fields;
-            countdownElement.countdownEndtime = cf['countdown-end-time'] ? parseInt(cf['countdown-end-time']) : 0;
+            //countdownElement.countdownEndtime = cf['countdown-end-time'] ? parseInt(cf['countdown-end-time']) : 0;
 
             /*var event_id = getEventForHost(data, this_host);
             if (event_id == null) {
@@ -51,13 +53,25 @@
                 }
                 .playerIconRegion{
                     display: flex; 
-                    flex-direction: row; 
                     border-top-left-radius: 15px; 
                     background-color: var(--ladder-league-dark-blue);
                     color: var(--ladder-league-white);
                     box-sizing: border-box;
-                    padding: 10px;
+                    padding: 20px;
+                    height: 80px;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    text-transform: uppercase;
+                    font-weight: bold;
+                    text-align: center;
                 }
+
+                .top8Placeholder{
+                    font-size: 2.82em;
+                }
+
                 .countdownRegion{
                     border-bottom-right-radius: 15px; 
                     color: var(--ladder-league-dark-blue);
@@ -66,33 +80,114 @@
                     padding: 5px;
                     font-variant-numeric: tabular-nums; 
                     font-weight: bold;
-                    font-size: 1.2em;
+                    font-size: 2.82em;
                     display: flex;
                     flex-direction: row;
                     align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    height: 80px;
+                    width: 220px;
                 }
                 .matchTitleRegion{
                     border-bottom-left-radius: 15px; 
                     border-bottom-right-radius: 15px; 
                     color: var(--ladder-league-white);
                     background-color: var(--ladder-league-teal);
+                    align-items: flex-start;
                     box-sizing: border-box;
                     padding: 10px;
-                    width: 50%;
+                    width: 60%;
+                    height: 42px;
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    grid-template-rows: 1fr;
+                    font-size: 1.5em;
+                }
+
+                .matchTitleRegion > * {
+                    grid-column: 1;
+                    grid-row: 1;
+                    font-style: italic;
+                    text-transform: uppercase;
+                }
+
+                .ladder-icon{
+                    height: 60px;
                 }
             `;
 
             static properties = {
                 countdownEndtime: { type: Number },
                 _time: {type: Number},
+                eventName: {type: String},
+                top: {type: Number},
+                left: {type: Number},
+                p1Name: {type: String},
+                p2Name: {type: String},
+                p1Seed: {type: Number},
+                p2Seed: {type: Number},
+                p1Image: {type: String},
+                p2Image: {type: String},
+                _currSlide: {type: Number},
+                lastSlideTransition: {type: Number}
             };
+
+            static get transitionInterval() {
+                return 13000;
+            }
+            static duration = 1;
+
+            updateSlides(){
+                const parent = this.renderRoot.querySelector('#bottom-scroll');
+                if(this._currSlide == 1){
+                    if(this.p1Name && this.p2Name){
+                    }else{
+                        this._currSlide = 0;
+                    }
+                }
+                Array.from(parent.children).forEach((element,index) => {
+                    gsap.set(element, { autoAlpha: (index == this._currSlide ? 1 : 0) });
+                });
+                this.lastSlideTransition = Date.now();
+            }
+
+            nextSlide(){
+                let prevSlide = this._currSlide;
+                if(this._currSlide == 0){
+                    if(this.p1Name && this.p2Name){
+                        this._currSlide = 1;
+                    }
+                }else{
+                    this._currSlide = 0;
+                }
+
+                const parent = this.renderRoot.querySelector('#bottom-scroll');
+
+                const tl = gsap.timeline();
+                tl.to(parent.children[prevSlide], { autoAlpha: 0, duration: CountdownBug.duration })
+                    .to(parent.children[this._currSlide], { autoAlpha: 1, duration: CountdownBug.duration }, `-=${CountdownBug.duration}`)
+
+                this.lastSlideTransition = Date.now();
+            }
+
+            firstUpdated(changedProperties) {
+                this.updateSlides();
+            }
 
             constructor() {
                 super();
                 this._time = 0;
-                this.countdownEndtime = 0;
+                this.countdownEndtime = Date.now() + 40000;
+                this.lastSlideTransition = Date.now();
+                this._currSlide = 0;
                 window.setInterval(() => {
-                    this._time = this.countdownEndtime ? this.countdownEndtime - Date.now() : -1;
+                    this._time = this.countdownEndtime ? (this.countdownEndtime - Date.now()) : -1;
+                    console.log(Date.now() - this.lastSlideTransition, CountdownBug.transitionInterval);
+                    if(Date.now() - this.lastSlideTransition > CountdownBug.transitionInterval){
+                        console.log("sdsd")
+                        this.nextSlide();
+                    }
                 }, 100);
             }
 
@@ -106,19 +201,25 @@
 
             render() {
                 return html`
-                    <div style="display: flex; flex-direction: column; width: 600px;">
+                    <div style="display: flex; flex-direction: column; width: 600px; position: absolute; top: ${this.top}px; left: ${this.left}px;">
                         <div style="display: flex; flex-direction: row;">
                             <div class="playerIconRegion">
-                                <img/>
-                                <span>VS.</span>
+                                <img src="./ladder.png" class="ladder-icon"/>
+                                <span class="top8Placeholder">TOP 8</span>
+                                <!--<span>VS.</span>-->
                                 <img/>
                             </div>
                             <div class="countdownRegion">
-                                ${this._formattedTime}
+                                <span>${this._formattedTime}</span>
                             </div>
                         </div>
-                        <div class="matchTitleRegion">
-                            UP NEXT: SEMIFINAL 1
+                        <div class="matchTitleRegion" id="bottom-scroll">
+                            <div>
+                                <b>UP NEXT: ${this.eventName}</b>
+                            </div>
+                            <div>
+                            (${this.p1Seed}) <b>${this.p1Name}</b> VS. (${this.p2Seed}) <b>${this.p2Name}</b>
+                            </div>
                         </div>
                     </div>
                 `;

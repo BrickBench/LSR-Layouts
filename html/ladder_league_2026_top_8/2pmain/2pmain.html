@@ -4,6 +4,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
         <style>
             :root {
                 --ladder-league-white: #cacacb;
@@ -25,12 +26,61 @@
             }
         </style>
     </head>
+    <script>
+        /*connectToSocket('/ws?high_rate=true', function(data) {
+             
+        });*/
+
+        document.addEventListener("DOMContentLoaded", (event) => {
+            const splitsTable = document.querySelector('splits-table');
+            const winProbs = document.querySelector('win-prob');
+
+            //Set initial alphas
+            gsap.set(splitsTable, { autoAlpha: 1 });
+            gsap.set(winProbs, { autoAlpha: 0 });
+        });
+
+        function switchSlides(activeSlide){
+            var slides = ['splits-table', 'win-prob'];
+
+            if(slides.includes(activeSlide)){
+                slides = slides.filter(elem => elem !== activeSlide);
+            }else{
+                return;
+            }
+
+            const tl = gsap.timeline();
+            const activeElem = document.querySelector(activeSlide);
+
+            let duration = 0.65;
+
+            tl.to(activeElem, { autoAlpha: 1, duration: duration });
+
+            slides.forEach(element => {
+                const elem = document.querySelector(element);
+                tl.to(elem, {autoAlpha: 0, duration: duration}, `-=${duration}`);
+            });    
+        }
+
+        //test, drop this
+        setInterval(function() {
+            const timeElement = document.querySelector('win-overlay');
+            timeElement.p1Time="2:32:32.44";
+            timeElement.p2Time="2:32:32.23";
+
+            const winProb = document.querySelector('win-prob');
+            winProb.probs = [90, 10];
+            winProb.prevProbs = [10, 90];
+            winProb.names=["EROADHOUSE","JARED"];
+
+            switchSlides("win-prob");
+            winProb.animateBar();
+        }, 5000)
+    </script>
     <script type="module" defer>
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
+        import {classMap} from 'https://esm.run/lit/directives/class-map.js';
         import {connectToSocket, getEventForHost, toStringTime} from '../../../js/automarathon.js'
-
-        connectToSocket('/ws?high_rate=true', function(data) {
-        });
 
         class RunnerPlate extends LitElement {
             static styles = css`
@@ -191,7 +241,7 @@
                 left: { type: Number },
                 splitIndex: {type: Number},
                 splits: { type: Array},
-                bpts: { type: Array }
+                bpts: { type: Array }, 
             };
 
             constructor() {
@@ -347,27 +397,246 @@
                 :host {
                     font-family: Rubik;
                 }
+                
+                .win-prob-2p{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    font-family: 'Rubik';
+                    color: var(--ladder-league-white);
+                    box-sizing: border-box;
+                    padding-top: 25px;
+                    padding-bottom: 25px;
+                    padding-left: 25px;
+                    padding-right: 25px;
+                    text-shadow: 2px 2px 5px var(--ladder-league-shadow);
+                }
+
+                .win-prob-title{
+                    text-align: center;
+                    height: 18%;
+                    font-size: 1.8em;
+                    font-weight: bold;
+                }
+
+                .bars-container{
+                    display: flex;
+                    flex-direction: column;
+                    align-content: space-evenly;
+                    height: 82%;
+                }
+
+                .bar-container{
+                    display: flex;
+                    flex-direction: row;
+                    flex: 1;
+                    align-items: center;
+                    gap: 2%;
+                }
+
+                .win-prob-bar {
+                    background-color: var(--bar-color);
+                    height: 40%;
+                }
+
+                .bar-name{
+                    width: 24%;
+                    font-weight: bold;
+                    font-size: 1.3em;
+                }
+
+                .bar-percentage{
+                    width: 5%;
+                    font-size: 1.3em;
+                }
             `; 
 
             static properties = {
                 top: { type: Number },
                 left: { type: Number },
                 names: { type: Array },
-                probs: { type: Array}
+                probs: { type: Array},
+                prevProbs: {type: Array}
             };
+
+            animateBar(){
+                const p1CE = this.renderRoot.querySelector("#bar-percent-1");
+                const p1CO = { val: this.prevProbs[0] };
+                
+                gsap.to(p1CO, {
+                    val: this.probs[0],
+                    duration: 3,
+                    ease: "power1.inOut",
+                    snap: { val: 1 }, 
+                    onUpdate: () => {
+                        p1CE.innerText = Math.round(p1CO.val) + "%";
+                    }
+                });
+
+                const p2CE = this.renderRoot.querySelector("#bar-percent-2");
+                const p2CO = { val: this.prevProbs[1] };
+                
+                gsap.to(p2CO, {
+                    val: this.probs[1],
+                    duration: 3, 
+                    ease: "power1.inOut",
+                    snap: { val: 1 }, 
+                    onUpdate: () => {
+                        p2CE.innerText = Math.round(p2CO.val) + "%";
+                    }
+                });
+            }
 
             constructor() {
                 super();
             }
             render() {
                 return html`
-                    <div style="display: flex; flex-direction: column; width: 771px; height: 236px;">
-                        ${this.name}
+                     <div id="win-prob-2p" class="win-prob-2p" style="position: absolute; left: ${this.left}px; top: ${this.top}px; width: 771px; height: 236px;">
+                        <div class="win-prob-title">
+                            LIVE WIN PREDICTION
+                        </div>
+                        <div class="bars-container">
+                            <div class="bar-container">
+                                <div class="bar-name">
+                                    ${this.names && this.names[0]}
+                                </div>
+                                <div id="bar-display-1" class="win-prob-bar" style="--bar-color: var(--ladder-league-p1-color); width: 1%;"></div>
+                                <div id="bar-percent-1" class="bar-percentage">
+                                    0%
+                                </div>
+                            </div>
+                            <div class="bar-container">
+                                <div id="bar-name-2" class="bar-name">
+                                    ${this.names && this.names[1]}
+                                </div>
+                                <div id="bar-display-2" class="win-prob-bar" style="--bar-color: var(--ladder-league-p2-color); width: 1%;"></div>
+                                <div id="bar-percent-2" class="bar-percentage">
+                                    0%
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 `;
             }
         }
         customElements.define('win-prob', WinProb);
+
+        class WinnerOverlays extends LitElement {
+            static styles = css`
+                :host {
+                    font-family: Rubik;
+                }
+                .runner-overlay{
+                    text-align: center;
+                    text-shadow: 2px 2px 7px rgb(30, 30, 30); 
+                    color: var(--ladder-league-bright-white);
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    background-color: rgba(0,0,0,0.7);
+                    visibility: hidden;
+                    opacity: 0;
+                    font-family: 'Rubik';
+                    box-sizing: border-box;
+                    padding-top: 30px;
+                    transition: opacity 300ms ease-in, visibility 0ms ease-in 300ms;
+                }
+
+                .runner-overlay-time{
+                    font-weight: bold;
+                    font-size: 94px;
+                }
+
+                .runner-overlay-placement{
+                    font-style: italic;
+                    font-size: 50px;
+                    opacity: 0;
+                    transition: opacity 300ms ease-in 0ms, visibility 0ms ease-in 0ms;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 12px;
+                }
+
+                .runner-overlay-placement.show{
+                    opacity: 1;
+                } 
+                .runner-overlay-show {
+                    visibility: visible;
+                    opacity: 1;
+                    transition-delay: 0ms;
+                }
+            `; 
+
+            static properties = {
+                p1Time: { type: String },
+                p2Time: { type: String }
+            };
+
+            constructor() {
+                super();
+            }
+            render() {
+                var placementP1;
+                var placementP2;
+
+                var p1Tokens;
+                var p2Tokens;
+                var displayTimeP1;
+                var displayTimeP2;
+
+                
+                if(this.p1Time){
+                    p1Tokens = this.p1Time.split(".");
+                    displayTimeP1 = p1Tokens[0].trim();
+                }
+                
+                if(this.p2Time){
+                    p2Tokens = this.p2Time.split(".");
+                    displayTimeP2 = p2Tokens[0].trim();
+                }
+                
+
+                if(this.p1Time && this.p2Time){
+                    if(displayTimeP2.toLowerCase().includes("dnf")){
+                        placementP1 = "1st";
+                        placementP2 = "2nd";
+                    }else if(displayTimeP1.toLowerCase().includes("dnf")){
+                        placementP1 = "2nd";
+                        placementP2 = "1st"
+                    }else{
+                        if(p1Tokens.length == 1){
+                            p1Tokens.push("000");
+                        }
+                        if(p2Tokens.length == 1){
+                            p2Tokens.push("000");
+                        }
+
+                        if((p1Tokens[0]+"."+p1Tokens[1]) < (p2Tokens[0]+"."+p2Tokens[1])){
+                            placementP1 = "1st";
+                            placementP2 = "2nd";
+                        }else{
+                            placementP1 = "2nd";
+                            placementP2 = "1st"
+                        }
+                    }
+                }
+
+                return html`
+                    <div class=${classMap({"runner-overlay": true, "runner-overlay-show": this.p1Time})} style="position:absolute; left: 30px; top: 60px; width:922px;height:512px;">
+                        <div class="runner-overlay-time">${displayTimeP1}</div>
+                        <div class=${classMap({"runner-overlay-placement": true, "win": placementP1 == "1st", "show": placementP1})}><img src="LL26_Flag.png" width="56"> <span>${placementP1} Place</span></div>
+                    </div>
+                    <div class=${classMap({"runner-overlay": true, "runner-overlay-show": this.p2Time})} style="position:absolute; left: 968px; top: 60px; width:921px;height:512px;">
+                        <div class="runner-overlay-time">${displayTimeP2}</div>
+                        <div class=${classMap({"runner-overlay-placement": true, "win": placementP2 == "1st", "show": placementP2})}><img src="LL26_Flag.png" width="56"> <span>${placementP2} Place</span></div>
+                    </div>
+                `;
+            }
+        }
+        customElements.define('win-overlay', WinnerOverlays);
     </script>
     <body style="width:1920px; height:1080px; background-image: url('LL26_Top8_2P_V6.png');">
         <title-bar id="title-bar" left="577" top="606" matchTitle="quarterfinals"></title-bar>
@@ -377,5 +646,6 @@
         <commentator-plate id="comm-2" name="P53" top="977" left="1056"></commentator-plate>
         <splits-table top="735" left="577"></splits-table>
         <win-prob top="735" left="577"></win-prob>
+        <win-overlay></win-overlay>
     </body>
 </html>
