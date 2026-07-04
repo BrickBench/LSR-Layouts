@@ -27,10 +27,6 @@
         </style>
     </head>
     <script>
-        /*connectToSocket('/ws?high_rate=true', function(data) {
-             
-        });*/
-
         document.addEventListener("DOMContentLoaded", (event) => {
             const splitsTable = document.querySelector('splits-table');
             const winProbs = document.querySelector('win-prob');
@@ -39,48 +35,11 @@
             gsap.set(splitsTable, { autoAlpha: 1 });
             gsap.set(winProbs, { autoAlpha: 0 });
         });
-
-        function switchSlides(activeSlide){
-            var slides = ['splits-table', 'win-prob'];
-
-            if(slides.includes(activeSlide)){
-                slides = slides.filter(elem => elem !== activeSlide);
-            }else{
-                return;
-            }
-
-            const tl = gsap.timeline();
-            const activeElem = document.querySelector(activeSlide);
-
-            let duration = 0.65;
-
-            tl.to(activeElem, { autoAlpha: 1, duration: duration });
-
-            slides.forEach(element => {
-                const elem = document.querySelector(element);
-                tl.to(elem, {autoAlpha: 0, duration: duration}, `-=${duration}`);
-            });    
-        }
-
-        //test, drop this
-        setInterval(function() {
-            const timeElement = document.querySelector('win-overlay');
-            timeElement.p1Time="2:32:32.44";
-            timeElement.p2Time="2:32:32.23";
-
-            const winProb = document.querySelector('win-prob');
-            winProb.probs = [90, 10];
-            winProb.prevProbs = [10, 90];
-            winProb.names=["EROADHOUSE","JARED"];
-
-            switchSlides("win-prob");
-            winProb.animateBar();
-        }, 5000)
     </script>
     <script type="module" defer>
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
         import {classMap} from 'https://esm.run/lit/directives/class-map.js';
-        import {connectToSocket, getEventForHost, toStringTime} from '../../../js/automarathon.js'
+        import {connectToSocket, getEventForHost, toStringTime, compareTime} from '../../../js/automarathon.js'
 
         class RunnerPlate extends LitElement {
             static styles = css`
@@ -279,16 +238,16 @@
 
                 return html`
                     <div class="splits-table" style="position: absolute; left: ${this.left}px; top: ${this.top}px; width: 771px; height: 236px;">
-                        ${this.splits.slice(cleanSplitIndex, cleanSplitIndex + 3).map((entry, index) => { console.log(entry,this.splits); return html`
+                        ${this.splits.slice(cleanSplitIndex, cleanSplitIndex + 3).map((entry, index) => {  return html`
                              <div class="splits-row">
-                                <div class="splits-entry ${entry[0] <= entry[1] ? "ahead" : "behind"}">
-                                    ${toStringTime(entry[0], false, true, false)}
+                                <div class="splits-entry ${entry[0] ? (entry[0] <= entry[1] ? "ahead" : "behind") : ""}">
+                                    ${entry[0] ? toStringTime(entry[0], false, true, false) : "--:--"}
                                 </div>
                                 <div class="row-header">
                                     ${this._getSplitName(cleanSplitIndex + index)}
                                 </div>
-                                <div class="splits-entry ${entry[1] <= entry[0] ? "ahead" : "behind"}">
-                                    ${toStringTime(entry[1], false, true, false)}
+                                <div class="splits-entry ${entry[1] ? (entry[1] <= entry[0] ? "ahead" : "behind") : ""}">
+                                    ${entry[1] ? toStringTime(entry[1], false, true, false) : "--:--"}
                                 </div>
                             </div
                         `})}
@@ -460,35 +419,49 @@
             };
 
             animateBar(){
+                const BAR_MAX_PERCENT = 50;
+            
                 const p1CE = this.renderRoot.querySelector("#bar-percent-1");
+                const p1CB = this.renderRoot.querySelector("#bar-display-1");
                 const p1CO = { val: this.prevProbs[0] };
                 
                 gsap.to(p1CO, {
                     val: this.probs[0],
                     duration: 3,
                     ease: "power1.inOut",
-                    snap: { val: 1 }, 
+                    snap: { val: 0.1 }, 
                     onUpdate: () => {
                         p1CE.innerText = Math.round(p1CO.val) + "%";
+
+                        const percent = p1CO.val * BAR_MAX_PERCENT / 100;
+                        p1CB.style.width = percent + "%";
+                        this.prevProbs[0] = p1CO.val;
                     }
                 });
 
                 const p2CE = this.renderRoot.querySelector("#bar-percent-2");
+                const p2CB = this.renderRoot.querySelector("#bar-display-2");
                 const p2CO = { val: this.prevProbs[1] };
                 
                 gsap.to(p2CO, {
                     val: this.probs[1],
                     duration: 3, 
                     ease: "power1.inOut",
-                    snap: { val: 1 }, 
+                    snap: { val: 0.1 }, 
                     onUpdate: () => {
                         p2CE.innerText = Math.round(p2CO.val) + "%";
+                        
+                        const percent = p2CO.val * BAR_MAX_PERCENT / 100;
+                        p2CB.style.width = percent + "%";
+                        this.prevProbs[1] = p2CO.val;
                     }
                 });
             }
 
             constructor() {
                 super();
+                this.probs = [50, 50];
+                this.prevProbs = [50, 50];
             }
             render() {
                 return html`
@@ -501,7 +474,7 @@
                                 <div class="bar-name">
                                     ${this.names && this.names[0]}
                                 </div>
-                                <div id="bar-display-1" class="win-prob-bar" style="--bar-color: var(--ladder-league-p1-color); width: 1%;"></div>
+                                <div id="bar-display-1" class="win-prob-bar" style="--bar-color: var(--ladder-league-p1-color); width: 50%;"></div>
                                 <div id="bar-percent-1" class="bar-percentage">
                                     0%
                                 </div>
@@ -510,7 +483,7 @@
                                 <div id="bar-name-2" class="bar-name">
                                     ${this.names && this.names[1]}
                                 </div>
-                                <div id="bar-display-2" class="win-prob-bar" style="--bar-color: var(--ladder-league-p2-color); width: 1%;"></div>
+                                <div id="bar-display-2" class="win-prob-bar" style="--bar-color: var(--ladder-league-p2-color); width: 50%;"></div>
                                 <div id="bar-percent-2" class="bar-percentage">
                                     0%
                                 </div>
@@ -644,8 +617,9 @@
         <runner-plate id="runner-2" left=1428 top=572 name="eroadhouse" flag="us" flip="true"></runner-plate>
         <commentator-plate id="comm-1" name="LaserTrap" pronoun="They/Them" top="977" left="622"></commentator-plate>
         <commentator-plate id="comm-2" name="P53" top="977" left="1056"></commentator-plate>
-        <splits-table top="735" left="577"></splits-table>
-        <win-prob top="735" left="577"></win-prob>
-        <win-overlay></win-overlay>
+        <splits-table id="splits" top="735" left="577"></splits-table>
+        <win-prob id="prob" top="735" left="577"></win-prob>
+        <win-overlay id="win-overlay"></win-overlay>
     </body>
+    <script type="module" src="../../../js/ladder_league_2026_top8.js"></script>
 </html>
