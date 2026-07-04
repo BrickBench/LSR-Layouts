@@ -371,6 +371,7 @@ function getCommentatorsOrdered(data, event) {
 function setCommentatorSlots(data, event) {
     commentator_slots = {};
     var commentators = getCommentatorsOrdered(data, event);
+    var names = []
     for (var i = 0; i < 2; i++) {
         var commentator = commentators[i];
 
@@ -378,10 +379,16 @@ function setCommentatorSlots(data, event) {
             commentator_slots[commentator] = i;
             var commentator_box = document.getElementById("comm-" + (i + 1));
             var participant = data.people[commentator];
-            commentator_box.name = participant.name;
-            commentator_box.pronoun = participant.pronouns;
+            if (commentator_box) {
+                commentator_box.name = participant.name;
+                commentator_box.pronoun = participant.pronouns;
+            }
+            names.push(participant.name);
         }
     }
+
+    var all_names = document.querySelector("commentator-names");
+    all_names.names = names;
 }
 
 function setResults(data, event) {

@@ -92,11 +92,10 @@
         import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById} from '../../../../js/automarathon.js'
 
         const this_host = "main";
-        const testStartTime = new Date().getTime();
 
         var state;
 
-        connectToSocket('/ws?high_rate=true', function(data) {
+        connectToSocket('/ws', function(data) {
             state = data;
         });
         
@@ -107,8 +106,6 @@
 
             let cf = state.custom_fields;
             let timer = cf['countdown-end-time'] ? parseInt(cf['countdown-end-time']) : undefined;
-            
-            timer = testStartTime + 30000;
             
             let time = timer ? timer - Date.now() : undefined;
             var timer_element = document.getElementsByClassName("countdown")[0];
