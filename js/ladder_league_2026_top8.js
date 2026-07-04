@@ -1,9 +1,9 @@
 import {
     connectToSocket,
-    getStreamById, getEventTimerValue,
+    getEventTimerValue,
     getEventById, getEventForHost, toStringTime,
-    getEventRunners, getOrderedStreamRunners,
-    getUpcomingEvents, getRunnersByTime,
+    getEventRunners,
+    getUpcomingEvents, 
     getParticipantByName,
     getRunnerScore, compareTime,
     setInnerHtml
@@ -11,17 +11,16 @@ import {
 
 const odds_endpoint = "https://ladderleague.run/stats/calculate"
 const this_host = "main";
-const live_row_count = 3;
 
 var user_meta = new Map();
-user_meta.set("Zac", { seed: 1, pb: "2:16:33", icon: "Zac-Emperor.png" })
-user_meta.set("Dragon76", { seed: 2, pb: "2:17:02", icon: "Dragon-Maul.png" })
-user_meta.set("Jared", { seed: 3, pb: "2:17:24", icon: "Jared-Obiwan.png" })
-user_meta.set("Eroadhouse", { seed: 4, pb: "2:17:31", icon: "Eroadhouse-LukeHoth.png" })
-user_meta.set("Anorak", { seed: 5, pb: "2:18:03", icon: "Anorak.png" })
-user_meta.set("Bricko", { seed: 6, pb: "2:17:42", icon: "Bricko-Boba.png" })
-user_meta.set("Scynor", { seed: 7, pb: "2:18:19", icon: "Scynor-Yoda.png" })
-user_meta.set("WiiSuper", { seed: 8, pb: "2:19:45", icon: "WiiSuper-ImperialGuard.png" })
+user_meta.set("Zac", { seed: 1, top8_seed: 4, pb: "2:16:33", icon: "Zac-Emperor.png" })
+user_meta.set("Dragon76", { seed: 2, top8_seed: 1, pb: "2:17:02", icon: "Dragon-Maul.png" })
+user_meta.set("Jared", { seed: 3, top8_seed: 8, pb: "2:17:24", icon: "Jared-Obiwan.png" })
+user_meta.set("ERoadhouse", { seed: 4, top8_seed: 2, pb: "2:17:31", icon: "Eroadhouse-LukeHoth.png" })
+user_meta.set("Anorak", { seed: 5, top8_seed: 3, pb: "2:18:03", icon: "Anorak.png" })
+user_meta.set("Bricko", { seed: 6, top8_seed: 7, pb: "2:17:42", icon: "Bricko-Boba.png" })
+user_meta.set("Scynor", { seed: 7, top8_seed: 5, pb: "2:18:19", icon: "Scynor-Yoda.png" })
+user_meta.set("WiiSuper", { seed: 8, top8_seed: 6, pb: "2:19:45", icon: "WiiSuper-ImperialGuard.png" })
 user_meta.set("Wazzip", { seed: 9, pb: "2:21:52", icon: "Wazzip-IG88.png" })
 user_meta.set("FlamingLazer", { seed: 10, pb: "2:19:26", icon: "lazericon.png" })
 user_meta.set("Dimei", { seed: 11, pb: "2:22:05", icon: "dimeiicon.png" })
@@ -42,30 +41,20 @@ user_meta.set("CaptainPaxo", { seed: 25, pb: "2:37:27", icon: "Han_Carbonite.png
 user_meta.set("Doubtt", { seed: 26, pb: "2:44:07", icon: "Anakin_Episode3.png" })
 user_meta.set("Chroma_Q", { seed: 27, pb: "2:46:27", icon: "Han_Hoth.png" })
 user_meta.set("Staunch", { seed: 28, pb: "2:48:42", icon: "Panaka.png" })
-user_meta.set("TBA", { seed: 99, pb: "2:49:23", icon: "Tarkin.png" });
 
 var state = null;
 var last_event = null;
 var commentator_slots = {}
 
-const PLAYOFF_RUNG_LABELS = [
-    "Advancing",
-    "Eliminated",
-]
-
-const PLAYOFF_RUNG_COLORS = [
-    "Advancing",
-    "Eliminated",
-]
-
 const QUALS_DATA = new Map();
-QUALS_DATA.set("QUARTERFINAL 1", { id: "q1", top_seeds: [1], bottom_seeds: [8] });
-QUALS_DATA.set("QUARTERFINAL 2", { id: "q2", top_seeds: [4], bottom_seeds: [5] });
-QUALS_DATA.set("QUARTERFINAL 3", { id: "q3", top_seeds: [3], bottom_seeds: [6] });
-QUALS_DATA.set("QUARTERFINAL 4", { id: "q4", top_seeds: [2], bottom_seeds: [7] });
-QUALS_DATA.set("SEMIFINAL 1", { id: "s1", top_seeds: [1, 8], bottom_seeds: [4, 5] });
-QUALS_DATA.set("SEMIFINAL 2", { id: "s2", top_seeds: [3, 6], bottom_seeds: [2, 7] });
-QUALS_DATA.set("GRAND FINALS", { id: "finals", top_seeds: [1, 8, 4, 5], bottom_seeds: [3, 6, 2, 7] });
+QUALS_DATA.set("QUARTERFINAL 1", { id: "qf-1", top_seeds: [1], bottom_seeds: [8] });
+QUALS_DATA.set("QUARTERFINAL 2", { id: "qf-2", top_seeds: [4], bottom_seeds: [5] });
+QUALS_DATA.set("QUARTERFINAL 3", { id: "qf-3", top_seeds: [2], bottom_seeds: [7] });
+QUALS_DATA.set("QUARTERFINAL 4", { id: "qf-4", top_seeds: [3], bottom_seeds: [6] });
+QUALS_DATA.set("SEMIFINAL 1", { id: "sf-1", top_seeds: [1, 8], bottom_seeds: [4, 5] });
+QUALS_DATA.set("SEMIFINAL 2", { id: "sf-2", top_seeds: [2, 7], bottom_seeds: [3, 6] });
+QUALS_DATA.set("GRAND FINALS", { id: "final", top_seeds: [1, 8, 4, 5], bottom_seeds: [3, 6, 2, 7] });
+QUALS_DATA.set("THIRD PLACE MATCH", { id: "3rd", top_seeds: [1, 8, 4, 5], bottom_seeds: [3, 6, 2, 7] });
 
 var raw_predictions = null;
 var last_active = "splits-table";
@@ -188,66 +177,15 @@ function displayLiveDeltas(data, event, splits, run_info) {
         live_table.splits = ui_splits;
         live_table.bpts = ui_bpts;
     }
-}
 
-function displayFinalTimes(data, event, times) {
-    var rung_labels = getRungLabels(event);
-    var rung_label_colors = getRungColors(event);
-    var runners = getRunnersByTime(event);
-
-    for (var i = 0; i < runners.length; i++) {
-        var label_box = document.getElementById("position-" + (i + 1) + "-status");
-        var name_box = document.getElementById("position-" + (i + 1) + "-name");
-        var img_box = document.getElementById("position-" + (i + 1) + "-img");
-        var pb_box = document.getElementById("position-" + (i + 1) + "-pb");
-
-        if (pb_box == null) {
-            break;
-        }
-
-        var participant = data.people[runners[i].id];
-        var participant_meta = null;
-        var participant_time = null;
-        if (participant != null) {
-            participant_meta = user_meta.get(participant.name);
-            participant_time = getRunnerFastestTime(data, participant.id);
-        }
-
-        if (participant_time != null) {
-            pb_box.innerHTML = "PB: " + participant_time;
-        }
-
-
-        label_box.innerHTML = rung_labels[i];
-        name_box.innerHTML = participant.name.toUpperCase();
-        img_box.src = '/html/ladder_league/icons/' + participant.name + ".png";
-
-        placement_box.innerHTML
-
-        for (var s = 0; s < 6; s++) {
-            var split_idx = (s * 6) + 5
-            var entry = document.getElementById("position-" + (i + 1) + "-" + (s + 1) + "-time");
-            var entry_str = "--"
-            if (s == 5) {
-                var final_time = getRunnerScore(event, runners[i].id);
-                if (final_time != null) {
-                    entry_str = final_time;
-                }
-            } else if (s < Object.keys(times).length) {
-                var split_data = times[split_idx];
-                if (runners[i].id in split_data) {
-                    var runner_split = split_data[runners[i].id];
-                    if (runner_split != null && runner_split.time != null) {
-                        entry_str = toStringTime(runner_split.time, false, true, false);
-                    }
-                }
-            }
-
-            entry.innerHTML = entry_str;
-        }
+    var results_table = document.querySelector("match-results");
+    if (results_table != null) {
+        results_table.eventName = event.name;
+        results_table.splits = ui_splits;
+        results_table.p1Name = data.people[runners[0]].name;
+        results_table.p2Name = data.people[runners[1]].name;
     }
 }
-
 function normalizeWinProbability(state, predictions) {
     let new_predictions = {};
     for (var i = 0; i < predictions.runners.length; i++) {
@@ -286,74 +224,6 @@ function displayLiveProbabilities(state, event) {
     prob.animateBar();
 }
 
-function getRungLabels(event) {
-    if (event.name.startsWith("QUARTERFINAL") ||
-        event.name.startsWith("SEMIFINAL")) {
-        return PLAYOFF_RUNG_LABELS;
-    }
-
-    if (event.name.toLowerCase().includes("wildcard")) {
-        return WILDCARD_LABELS;
-    }
-
-    var name_elements = event.name.split(" ");
-    var week = parseInt(name_elements[1]);
-    var rung = parseInt(name_elements[3]);
-    var week_max_rungs = 7 - (week - 1)
-
-    if (week == 7) {
-        return LAST_WEEK_RUNG_LABELS;
-    } else if (rung == 1) {
-        return TOP_RUNG_LABELS
-    } else if (rung == week_max_rungs) {
-        return BOTTOM_RUNG_LABELS
-    } else {
-        return MIDDLE_RUNG_LABELS
-    }
-}
-
-function getRungColors(event) {
-    if (event.name.startsWith("QUARTERFINAL") ||
-        event.name.startsWith("SEMIFINAL")) {
-        return PLAYOFF_RUNG_COLORS;
-    }
-
-    if (event.name.toLowerCase().includes("wildcard")) {
-        return WILDCARD_COLORS;
-    }
-
-    var name_elements = event.name.split(" ");
-    var week = parseInt(name_elements[1]);
-    var rung = parseInt(name_elements[3]);
-    var week_max_rungs = 7 - (week - 1)
-
-    if (week == 7) {
-        return LAST_WEEK_RUNG_COLORS;
-    } else if (rung == 1) {
-        return TOP_RUNG_COLORS
-    } else if (rung == week_max_rungs) {
-        return BOTTOM_RUNG_COLORS
-    } else {
-        return MIDDLE_RUNG_COLORS
-    }
-}
-
-/**
-    * Return the name of the level this zero-indexed split corresponds to
-    */
-function getSplitName(split) {
-    if (split >= 36) {
-        return null;
-    }
-    const level = (split % 6) + 1;
-    const episode_idx = Math.floor(split / 6);
-    const episode_names = [
-        1, 2, 4, 6, 3, 5
-    ];
-
-    return episode_names[episode_idx] + "-" + level;
-}
-
 /**
  * Return the list of commentators for this event,
  * starting with the pre-configured commentators and
@@ -388,7 +258,9 @@ function setCommentatorSlots(data, event) {
     }
 
     var all_names = document.querySelector("commentator-names");
-    all_names.names = names;
+    if (all_names != null) {
+        all_names.names = names;
+    }
 }
 
 function setResults(data, event) {
@@ -406,46 +278,6 @@ function setResults(data, event) {
                     name_box.p2Time = time.final_result;
                 }
             }
-        }
-    }
-}
-
-function setFinalResultsView(data, event) {
-    var runners_time = getRunnersByTime(event);
-    var rung_labels = getRungLabels(event);
-    var rung_colors = getRungColors(event);
-    var placements = ["1st Place", "2nd Place", "3rd Place"];
-
-    for (var i = 0; i < 3; i++) {
-        if (i >= runners_time.length) {
-            return;
-        }
-
-        var meta = user_meta.get(data.people[runners_time[i].id].name);
-
-        const eps_ids = ["-ep-1", "-ep-2", "-ep-4", "-ep-6", "-ep-3"];
-
-        var runner_results = getRunnerScore(event, runners_time[i].id);
-        for (var s = 0; s < 5; s++) {
-            var result = runner_results.splits[s * 6 + 5];
-            var time_str = result != null ? toStringTime(result, false, true, false) : "--";
-            setInnerHtml("result-" + (i + 1) + eps_ids[s], time_str);
-        }
-
-        setInnerHtml("result-name-" + (i + 1), data.people[runners_time[i].id].name);
-        setInnerHtml("result-" + (i + 1) + "-ep-5", runners_time[i].time);
-
-        var placement_box = document.getElementById("runner-" + (i + 1) + "-placement");
-        if (placement_box) {
-            placement_box.innerHTML = placements[i] + rung_labels[i];
-            if (rung_colors[i] && rung_colors[i].length > 0) {
-                placement_box.classList.add(rung_colors[i]);
-            }
-        }
-
-        var icon = document.getElementById("runner-" + (i + 1) + "-icon");
-        if (icon && meta && meta.icon) {
-            icon.src = "./icons/" + meta.icon;
         }
     }
 }
@@ -484,7 +316,7 @@ function getRunnerFastestTime(data, runner) {
     return time;
 }
 
-function setRunnerData(data, event, stream) {
+function setRunnerData(data, event) {
     var runners = getRunnersBySeed(data, event);
 
     for (var i = 0; i < runners.length; i++) {
@@ -658,39 +490,6 @@ function setNextEventData(data) {
     }
 }
 
-function setRunnerBracketData(event, runner, bracket_id, is_top, winner) {
-    let id = "r2"
-    if (is_top) {
-        id = "r1";
-    }
-
-    let root = document.getElementById(bracket_id.id + "-" + id + "-root");
-    let name = document.getElementById(bracket_id.id + "-" + id + "-name");
-    let time = document.getElementById(bracket_id.id + "-" + id + "-time");
-
-    if (runner != null) {
-        let runner_meta = user_meta.get(runner.name);
-
-        root.classList.remove("runner-undecided");
-        root.classList.remove("runner-winner");
-        root.classList.remove("runner");
-        if (winner) {
-            root.classList.add("runner-winner");
-        } else {
-            root.classList.add("runner");
-        }
-
-        name.innerHTML = "(" + runner_meta.top8_seed + ") " + runner.name.toUpperCase();
-
-        var final_time = getRunnerScore(event, runner.id);
-        if (final_time != null && final_time != "") {
-            time.innerHTML = final_time;
-        } else {
-            time.innerHTML = "--:--:--";
-        }
-    }
-}
-
 function setBracketData(data, event) {
     var bracket_name_prefix = QUALS_DATA.get(event.name);
 
@@ -698,24 +497,16 @@ function setBracketData(data, event) {
         return;
     }
 
+    let time = null;
     if (event.event_start_time != null) {
-        var date = new Date(event.event_start_time);
-        var date_options = {
-            month: "numeric",
-            day: "numeric",
-            hour: "numeric",
-            minute: "2-digit",
-            timeZone: 'America/New_York',
-        }
-
-        document.getElementById(bracket_name_prefix.id + "-time").innerHTML =
-            date.toLocaleString("en-US", date_options) + " EST";
+        time = new Date(event.event_start_time);
     }
 
     let runners = getRunnersBySeed(data, event);
     let top_runner = null
     let bottom_runner = null
-    let compared_time = 0
+    let top_time = null;
+    let bottom_time = null;
     if (runners.length == 1) {
         let r1 = data.people[runners[0]];
 
@@ -723,8 +514,10 @@ function setBracketData(data, event) {
         let is_top = (bracket_name_prefix.top_seeds.indexOf(meta.top8_seed) != -1);
         if (is_top) {
             top_runner = r1;
+            top_time = getRunnerScore(event, top_runner.id).final_result;
         } else {
             bottom_runner = r1;
+            bottom_time = getRunnerScore(event, bottom_runner.id).final_result;
         }
     } else if (runners.length == 2) {
         let r1 = data.people[runners[0]];
@@ -740,16 +533,30 @@ function setBracketData(data, event) {
             top_runner = r2;
         }
 
-        let top_time = getRunnerScore(event, top_runner.id);
-        let bot_time = getRunnerScore(event, bottom_runner.id);
-
-        if (top_time != null && top_time != "" && bot_time != null && bot_time != "") {
-            compared_time = compareTime(top_time, bot_time)
-        }
+        top_time = getRunnerScore(event, top_runner.id).final_result;
+        bottom_time = getRunnerScore(event, bottom_runner.id).final_result;
     }
 
-    setRunnerBracketData(event, top_runner, bracket_name_prefix, true, compared_time < 0);
-    setRunnerBracketData(event, bottom_runner, bracket_name_prefix, false, compared_time > 0);
+    var box = document.getElementById(bracket_name_prefix.id);
+    if (box != null) {
+        box.eventName = event.name;
+        box.eventTime = time;
+        if (top_runner) {
+            box.p1Name = top_runner.name;
+            box.p1Seed = user_meta.get(top_runner.name).top8_seed;
+        } else {
+            box.p1Name = null;
+            box.p1Seed = null;
+        }
+
+        if (bottom_runner) {
+            box.p2Name = bottom_runner.name;
+            box.p2Seed = user_meta.get(bottom_runner.name).top8_seed;
+        } else {
+            box.p2Name = null;
+            box.p2Seed = null;
+        }
+    }
 }
 
 function queryProbabilities(data, event) {
@@ -802,32 +609,19 @@ connectToSocket('/ws?high_rate=true', function(data) {
     }
 
     var event = getEventById(data, event_id);
-    var stream = getStreamById(data, event_id);
 
     last_event = event;
 
-    setRunnerData(data, event, stream);
+    setRunnerData(data, event);
     setCommentatorSlots(data, event);
     setResults(data, event);
     setNextEventData(data);
     setOpenerData(data, event);
     setInterviewData(data, event);
-    setFinalResultsView(data, event);
     queryProbabilities(data, event);
 
     const splitData = determineSplitInfo(event);
     displayLiveDeltas(state, event, splitData, data.active_runs);
-    if (document.getElementById("time-table") != null) {
-    } else if (document.getElementById("final-table") != null) {
-        displayFinalTimes(state, event, splitData);
-    } else if (document.getElementById("bottom-lcq-bar" != null)) {
-    }
-    //displayLCQDeltas(state, event, splitData);
-
-    var event_name_element = document.getElementById("title_bar");
-    if (event_name_element != null) {
-        event_name_element.innerHTML = event.name;
-    }
 
     let cf = data.custom_fields;
 
@@ -863,13 +657,12 @@ connectToSocket('/ws?high_rate=true', function(data) {
 
     last_active = table_setting;
 
-    if (document.getElementById("bracket") != null) {
-        for (const event of Object.values(data.events)) {
-            if (event.name.startsWith("QUARTERFINAL") ||
-                event.name.startsWith("SEMIFINAL") ||
-                event.name.startsWith("GRAND FINALS")) {
-                setBracketData(data, event);
-            }
+    for (const event of Object.values(data.events)) {
+        if (event.name.startsWith("QUARTERFINAL") ||
+            event.name.startsWith("SEMIFINAL") ||
+            event.name.startsWith("GRAND FINALS") ||
+            event.name.startsWith("THIRD PLACE MATCH")) {
+            setBracketData(data, event);
         }
     }
 })

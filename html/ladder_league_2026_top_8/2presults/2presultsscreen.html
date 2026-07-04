@@ -182,8 +182,7 @@
 
             static properties = {
                 eventName: { type: String },
-                p1Splits: { type: Array },
-                p2Splits: { type: Array },
+                splits: { type: Array },
                 p1Name: {type: String},
                 p2Name: {type: String}
             };
@@ -193,19 +192,27 @@
             }
 
             render() {
+
                 let p1Display = [];
                 let p2Display = [];
 
-                for(var i = 0; i < 6; i++){
-                    if(!this.p1Splits || i >= this.p1Splits.length){
-                        p1Display.push("-");
-                    }else{
-                        p1Display.push(toStringTime(this.p1Splits[i]));
-                    }
-                    if(!this.p2Splits || i >= this.p2Splits.length){
-                        p2Display.push("-");
-                    }else{
-                        p2Display.push(toStringTime(this.p2Splits[i]));
+                if (this.splits != null) {
+                    for(var i = 5; i < 36; i += 6){
+                        if (i >= this.splits.length) {
+                            break;
+                        }
+
+                        var split = this.splits[i];
+                        if(!split[0]){
+                            p1Display.push("-");
+                        }else{
+                            p1Display.push(toStringTime(split[0]));
+                        }
+                        if(!split[1]){
+                            p2Display.push("-");
+                        }else{
+                            p2Display.push(toStringTime(split[1]));
+                        }
                     }
                 }
 
@@ -290,4 +297,5 @@
 
         customElements.define('match-results', MatchResults);
     </script>
-    </html>
+    <script type="module" src="../../../js/ladder_league_2026_top8.js"></script>
+</html>

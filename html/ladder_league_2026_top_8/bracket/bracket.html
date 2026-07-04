@@ -36,17 +36,17 @@
         <svg class="top8-connectors-svg" width="1839" height="958" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 0; overflow: visible;"><path d="M456.4500274658203,154.7416763305664 H537.0000381469727 V372.55835723876953 M456.4500274658203,372.55835723876953 H537.0000381469727 M537.0000381469727,263.6500015258789 H617.550048828125" stroke="rgba(255,255,255,0.53)" stroke-width="2.5" fill="none"></path><path d="M456.4500274658203,590.3750381469727 H537.0000381469727 V808.1916885375977 M456.4500274658203,808.1916885375977 H537.0000381469727 M537.0000381469727,699.2833633422852 H617.550048828125" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" fill="none"></path><path d="M993.4500732421875,263.6500015258789 H1074.0000610351562 V699.2833633422852 M993.4500732421875,699.2833633422852 H1074.0000610351562 M1074.0000610351562,481.46671295166016 H1154.550048828125" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" fill="none"></path></svg>
         <!--Col 1-->
         <div style="display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; position: absolute; top: 0px; left: 50px; height: 1080px; ">
-            <bracket-box width="365" height="146" eventName="Quarterfinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8" p1Time="2:20:20.10" p2Time="2:20:20"></bracket-box>
-            <bracket-box width="365" height="146" eventName="Quarterfinal 2" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
-            <bracket-box width="365" height="146" eventName="Quarterfinal 3" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
-            <bracket-box width="365" height="146" eventName="Quarterfinal 4" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+            <bracket-box id="qf-1"width="365" height="146" eventName="Quarterfinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8" p1Time="2:20:20.10" p2Time="2:20:20"></bracket-box>
+            <bracket-box id="qf-2"width="365" height="146" eventName="Quarterfinal 2" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+            <bracket-box id="qf-3"width="365" height="146" eventName="Quarterfinal 3" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+            <bracket-box id="qf-4"width="365" height="146" eventName="Quarterfinal 4" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
         </div>
         <div style="display: flex; flex-direction: column; justify-content: space-evenly; position: absolute; top: 0px; left: 500px; height: 1080px;">
-            <bracket-box width="365" height="146" eventName="Semifinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
-            <bracket-box width="365" height="146" eventName="Semifinal 2" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+            <bracket-box id="sf-1" width="365" height="146" eventName="Semifinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+            <bracket-box id="sf-2" width="365" height="146" eventName="Semifinal 2" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
         </div>
-        <bracket-box left="1500" top="500" width="365" height="146" eventName="Grand Finals" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
-        <bracket-box left="1500" top="700" width="365" height="146" eventName="3rd Place Match" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box> 
+        <bracket-box id="final" left="1500" top="500" width="365" height="146" eventName="Grand Finals" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+        <bracket-box id="3rd" left="1500" top="700" width="365" height="146" eventName="3rd Place Match" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box> 
     </body>
     <script type="module">
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
@@ -213,4 +213,5 @@
         }
         customElements.define('bracket-box', BracketBox);
     </script>
+    <script type="module" src="../../../js/ladder_league_2026_top8.js"></script>
 </html>
