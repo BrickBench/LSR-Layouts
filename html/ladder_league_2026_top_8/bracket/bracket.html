@@ -25,6 +25,7 @@
                 --ladder-league-blue: #1562D1;
                 --ladder-league-gold: #FFC80B;
                 --ladder-league-dark-blue: #1B243C;
+                --ladder-league-dark-blue2: #101625;
                 --ladder-league-teal: #193952;
                 --ladder-league-darkgrey: #525251;
                 --transition-offset: 3.1s;
@@ -32,10 +33,10 @@
         </style>
     </head>
     <body style="width:1920px; height:1080px; background-image: url('LL26_MatchResults_Background.png')">
-        <svg class="top8-connectors-svg" width="1839" height="958" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 0; overflow: visible;"><path d="M456.4500274658203,154.7416763305664 H537.0000381469727 V372.55835723876953 M456.4500274658203,372.55835723876953 H537.0000381469727 M537.0000381469727,263.6500015258789 H617.550048828125" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" fill="none"></path><path d="M456.4500274658203,590.3750381469727 H537.0000381469727 V808.1916885375977 M456.4500274658203,808.1916885375977 H537.0000381469727 M537.0000381469727,699.2833633422852 H617.550048828125" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" fill="none"></path><path d="M993.4500732421875,263.6500015258789 H1074.0000610351562 V699.2833633422852 M993.4500732421875,699.2833633422852 H1074.0000610351562 M1074.0000610351562,481.46671295166016 H1154.550048828125" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" fill="none"></path></svg>
+        <svg class="top8-connectors-svg" width="1839" height="958" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 0; overflow: visible;"><path d="M456.4500274658203,154.7416763305664 H537.0000381469727 V372.55835723876953 M456.4500274658203,372.55835723876953 H537.0000381469727 M537.0000381469727,263.6500015258789 H617.550048828125" stroke="rgba(255,255,255,0.53)" stroke-width="2.5" fill="none"></path><path d="M456.4500274658203,590.3750381469727 H537.0000381469727 V808.1916885375977 M456.4500274658203,808.1916885375977 H537.0000381469727 M537.0000381469727,699.2833633422852 H617.550048828125" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" fill="none"></path><path d="M993.4500732421875,263.6500015258789 H1074.0000610351562 V699.2833633422852 M993.4500732421875,699.2833633422852 H1074.0000610351562 M1074.0000610351562,481.46671295166016 H1154.550048828125" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" fill="none"></path></svg>
         <!--Col 1-->
         <div style="display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; position: absolute; top: 0px; left: 50px; height: 1080px; ">
-            <bracket-box width="365" height="146" eventName="Quarterfinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+            <bracket-box width="365" height="146" eventName="Quarterfinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8" p1Time="2:20:20.10" p2Time="2:20:20"></bracket-box>
             <bracket-box width="365" height="146" eventName="Quarterfinal 2" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
             <bracket-box width="365" height="146" eventName="Quarterfinal 3" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
             <bracket-box width="365" height="146" eventName="Quarterfinal 4" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
@@ -62,8 +63,8 @@
                 p2Name: {type: String},
                 p1Seed: {type: Number},
                 p2Seed: {type: Number},
-                p1Time: {type: Number},
-                p2Time: {type: Number},
+                p1Time: {type: String},
+                p2Time: {type: String},
                 eventTime: {type: Date}   
             };
 
@@ -75,11 +76,19 @@
                     background-color: var(--ladder-league-dark-blue);
                     color: var(--ladder-league-white);
                     font-family: "Rubik";
+                    border-radius: 10px;
+                    box-sizing: border-box; 
+                    padding-left: 20px;
+                    padding-right: 20px;
+                    box-shadow: var(--ladder-league-dark-blue2) 0px 0px 8px inset;
+                    border: 1px var(--ladder-league-white) solid;
+                    text-shadow: var(--ladder-league-dark-blue2) 1px 1px 10px inset;
                 }
                 .box-header{
                     display: flex;
                     flex-direction: row;
                     justify-content: space-between;
+                    align-items: center;
                 }
                 .box-entry{
                     display: flex;
@@ -88,7 +97,7 @@
                 }
                 .box-name{
                     font-weight: bold;
-
+                    font-size: 1.2em;
                 }
                 .box-seed{
 
@@ -96,12 +105,23 @@
                 .box-event-name{
                     text-transform: uppercase;
                     font-weight:bold;
+                    font-size: 1.3em;
                 }
 
                 .box-player-time{
+                    font-size: 1.2em;
+                }
+
+                .box-name.win{
+                    color: var(--ladder-league-green);
+                }
+
+                .box-name.lose{
+                    color: var(--ladder-league-red);
                 }
 
                 .box-event-time{
+                    font-size: 1.2em;
                 }
             `;
 
@@ -110,28 +130,81 @@
                 this.eventTime = new Date();
             }
             render() {
+                let dateString = this.eventTime ? this.eventTime.toLocaleTimeString('en-US', {
+                    timeZone: 'America/New_York',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true 
+                }) : "-";
+
+                var placementP1;
+                var placementP2;
+
+                var p1Tokens;
+                var p2Tokens;
+                var displayTimeP1 = "-";
+                var displayTimeP2 = "-";
+
+                
+                if(this.p1Time){
+                    p1Tokens = this.p1Time.split(".");
+                    displayTimeP1 = p1Tokens[0].trim();
+                }
+                
+                if(this.p2Time){
+                    p2Tokens = this.p2Time.split(".");
+                    displayTimeP2 = p2Tokens[0].trim();
+                }
+                
+
+                if(this.p1Time && this.p2Time){
+                    if(displayTimeP2.toLowerCase().includes("dnf")){
+                        placementP1 = "1st";
+                        placementP2 = "2nd";
+                    }else if(displayTimeP1.toLowerCase().includes("dnf")){
+                        placementP1 = "2nd";
+                        placementP2 = "1st"
+                    }else{
+                        if(p1Tokens.length == 1){
+                            p1Tokens.push("000");
+                        }
+                        if(p2Tokens.length == 1){
+                            p2Tokens.push("000");
+                        }
+
+                        if((p1Tokens[0]+"."+p1Tokens[1]) < (p2Tokens[0]+"."+p2Tokens[1])){
+                            placementP1 = "1st";
+                            placementP2 = "2nd";
+                        }else{
+                            placementP1 = "2nd";
+                            placementP2 = "1st"
+                        }
+                    }
+                }
+
                 return html`
                     <div class="box-style" style="${this.top ? "position: absolute; top: "+this.top +"px; left: " + this.left +"px;" : ""} width: ${this.width}px; height: ${this.height}px;">
                         <div class="box-header">
                             <div class="box-event-name">${this.eventName}</div>
-                            <div class="box-event-time">${this.eventTime && this.eventTime.toDateString()}</div>
+                            <div class="box-event-time">${dateString} EDT</div>
                         </div>
                         <div class="box-entry">
-                            <div style="display: flex; flex-direction: row;">
+                            <div style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
                                 <div class="box-seed">${this.p1Seed}</div>
-                                <div class="box-name">${this.p1Name || "-"}</div>
+                                <div class="box-name ${placementP1 ? (placementP1 == "1st" ? "win": "lose"): ""}">${this.p1Name || "-"}</div>
                             </div>
                             <div class="box-player-time">
-                                ${this.p1Time ? toStringTime(this.p1Time) : "-"}
+                                ${displayTimeP1}
                             </div>
                         </div>
+                        <hr style="width: 100%; margin-top: -6px; margin-bottom: -6px;">
                         <div class="box-entry">
-                            <div style="display: flex; flex-direction: row;">
+                            <div style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
                                 <div class="box-seed">${this.p2Seed}</div>
-                                <div class="box-name">${this.p2Name || "-"}</div>
+                                <div class="box-name ${placementP2 ? (placementP2 == "1st" ? "win": "lose"): ""}">${this.p2Name || "-"}</div>
                             </div>
                             <div class="box-player-time">
-                                 ${this.p2Time ? toStringTime(this.p2Time) : "-"}
+                                 ${displayTimeP2}
                             </div>
                         </div>
                     </div>
