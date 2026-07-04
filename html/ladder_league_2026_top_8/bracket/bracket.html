@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html style="background-color: transparent;">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="https://fonts.cdnfonts.com/css/aurebesh" rel="stylesheet">
+
+        <style>
+            :root {
+                --ladder-league-white: #cacacb;
+                --ladder-league-shadow: #131524;
+                --ladder-league-green: #6cc46c;
+                --ladder-league-red: #e46a6a;
+                --ladder-league-split-green: #95d895;
+                --ladder-league-split-red: #e67b7b;
+                --ladder-league-p1-color: #6cc46c;
+                --ladder-league-p2-color: #00a2ff;
+                --ladder-league-p3-color: #ffbc09;
+                --ladder-league-bright-white: #dadadb;
+                --ladder-league-grey: #A8A8A8;
+                --ladder-league-blue: #1562D1;
+                --ladder-league-gold: #FFC80B;
+                --ladder-league-dark-blue: #1B243C;
+                --ladder-league-teal: #193952;
+                --ladder-league-darkgrey: #525251;
+                --transition-offset: 3.1s;
+            }
+        </style>
+    </head>
+    <body style="width:1920px; height:1080px; background-image: url('LL26_MatchResults_Background.png')">
+        <svg class="top8-connectors-svg" width="1839" height="958" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 0; overflow: visible;"><path d="M456.4500274658203,154.7416763305664 H537.0000381469727 V372.55835723876953 M456.4500274658203,372.55835723876953 H537.0000381469727 M537.0000381469727,263.6500015258789 H617.550048828125" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" fill="none"></path><path d="M456.4500274658203,590.3750381469727 H537.0000381469727 V808.1916885375977 M456.4500274658203,808.1916885375977 H537.0000381469727 M537.0000381469727,699.2833633422852 H617.550048828125" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" fill="none"></path><path d="M993.4500732421875,263.6500015258789 H1074.0000610351562 V699.2833633422852 M993.4500732421875,699.2833633422852 H1074.0000610351562 M1074.0000610351562,481.46671295166016 H1154.550048828125" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" fill="none"></path></svg>
+        <!--Col 1-->
+        <div style="display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; position: absolute; top: 0px; left: 50px; height: 1080px; ">
+            <bracket-box width="365" height="146" eventName="Quarterfinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+            <bracket-box width="365" height="146" eventName="Quarterfinal 2" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+            <bracket-box width="365" height="146" eventName="Quarterfinal 3" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+            <bracket-box width="365" height="146" eventName="Quarterfinal 4" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+        </div>
+        <div style="display: flex; flex-direction: column; justify-content: space-evenly; position: absolute; top: 0px; left: 500px; height: 1080px;">
+            <bracket-box width="365" height="146" eventName="Semifinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+            <bracket-box width="365" height="146" eventName="Semifinal 2" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+        </div>
+        <bracket-box left="1500" top="500" width="365" height="146" eventName="Grand Finals" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+        <bracket-box left="1500" top="700" width="365" height="146" eventName="3rd Place Match" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box> 
+    </body>
+    <script type="module">
+        import { LitElement, html, css, nothing } from 'https://esm.run/lit';
+        import {connectToSocket, getEventForHost, toStringTime} from '../../../js/automarathon.js'
+
+        class BracketBox extends LitElement {
+            static properties = {
+                top: { type: Number },
+                left: { type: Number },
+                width: {type: Number },
+                height: {type: Number},
+                eventName: {type: String},
+                p1Name: {type: String},
+                p2Name: {type: String},
+                p1Seed: {type: Number},
+                p2Seed: {type: Number},
+                p1Time: {type: Number},
+                p2Time: {type: Number},
+                eventTime: {type: Date}   
+            };
+
+            static styles = css`
+                .box-style{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+                    background-color: var(--ladder-league-dark-blue);
+                    color: var(--ladder-league-white);
+                    font-family: "Rubik";
+                }
+                .box-header{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                }
+                .box-entry{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                }
+                .box-name{
+                    font-weight: bold;
+
+                }
+                .box-seed{
+
+                }
+                .box-event-name{
+                    text-transform: uppercase;
+                    font-weight:bold;
+                }
+
+                .box-player-time{
+                }
+
+                .box-event-time{
+                }
+            `;
+
+            constructor() {
+                super();
+                this.eventTime = new Date();
+            }
+            render() {
+                return html`
+                    <div class="box-style" style="${this.top ? "position: absolute; top: "+this.top +"px; left: " + this.left +"px;" : ""} width: ${this.width}px; height: ${this.height}px;">
+                        <div class="box-header">
+                            <div class="box-event-name">${this.eventName}</div>
+                            <div class="box-event-time">${this.eventTime && this.eventTime.toDateString()}</div>
+                        </div>
+                        <div class="box-entry">
+                            <div style="display: flex; flex-direction: row;">
+                                <div class="box-seed">${this.p1Seed}</div>
+                                <div class="box-name">${this.p1Name || "-"}</div>
+                            </div>
+                            <div class="box-player-time">
+                                ${this.p1Time ? toStringTime(this.p1Time) : "-"}
+                            </div>
+                        </div>
+                        <div class="box-entry">
+                            <div style="display: flex; flex-direction: row;">
+                                <div class="box-seed">${this.p2Seed}</div>
+                                <div class="box-name">${this.p2Name || "-"}</div>
+                            </div>
+                            <div class="box-player-time">
+                                 ${this.p2Time ? toStringTime(this.p2Time) : "-"}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        customElements.define('bracket-box', BracketBox);
+    </script>
+</html>
