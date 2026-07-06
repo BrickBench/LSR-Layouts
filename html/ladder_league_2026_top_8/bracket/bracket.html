@@ -25,7 +25,7 @@
                 --ladder-league-blue: #1562D1;
                 --ladder-league-gold: #FFC80B;
                 --ladder-league-dark-blue: #1B243C;
-                --ladder-league-dark-blue2: #101625;
+                --ladder-league-dark-blue2: #0d131f;
                 --ladder-league-teal: #193952;
                 --ladder-league-darkgrey: #525251;
                 --transition-offset: 3.1s;
@@ -50,31 +50,32 @@
         </style>
     </head>
     <body style="width:1920px; height:1080px; background-image: url('LL26_MatchResults_Background.png')">
-        <svg class="top8-connectors-svg" width="1839" height="958" style="position: absolute; top: 80px; left: 160px; pointer-events: none; z-index: 0; overflow: visible;">
-            <path d="M456.4500274658203,154.7416763305664 H537.0000381469727 V372.55835723876953 M456.4500274658203,372.55835723876953 H537.0000381469727 M537.0000381469727,263.6500015258789 H617.550048828125" stroke="rgba(255,255,255,0.53)" stroke-width="2.5" fill="none"></path>
-            <path d="M456.4500274658203,590.3750381469727 H537.0000381469727 V808.1916885375977 M456.4500274658203,808.1916885375977 H537.0000381469727 M537.0000381469727,699.2833633422852 H617.550048828125" stroke="rgba(255,255,255,0.53)" stroke-width="2.5" fill="none"></path>
-            <path d="M993.4500732421875,263.6500015258789 H1074.0000610351562 V699.2833633422852 M993.4500732421875,699.2833633422852 H1074.0000610351562 M1074.0000610351562,481.46671295166016 H1154.550048828125" stroke="rgba(255,255,255,0.53)" stroke-width="2.5" fill="none"></path></svg>
+        <svg class="top8-connectors-svg" width="1839" height="958" style="position: absolute; top: 80px; left: 163px; pointer-events: none; z-index: 0; overflow: visible;">
+            <path d="M426.4500274658203,154.7416763305664 H537.0000381469727 V372.55835723876953 M426.4500274658203,372.55835723876953 H537.0000381469727 M537.0000381469727,263.6500015258789 H657.550048828125" stroke="rgba(255,255,255,0.53)" stroke-width="2.5" fill="none"></path>
+            <path d="M426.4500274658203,590.3750381469727 H537.0000381469727 V808.1916885375977 M426.4500274658203,808.1916885375977 H537.0000381469727 M537.0000381469727,699.2833633422852 H657.550048828125" stroke="rgba(255,255,255,0.53)" stroke-width="2.5" fill="none"></path>
+            <path d="M993.4500732421875,263.6500015258789 H1074.0000610351562 V699.2833633422852 M993.4500732421875,699.2833633422852 H1074.0000610351562 M1074.0000610351562,481.46671295166016 H1164.550048828125" stroke="rgba(255,255,255,0.53)" stroke-width="2.5" fill="none"></path></svg>
         <!--Col 1-->
         <div style="display: flex; flex-direction: row; width: 1920px; height: 1080px; top: 10px; justify-content: center;">>
-            <div class="bracket-column" style="gap: 70px;">
+            <div class="bracket-column" style="gap: 70px; margin-top: 10px;">
                 <div class="match-day" style="top: 90px;">Friday</div>
                 <bracket-box id="qf-1"width="370" height="146" eventName="Quarterfinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8" p1Time="2:20:20.10" p2Time="2:20:20"></bracket-box>
                 <bracket-box id="qf-2"width="370" height="146" eventName="Quarterfinal 2" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+                <div style="height: 1px; margin-top: -70px;"></div>
                 <bracket-box id="qf-3"width="370" height="146" eventName="Quarterfinal 3" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
                 <bracket-box id="qf-4"width="370" height="146" eventName="Quarterfinal 4" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
             </div>
-            <div class="bracket-column" style="gap: 270px;">
-                <div class="match-day" style="top: 210px;">Saturday</div>
+            <div class="bracket-column" style="gap: 295px; margin-top: 10px;">
+                <div class="match-day" style="top: 195px;">Saturday</div>
                 <bracket-box id="sf-1" width="370" height="146" eventName="Semifinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
                 <bracket-box id="sf-2" width="370" height="146" eventName="Semifinal 2" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
             </div>
-             <div class="bracket-column" style="gap: 100px; margin-top: 280px;">
-                <div class="match-day" style="top: 430px;">Sunday</div>
-                <bracket-box id="final" width="370" height="146" eventName="Grand Finals" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+             <div class="bracket-column" style="gap: 100px; margin-top: 260px;">
+                <div class="match-day" style="top: 412px;">Sunday</div>
+                <bracket-box id="final" width="400" height="160" eventName="Grand Finals" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
                 <bracket-box id="3rd" width="370" height="146" eventName="3rd Place Match" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box> 
             </div>
         </div>
-        <img src="LL_DropShadow.png" style="position: absolute; width: 300px; top: 30px; left: 1550px; opacity: 0.8;"/>
+        <img src="LL_DropShadow.png" style="position: absolute; width: 300px; top: 30px; left: 1550px; opacity: 0.7;"/>
     
     </body>
     <script type="module">
@@ -112,9 +113,19 @@
                     box-shadow: var(--ladder-league-dark-blue2) 0px 0px 16px inset;
                     border: 1px var(--ladder-league-white) solid;
                     text-shadow: var(--ladder-league-dark-blue2) 5px 5px 5px;
+                    position: relative;
                 }
                 .box-style::before{
-                    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://w3.org id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+                    content: "";
+                    background-image: url("../noise.svg");
+                    filter: contrast(470%) brightness(40%);
+                    opacity: 0.05;
+                    zIndex: -1;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
                 }
                 .box-header{
                     display: flex;
