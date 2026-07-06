@@ -31,8 +31,8 @@
             }
         </style>
     </head>
-    <body style="width:1920px; height:1080px; background-image: url('LL26_MatchResults_Background.png')">
-        <match-results></match-results>
+    <body style="width:1920px; height:1080px; background-image: url('LL26_MatchResults_Background.png'); margin: 0;">
+        <match-results p1Icon="../icons/zac.png" p2Icon="../icons/scynor.png"></match-results>
     </body>
     <script type="module">
         import { LitElement, html, css } from 'https://esm.run/lit';
@@ -61,10 +61,13 @@
                     flex-direction: column;
                     box-sizing: border-box;
                     align-items: center;
-                    padding-top: 47px;
+                    padding-top: 30px;
                     padding-left: 57px;
                     padding-right: 57px;
                     padding-bottom: 57px;
+                    border-bottom-right-radius: 65px;
+                    border-top-left-radius: 25px;
+                    box-shadow: 4px 4px 10px #101010;
                 }
 
                 .results-runner-icon{
@@ -165,18 +168,62 @@
                     font-size: 37px;
                 }
                 .hrule{
-                    width: 300px;
-                    height: 10px;
+                    width: 100%;
+                    padding-top:4px;
                     border-radius: 10px;
-                    backdrop-filter: blur(10px);
-                    /*background-color: var(--ladder-league-darkgrey);*/
+                    opacity: 80%;
+                    background-color: var(--ladder-league-darkgrey);
+                    filter: blur(2px);
                 }
-                .hrule::before{
-                    inset: 0;
-                    content: "";
-                    background: linear-gradient(140deg, red, orange, yellow, green, indigo, blue) border-box;
-                    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-                    mask-composite: exclude;
+                
+                .runner-profile-column{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+
+                .runner-profile-status{
+                    font-family: "Rubik";
+                    font-size: 2.6em;
+                    font-style: italic;
+                }
+
+                .runner-profile-status.win{
+                    color: var(--ladder-league-green);
+                }
+
+                .runner-profile-status.lose{
+                    color: var(--ladder-league-red);
+                }
+
+                .runner-profile-name{
+                    color: var(--ladder-league-white);
+                    font-family: "Rubik";
+                    font-weight: bold;
+                    font-size: 2.6em;
+                    text-transform: uppercase;
+                }
+
+                .name-column{
+                    width:360px;
+                    text-align: center;
+                    align-items: center;
+                    margin-top: -10px;
+                    text-shadow: 4px 4px 4px #202020;
+                }
+
+                .splits-name{
+                    text-transform: uppercase;
+                    font-style: italic;
+                    color: var(--ladder-league-white);
+                    font-size: 2.2em;
+                    font-weight: bold;
+                }
+
+                .portrait{
+                    width: 360px;
+                    height: 600px;
+                    background-color: white;
                 }
             `;
 
@@ -184,7 +231,13 @@
                 eventName: { type: String },
                 splits: { type: Array },
                 p1Name: {type: String},
-                p2Name: {type: String}
+                p2Name: {type: String},
+                p1Icon: {type: String},
+                p2Icon: {type: String},
+                p1Img: {type: String},
+                p2Img: {type: String},
+                p1MainImage: {type: String},
+                p2MainImage: {type: String}
             };
 
             constructor() {
@@ -217,19 +270,32 @@
                 }
 
                 return html`
-                    <div id="match-box" class="match-3p-results-header moveUp" style="position: absolute; width: 1920px; height: 258px; top: 0px; left: 0px">
+                    <div class="match-3p-results-header" style="position: absolute; width: 1920px; height: 258px; top: 0px; left: 0px">
                         <div class="match-3p-results-header-name">
-                            <span id="match-title">${this.eventName}</span> Results
+                            ${this.eventName} Summary
                         </div>
                         <div class="match-3p-results-header-caption">
                             Match Results
                         </div>
                     </div>
-                    <!-- Runner 1 -->
-                <div id ="runner-1-box" class="match-3p-results-left-box moveUp" style="position: absolute; top: 0px; left: 210px; width: 1920px; height: 1080px;  background-image: url('LL26_MatchResults_RightBox.png');">
-                    <div class="match-3p-results-column" style="position: absolute; top: 250px; left: 157px; width: 468px; height: 770px;"">
-                        <img id="runner-1-icon" class="results-runner-icon" src="BF.png"/>
-                        <div class="hrule"></div>
+
+                    <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 80px; margin-top: 100px; margin-left: -3px; width: 1920px; height: 1080px;">
+                    
+                    <div class="runner-profile-column name-column">
+                        <img class="portrait" src="${this.p1MainImage}"/>
+                        <div class="runner-profile-name">
+                            ${this.p1Name}
+                        </div>
+                        <div class="runner-profile-status ${this.splits && ((this.splits[35][0] < this.splits[35][1]) || (!this.splits[35][1]) ? "win": "lose")}">
+                            ${this.splits && ((this.splits[35][0] < this.splits[35][1]) || (!this.splits[35][1]) ? "Winner": "Loser")}
+                        </div>
+                    </div>
+                    
+                        <!-- Runner 1 -->
+                    <div class="match-3p-results-column" style="width: 409px; height: 672px; background-image: url('Box_Left.png');">
+                        <img id="runner-1-icon" class="results-runner-icon" src="${this.p1Icon}"/>
+                        <div class="splits-name">Split Times</div>
+                        <hr class="hrule">
                         <div class="results-time-row">
                             <div class="results-episode-label">I</div>
                             <div id="result-1-ep-1" class="results-episode-time">${p1Display[0]}</div>
@@ -257,12 +323,12 @@
                             ${p1Display[5]}
                         </div>
                     </div>
-                </div>
 
-                <!-- Runner 2 -->
-                <div id ="runner-2-box" class="match-3p-results-center-box moveUp" style="position: absolute; top: 0px; left: 357px; width: 1920px; height: 1080px;  background-image: url('LL26_MatchResults_MiddleBox.png');">
-                    <div class="match-3p-results-column" style="position: absolute; top: 250px; left: 728px; width: 468px; height: 770px;"">
-                        <img id="runner-2-icon" class="results-runner-icon" src="BF.png"/>
+                    <!-- Runner 2 -->
+                    <div class="match-3p-results-column" style="width: 409px; height: 672px; background-image: url('Box_Right.png');">
+                        <img id="runner-2-icon" class="results-runner-icon" src="${this.p2Icon}"/>
+                        <div class="splits-name">Split Times</div>
+                        <hr class="hrule">
                         <div class="results-time-row">
                             <div class="results-episode-label">I</div>
                             <div id="result-2-ep-1" class="results-episode-time">${p2Display[0]}</div>
@@ -290,7 +356,19 @@
                             ${p2Display[5]}
                         </div>
                     </div>
-                </div>
+
+                    <div class="runner-profile-column name-column">
+                        <img class="portrait"  src="${this.p2MainImage}"/>
+                        <div class="runner-profile-name">
+                            ${this.p2Name}
+                        </div>
+                        <div class="runner-profile-status ${this.splits && ((this.splits[35][1] < this.splits[35][0]) || (!this.splits[35][0]) ? "win": "lose")}">
+                            ${this.splits && ((this.splits[35][1] < this.splits[35][0]) || (!this.splits[35][0]) ? "Winner": "Loser")}
+                        </div>
+                    </div>
+
+                    </div>
+
                 `;
             }
         }
