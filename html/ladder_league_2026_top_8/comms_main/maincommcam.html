@@ -21,18 +21,30 @@
                 --ladder-league-teal: #193952;
                 --transition-offset: 3.1s;
             }
+            .low-thirds{
+            }
         </style>
     </head>
 
     <script>
         // use a script tag or an external JS file
         document.addEventListener("DOMContentLoaded", (event) => {
-        // gsap code here!
+            var lowerThirds = document.getElementById("low-thirds");
+            var comms = document.getElementById("comms");
+            setTimeout(() => {
+                lowerThirds.reveal();
+                //comms.reveal();
+                setTimeout(() => {
+                    lowerThirds.hide();
+                    //comms.hide();
+                }, 5000);
+            }, 1000); 
         });
     </script>
 
     <script type="module" defer>
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
+        import { gsap } from "https://esm.sh/gsap";
 
         class LowerThirds2 extends LitElement {
             static styles = css`
@@ -112,6 +124,9 @@
                     z-index: 2;
                     margin-top: ${LOWER_THIRDS_RADIUS * 0.10}px;
                 }
+                .reveal-element{
+                    clip-path: polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%);
+                }
             `;
 
             static properties = {
@@ -123,12 +138,40 @@
                 lowerThirdsHeader: {type: String}
             };
 
+            reveal(){
+                const box = this.renderRoot?.querySelector('.reveal-element');
+                gsap.fromTo(box, 
+                { 
+                    clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)" 
+                }, 
+                { 
+                    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+                    duration: 0.75,
+                    ease: "power2.inOut"
+                }
+                );
+            }
+
+            hide(){
+                const box = this.renderRoot?.querySelector('.reveal-element');
+                gsap.fromTo(box, 
+                { 
+                    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" 
+                }, 
+                { 
+                    clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)",
+                    duration: 0.75,
+                    ease: "power2.inOut"
+                }
+                );
+            }
+
             constructor() {
                 super();
             }
             render() {
                 return html`
-                    <div style="display: flex; flex-direction: row; width: 1920px; justify-content: center; align-items: center; position: absolute; top: ${this.top}px;">
+                    <div class="reveal-element" style="display: flex; flex-direction: row; width: 1920px; justify-content: center; align-items: center; position: absolute; top: ${this.top}px;">
                         <div class="lower-thirds-side">
                         </div>
                         <div class="lower-thirds" style="width: ${this.width}px; margin-left: -${LOWER_THIRDS_RADIUS}px;">
@@ -178,6 +221,10 @@
                     border: 5px solid var(--ladder-league-white);
                     box-shadow: 10px 10px 30px var(--ladder-league-dark-blue);
                 }
+                .reveal-element{
+                    opacity: 0;
+                    visibility: hidden;
+                }
             `;
 
             static properties = {
@@ -187,12 +234,48 @@
                 enable: { type: Boolean }
             };
 
+            reveal(){
+                const box = this.renderRoot?.querySelector('.reveal-element');
+                gsap.fromTo(box, 
+                { 
+                    autoAlpha: 0,
+                    y: 50,
+                    duration: 0.75,
+                    ease: "power2.out"
+                },
+                {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.75,
+                    ease: "power2.out"
+                }
+                );
+            }
+
+            hide(){
+                const box = this.renderRoot?.querySelector('.reveal-element');
+                gsap.fromTo(box, 
+                {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.75,
+                    ease: "power2.out"
+                },
+                { 
+                    autoAlpha: 0,
+                    y: 50,
+                    duration: 0.75,
+                    ease: "power2.out"
+                }
+                );
+            }
+
             constructor() {
                 super();
             }
             render() {
                 return html`
-                    <div class="commentator-row" style="position: absolute; top: ${this.top}px; width: 1920px;">
+                    <div class="reveal-element commentator-row" style="position: absolute; top: ${this.top}px; width: 1920px;">
                         ${this.names.map((entry, index) => { return html`
                             <div class="commentator-entry" style="height: ${this.height}px;">
                                 <img src="./microphone.png" width=70/>${entry}    
@@ -205,9 +288,9 @@
         customElements.define('commentator-names', CommentatorNames);
     </script>
 
-    <body style="width:1920px; height:1080px; background-image: url('image.png');">
-        <commentator-names names='["ERoadhouse","Anonymous"]' top="770" height="120"></commentator-names>
-        <!--<lower-thirds top="700" width="1600" contentBoxHeight="150" lowerThirdsHeader="itsjared97"></lower-thirds>-->
+    <body style="width:1920px; height:1080px; background-image: url('image2.png');">
+        <commentator-names id="comms" class="comm-names" names='["ERoadhouse","Anonymous"]' top="770" height="120"></commentator-names>
+        <lower-thirds id="low-thirds" top="700" width="1600" contentBoxHeight="150" lowerThirdsHeader="itsjared97"></lower-thirds>
     </body>
     <script type="module" src="../../../js/ladder_league_2026_top8.js"></script>
 
