@@ -30,23 +30,52 @@
                 --ladder-league-darkgrey: #525251;
                 --transition-offset: 3.1s;
             }
+            .match-day{
+                position: absolute; 
+                font-family: 'Rubik';
+                font-size: 2em;
+                font-weight: bold;
+                color: var(--ladder-league-white);
+                text-transform: uppercase;
+                text-align: left;
+                text-shadow: 0px 0px 10px black;
+            }
+            .bracket-column{
+                display: flex; 
+                flex-direction: column; 
+                justify-content: center; 
+                align-items: center; 
+                width:28.5%;
+            }
         </style>
     </head>
     <body style="width:1920px; height:1080px; background-image: url('LL26_MatchResults_Background.png')">
-        <svg class="top8-connectors-svg" width="1839" height="958" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 0; overflow: visible;"><path d="M456.4500274658203,154.7416763305664 H537.0000381469727 V372.55835723876953 M456.4500274658203,372.55835723876953 H537.0000381469727 M537.0000381469727,263.6500015258789 H617.550048828125" stroke="rgba(255,255,255,0.53)" stroke-width="2.5" fill="none"></path><path d="M456.4500274658203,590.3750381469727 H537.0000381469727 V808.1916885375977 M456.4500274658203,808.1916885375977 H537.0000381469727 M537.0000381469727,699.2833633422852 H617.550048828125" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" fill="none"></path><path d="M993.4500732421875,263.6500015258789 H1074.0000610351562 V699.2833633422852 M993.4500732421875,699.2833633422852 H1074.0000610351562 M1074.0000610351562,481.46671295166016 H1154.550048828125" stroke="rgba(255,255,255,0.13)" stroke-width="1.5" fill="none"></path></svg>
+        <svg class="top8-connectors-svg" width="1839" height="958" style="position: absolute; top: 80px; left: 160px; pointer-events: none; z-index: 0; overflow: visible;">
+            <path d="M456.4500274658203,154.7416763305664 H537.0000381469727 V372.55835723876953 M456.4500274658203,372.55835723876953 H537.0000381469727 M537.0000381469727,263.6500015258789 H617.550048828125" stroke="rgba(255,255,255,0.53)" stroke-width="2.5" fill="none"></path>
+            <path d="M456.4500274658203,590.3750381469727 H537.0000381469727 V808.1916885375977 M456.4500274658203,808.1916885375977 H537.0000381469727 M537.0000381469727,699.2833633422852 H617.550048828125" stroke="rgba(255,255,255,0.53)" stroke-width="2.5" fill="none"></path>
+            <path d="M993.4500732421875,263.6500015258789 H1074.0000610351562 V699.2833633422852 M993.4500732421875,699.2833633422852 H1074.0000610351562 M1074.0000610351562,481.46671295166016 H1154.550048828125" stroke="rgba(255,255,255,0.53)" stroke-width="2.5" fill="none"></path></svg>
         <!--Col 1-->
-        <div style="display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; position: absolute; top: 0px; left: 50px; height: 1080px; ">
-            <bracket-box id="qf-1"width="365" height="146" eventName="Quarterfinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8" p1Time="2:20:20.10" p2Time="2:20:20"></bracket-box>
-            <bracket-box id="qf-2"width="365" height="146" eventName="Quarterfinal 2" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
-            <bracket-box id="qf-3"width="365" height="146" eventName="Quarterfinal 3" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
-            <bracket-box id="qf-4"width="365" height="146" eventName="Quarterfinal 4" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+        <div style="display: flex; flex-direction: row; width: 1920px; height: 1080px; top: 10px; justify-content: center;">>
+            <div class="bracket-column" style="gap: 70px;">
+                <div class="match-day" style="top: 90px;">Friday</div>
+                <bracket-box id="qf-1"width="370" height="146" eventName="Quarterfinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8" p1Time="2:20:20.10" p2Time="2:20:20"></bracket-box>
+                <bracket-box id="qf-2"width="370" height="146" eventName="Quarterfinal 2" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+                <bracket-box id="qf-3"width="370" height="146" eventName="Quarterfinal 3" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+                <bracket-box id="qf-4"width="370" height="146" eventName="Quarterfinal 4" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+            </div>
+            <div class="bracket-column" style="gap: 270px;">
+                <div class="match-day" style="top: 210px;">Saturday</div>
+                <bracket-box id="sf-1" width="370" height="146" eventName="Semifinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+                <bracket-box id="sf-2" width="370" height="146" eventName="Semifinal 2" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+            </div>
+             <div class="bracket-column" style="gap: 100px; margin-top: 280px;">
+                <div class="match-day" style="top: 430px;">Sunday</div>
+                <bracket-box id="final" width="370" height="146" eventName="Grand Finals" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
+                <bracket-box id="3rd" width="370" height="146" eventName="3rd Place Match" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box> 
+            </div>
         </div>
-        <div style="display: flex; flex-direction: column; justify-content: space-evenly; position: absolute; top: 0px; left: 500px; height: 1080px;">
-            <bracket-box id="sf-1" width="365" height="146" eventName="Semifinal 1" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
-            <bracket-box id="sf-2" width="365" height="146" eventName="Semifinal 2" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
-        </div>
-        <bracket-box id="final" left="1500" top="500" width="365" height="146" eventName="Grand Finals" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box>
-        <bracket-box id="3rd" left="1500" top="700" width="365" height="146" eventName="3rd Place Match" p1Name="ERoadhouse" p2Name="Jared" p1Seed="1" p2Seed="8"></bracket-box> 
+        <img src="LL_DropShadow.png" style="position: absolute; width: 300px; top: 30px; left: 1550px; opacity: 0.8;"/>
+    
     </body>
     <script type="module">
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
@@ -80,9 +109,12 @@
                     box-sizing: border-box; 
                     padding-left: 20px;
                     padding-right: 20px;
-                    box-shadow: var(--ladder-league-dark-blue2) 0px 0px 8px inset;
+                    box-shadow: var(--ladder-league-dark-blue2) 0px 0px 16px inset;
                     border: 1px var(--ladder-league-white) solid;
-                    text-shadow: var(--ladder-league-dark-blue2) 1px 1px 10px inset;
+                    text-shadow: var(--ladder-league-dark-blue2) 5px 5px 5px;
+                }
+                .box-style::before{
+                    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://w3.org id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
                 }
                 .box-header{
                     display: flex;
@@ -110,6 +142,7 @@
 
                 .box-player-time{
                     font-size: 1.2em;
+                    font-variant-numeric: tabular-nums; 
                 }
 
                 .box-name.win{
@@ -132,7 +165,7 @@
             render() {
                 let dateString = this.eventTime ? this.eventTime.toLocaleTimeString('en-US', {
                     timeZone: 'America/New_York',
-                    hour: '2-digit',
+                    hour: 'numeric',
                     minute: '2-digit',
                     hour12: true 
                 }) : "-";
