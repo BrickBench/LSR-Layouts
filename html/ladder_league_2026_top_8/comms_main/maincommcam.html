@@ -2,6 +2,9 @@
 <html style="background-color: transparent;">
     <head>
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
         <style>
             :root {
                 --ladder-league-white: #cacacb;
@@ -18,6 +21,7 @@
                 --ladder-league-blue: #1562D1;
                 --ladder-league-gold: #FFC80B;
                 --ladder-league-dark-blue: #1B243C;
+                --ladder-league-dark-blue2: #101625;
                 --ladder-league-teal: #193952;
                 --transition-offset: 3.1s;
             }
@@ -33,6 +37,7 @@
             var comms = document.getElementById("comms");
             setTimeout(() => {
                 lowerThirds.reveal();
+                //comms.names=["ERoadhouse","Jared", "Dragon"];
                 //comms.reveal();
                 setTimeout(() => {
                     lowerThirds.hide();
@@ -78,12 +83,27 @@
             static styles = css`
                 :host {
                     font-family: Rubik;
+                    padding: 10px;
                 }
 
                 .main-box{
                     display: flex;
                     flex-direction: column;
                 }
+
+                .main-box::before{
+                    content: "";
+                    background-image: url("../noise.svg");
+                    filter: contrast(470%) brightness(50%);
+                    opacity: 0.05;
+                    zIndex: -1;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+
                 .lower-thirds{
                     display: flex;
                     flex-direction: column;
@@ -96,9 +116,11 @@
                     padding: 10px;
                     padding-right: 30px;
                     border-top-right-radius: 40px;
+                    border-top-left-radius: 40px;
                     box-sizing: border-box;
                     font-weight: bold;
                     color: var(--ladder-league-dark-blue);
+                    box-shadow: inset 0px 0px 16px rgba(0, 0, 0, 0.4);
                 }
                 .main-box{
                     background-color: var(--ladder-league-dark-blue);
@@ -106,7 +128,11 @@
                     flex-direction: column;
                     color: var(--ladder-league-white);
                     border-bottom-right-radius: 40px;
+                    border-bottom-left-radius: 40px;
                     justify-content: space-evenly;
+                    box-shadow: var(--ladder-league-dark-blue2) 0px 0px 16px inset;
+                    box-shadow: rgba(0,0,0,0.3) 4px 4px 4px;
+                    border: 3px solid var(--ladder-league-white);
                 }
                 .main-box-header{
                     font-size: 3em;
@@ -120,6 +146,7 @@
                     width: ${LOWER_THIRDS_RADIUS * 2}px;
                     border-radius: ${LOWER_THIRDS_RADIUS}px;
                     background-color: var(--ladder-league-dark-blue);
+                    box-shadow: var(--ladder-league-dark-blue2) 0px 0px 16px inset;
                     border: 5px solid var(--ladder-league-white);
                     z-index: 2;
                     margin-top: ${LOWER_THIRDS_RADIUS * 0.10}px;
@@ -135,7 +162,10 @@
                 name: { type: String },
                 width: {type: Number},
                 contentBoxHeight: {type: Number},
-                lowerThirdsHeader: {type: String}
+                lowerThirdsHeader: {type: String},
+                image: {type: String},
+                headerText: {type: String},
+                mainText: {type: String}
             };
 
             reveal(){
@@ -146,7 +176,7 @@
                 }, 
                 { 
                     clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-                    duration: 0.75,
+                    duration: 0.5,
                     ease: "power2.inOut"
                 }
                 );
@@ -160,7 +190,7 @@
                 }, 
                 { 
                     clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)",
-                    duration: 0.75,
+                    duration: 0.5,
                     ease: "power2.inOut"
                 }
                 );
@@ -171,19 +201,19 @@
             }
             render() {
                 return html`
-                    <div class="reveal-element" style="display: flex; flex-direction: row; width: 1920px; justify-content: center; align-items: center; position: absolute; top: ${this.top}px;">
-                        <div class="lower-thirds-side">
-                        </div>
-                        <div class="lower-thirds" style="width: ${this.width}px; margin-left: -${LOWER_THIRDS_RADIUS}px;">
-                            <div class="lower-thirds-header" style="padding-left: ${LOWER_THIRDS_RADIUS+LOWER_THIRDS_RADIUS_PADDING}px;">
+                    <div class="reveal-element" style="display: flex; flex-direction: row; width: 1920px; justify-content: center; align-items: center; position: absolute; top: ${this.top}px; margin-left: -10px;">
+                        ${this.image && html`<div class="lower-thirds-side">
+                        </div>`}
+                        <div class="lower-thirds" style="width: ${this.width}px; margin-left: -${this.image ? LOWER_THIRDS_RADIUS : 0}px; overflow:visible;">
+                            <div class="lower-thirds-header" style="padding-left: ${this.image ? LOWER_THIRDS_RADIUS+LOWER_THIRDS_RADIUS_PADDING : 40}px;">
                                 ${this.lowerThirdsHeader}
                             </div>
-                            <div class="main-box" style="height: ${this.contentBoxHeight}px; padding-left: ${LOWER_THIRDS_RADIUS+LOWER_THIRDS_RADIUS_PADDING}px;">
+                            <div class="main-box" style="height: ${this.contentBoxHeight}px; padding-left: ${this.image ? LOWER_THIRDS_RADIUS+LOWER_THIRDS_RADIUS_PADDING : 40}px; overflow:visible;">
                                 <div class="main-box-header">
-                                    Header Text
+                                ${this.headerText}
                                 </div>
                                 <div class="main-box-content">
-                                    Test text
+                                ${this.mainText}
                                 </div>
                             </div>
                         </div>
@@ -219,8 +249,25 @@
                     align-items: center;
                     gap: 10px;
                     border: 5px solid var(--ladder-league-white);
-                    box-shadow: 10px 10px 30px var(--ladder-league-dark-blue);
+                    box-shadow: 10px 10px 30px rgba(0,0,0,0.6);
+                    position: relative;
                 }
+
+                .commentator-entry::before{
+                    content: "";
+                    background-image: url("../noise.svg");
+                    filter: contrast(470%) brightness(40%);
+                    opacity: 0.15;
+                    zIndex: -1;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    border-bottom-right-radius: 25px;
+                    border-top-left-radius: 25px;
+                }
+
                 .reveal-element{
                     opacity: 0;
                     visibility: hidden;
@@ -240,13 +287,13 @@
                 { 
                     autoAlpha: 0,
                     y: 50,
-                    duration: 0.75,
+                    duration: 0.5,
                     ease: "power2.out"
                 },
                 {
                     autoAlpha: 1,
                     y: 0,
-                    duration: 0.75,
+                    duration: 0.5,
                     ease: "power2.out"
                 }
                 );
@@ -258,13 +305,13 @@
                 {
                     autoAlpha: 1,
                     y: 0,
-                    duration: 0.75,
+                    duration: 0.5,
                     ease: "power2.out"
                 },
                 { 
                     autoAlpha: 0,
                     y: 50,
-                    duration: 0.75,
+                    duration: 0.5,
                     ease: "power2.out"
                 }
                 );
@@ -290,7 +337,7 @@
 
     <body style="width:1920px; height:1080px; background-image: url('image2.png');">
         <commentator-names id="comms" class="comm-names" names='["ERoadhouse","Anonymous"]' top="770" height="120"></commentator-names>
-        <lower-thirds id="low-thirds" top="700" width="1600" contentBoxHeight="150" lowerThirdsHeader="itsjared97"></lower-thirds>
+        <lower-thirds id="low-thirds" top="700" width="1600" contentBoxHeight="150" lowerThirdsHeader="Ladder League" headerText="What do we say here" mainText="Filler text for something and later"></lower-thirds>
     </body>
     <script type="module" src="../../../js/ladder_league_2026_top8.js"></script>
 
