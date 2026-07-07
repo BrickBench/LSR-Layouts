@@ -26,8 +26,9 @@
             }
         </style>
     </head>
-    <body style="width:1920px; height:1080px; background-image: url('image.png')">
-        <countdown-bug eventName="QUARTERFINAL 1" top="66" left="84" p1Name="Eroadhouse" p2Name="Jared" p1Seed="3" p2Seed="5" ></countdown-bug>
+    <body style="width:1920px; height:1080px; /*background-image: url('image.png')*/">
+        <!--<countdown-bug  eventName="QUARTERFINAL 1" top="66" left="84" p1Name="Eroadhouse" p2Name="Jared" p1Seed="3" p2Seed="5" ></countdown-bug>-->
+        <countdown-bug eventName="QUARTERFINAL 1" top="870" left="1390" p1Name="Eroadhouse" p2Name="WiiSuper" p1Seed="3" p2Seed="5" ></countdown-bug>
     </body>
     <script type="module">
         import { LitElement, html, css } from 'https://esm.run/lit';
@@ -53,12 +54,14 @@
                 }
                 .playerIconRegion{
                     display: flex; 
-                    border-top-left-radius: 15px; 
+                    border-top-left-radius: 10px; 
+                    border-bottom-left-radius: 10px; 
                     background-color: var(--ladder-league-dark-blue);
                     color: var(--ladder-league-white);
                     box-sizing: border-box;
                     padding: 20px;
                     height: 80px;
+                    line-height: 80px;
                     flex-direction: row;
                     align-items: center;
                     justify-content: center;
@@ -66,6 +69,7 @@
                     text-transform: uppercase;
                     font-weight: bold;
                     text-align: center;
+                    box-shadow: 4px 4px 16px rgba(0,0,0,0.5);
                 }
 
                 .top8Placeholder{
@@ -73,7 +77,7 @@
                 }
 
                 .countdownRegion{
-                    border-bottom-right-radius: 15px; 
+                    border-bottom-right-radius: 10px; 
                     color: var(--ladder-league-dark-blue);
                     background-color: var(--ladder-league-white);
                     box-sizing: border-box;
@@ -88,21 +92,24 @@
                     text-align: center;
                     height: 80px;
                     width: 220px;
+                    box-shadow: 4px 4px 16px rgba(0,0,0,0.5);
                 }
                 .matchTitleRegion{
-                    border-bottom-left-radius: 15px; 
-                    border-bottom-right-radius: 15px; 
+                    border-top-left-radius: 15px; 
+                    border-top-right-radius: 15px; 
                     color: var(--ladder-league-white);
                     background-color: var(--ladder-league-teal);
                     align-items: flex-start;
                     box-sizing: border-box;
                     padding: 10px;
-                    width: 70%;
+                    width: 380px; 
                     height: 42px;
                     display: grid;
                     grid-template-columns: 1fr;
                     grid-template-rows: 1fr;
                     font-size: 1.5em;
+                    box-shadow: 0px 0px 10px rgba(0,0,0,0.1) inset;
+                    text-align: center;
                 }
 
                 .matchTitleRegion > * {
@@ -114,6 +121,16 @@
 
                 .ladder-icon{
                     height: 60px;
+                }
+
+                .img-icon{
+                    width: 50px;
+                    height: 50px;
+                    background-color: white;
+                }
+                
+                .vs-img{
+                    font-size: 2em;
                 }
             `;
 
@@ -183,9 +200,7 @@
                 this._currSlide = 0;
                 window.setInterval(() => {
                     this._time = this.countdownEndtime ? (this.countdownEndtime - Date.now()) : -1;
-                    console.log(Date.now() - this.lastSlideTransition, CountdownBug.transitionInterval);
                     if(Date.now() - this.lastSlideTransition > CountdownBug.transitionInterval){
-                        console.log("sdsd")
                         this.nextSlide();
                     }
                 }, 100);
@@ -194,31 +209,35 @@
             get _formattedTime() {
                 let countDownStr = toStringTime(this._time, false, true);
                 if(!this._time || this._time < 0){
-                    countDownStr = "Starting Soon";
+                    countDownStr = "00:00";
                 }
                 return `${countDownStr}`;
             }
 
             render() {
                 return html`
-                    <div style="display: flex; flex-direction: column; width: 600px; position: absolute; top: ${this.top}px; left: ${this.left}px;">
-                        <div style="display: flex; flex-direction: row;">
-                            <div class="playerIconRegion">
-                                <img src="./ladder.png" class="ladder-icon"/>
-                                <span class="top8Placeholder">TOP 8</span>
-                                <!--<span>VS.</span>-->
-                                <img/>
-                            </div>
-                            <div class="countdownRegion">
-                                <span>${this._formattedTime}</span>
-                            </div>
-                        </div>
+                    <div style="display: flex; flex-direction: column; gap: 0px; width: 500px; position: absolute; top: ${this.top}px; left: ${this.left}px; align-items: flex-end;">
                         <div class="matchTitleRegion" id="bottom-scroll">
                             <div>
                                 <b>UP NEXT: ${this.eventName}</b>
                             </div>
                             <div>
-                            (${this.p1Seed}) <b>${this.p1Name}</b> VS. (${this.p2Seed}) <b>${this.p2Name}</b>
+                            <b>${this.p1Name}</b> VS. <b>${this.p2Name}</b>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: row;">
+                            <div class="playerIconRegion">
+                                ${(!this.p1Image || !this.p2Image) ? html`
+                                    <img src="./ladder.png" class="ladder-icon"/>
+                                    <span class="top8Placeholder">TOP 8</span>
+                                ` : html`
+                                    <img class="img-icon" src=""/>
+                                    <span class="vs-img">VS.</span>
+                                    <img class="img-icon" src=""/>
+                                `}
+                            </div>
+                            <div class="countdownRegion">
+                                <span>${this._formattedTime}</span>
                             </div>
                         </div>
                     </div>
