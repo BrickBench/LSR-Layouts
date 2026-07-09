@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html style="background-color: transparent;">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+        <style>
+            :root {
+                --ladder-league-white: #cacacb;
+                --ladder-league-shadow: #131524;
+                --ladder-league-green: #6cc46c;
+                --ladder-league-red: #e46a6a;
+                --ladder-league-split-green: #95d895;
+                --ladder-league-split-red: #e67b7b;
+                --ladder-league-p1-color: #6cc46c;
+                --ladder-league-p2-color: #00a2ff;
+                --ladder-league-p3-color: #ffbc09;
+                --ladder-league-bright-white: #dadadb;
+                --ladder-league-grey: #A8A8A8;
+                --ladder-league-blue: #1562D1;
+                --ladder-league-gold: #FFC80B;
+                --ladder-league-dark-blue: #1B243C;
+                --ladder-league-teal: #193952;
+                --transition-offset: 3.1s;
+            }
+        </style>
+    </head>
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            const splitsTable = document.querySelector('splits-table');
+            const winProbs = document.querySelector('win-prob');
+
+            //Set initial alphas
+            gsap.set(splitsTable, { autoAlpha: 1 });
+            gsap.set(winProbs, { autoAlpha: 0 });
+        });
+    </script>
+    <script type="module" defer>
+        import { LitElement, html, css, nothing } from 'https://esm.run/lit';
+        import {classMap} from 'https://esm.run/lit/directives/class-map.js';
+        import {connectToSocket, getEventForHost, toStringTime, compareTime} from '../../../js/automarathon.js'
+
+        class TitleBar extends LitElement {
+            static styles = css`
+                :host {
+                    font-family: Rubik;
+                }
+                .timer-title-box{
+                    display: flex;
+                    flex-direction: row;
+                    font-family: 'Rubik';
+                    font-weight: bold;
+                    box-sizing: border-box;
+                    padding-top: 5px;
+                    padding-bottom: 5px;
+                    padding-left: 27px;
+                    padding-right: 24px;
+                    color: var(--ladder-league-white);
+                    text-shadow: 2px 2px 5px var(--ladder-league-shadow);
+                }
+
+                .match-title-box{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    text-align: center;
+                    text-transform: uppercase;
+                    font-size: 30px;
+                    gap: 1px;
+                    flex: 1;
+                    margin-left: -26px;
+                }
+
+                .timer{
+                    text-align: right;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    font-size: 52px;
+                    flex: 1;
+                    font-variant-numeric: tabular-nums; 
+                }
+
+                .time-title-spacer{
+                    flex: 1;
+                }
+            `;
+
+            static properties = {
+                top: { type: Number },
+                left: { type: Number },
+                matchTitle: { type: String },
+                timer: {type: Number}
+            };
+
+            constructor() {
+                super();
+                this.timer = 10000000;
+            }
+            render() {
+                var matchElements;
+                
+                if(!this.matchTitle){
+                     matchElements = html`<div>TOP 8</div><div>ELIMS</div>`;
+                }else if(this.matchTitle.toLowerCase().includes("quarter") || this.matchTitle.toLowerCase().includes("semi"))
+                {
+                    matchElements = html`<div>TOP 8</div><div>${this.matchTitle}</div>`;
+                }else if(this.matchTitle.toLowerCase().includes("grand"))
+                {
+                    matchElements = html`<div>GRAND</div><div>FINALS</div>`;
+                }else{
+                    matchElements = html`<div>${this.matchTitle}</div>`;
+                }
+
+                return html`
+                   <div class="timer-title-box" style="position: absolute; left: ${this.left}px; top: ${this.top}px; width: 771px; height: 100px;">
+                        <div class="time-title-spacer"></div>
+                        <div id="match-title-split" class="match-title-box">
+                            ${matchElements}
+                        </div>
+                        <div class="timer">Replay</div>
+                    </div>
+                `;
+            }
+        }
+        customElements.define('title-bar', TitleBar);
+
+        class TableCover extends LitElement {
+            static styles = css`
+                :host {
+                    font-family: Rubik;
+                    zIndex: 2;
+                }
+                .mask {
+                    position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px; background-image: url('tableblocker.png');
+                    zIndex: -1;
+                    mask-image: linear-gradient(#000, #000), linear-gradient(#000, #000);
+                    mask-repeat: no-repeat;
+                    mask-position: 0 0, 572px 730px;
+                    mask-size: 100% 100%, 774px 320px;
+                    padding-left: 572px;
+                    padding-top: 730px;
+                    box-sizing: content-box;
+                    border-top-left-radius: 30px;
+                    border-bottom-right-radius: 30px;
+                    
+                    mask-clip: border-box, content-box;
+                    mask-composite: exclude;
+                    -webkit-mask-composite: xor;
+                }
+                .replayBox{
+                    border-top-left-radius: 30px;
+                    border-bottom-right-radius: 30px;
+                    border: 4px solid var(--ladder-league-white);
+                    position: absolute;
+                    top: 730px;
+                    left: 572px;
+                    width: 774px;
+                    height: 320px;
+                    background: transparent;
+                }
+            `;
+
+            static properties = {
+                on: {type: Boolean}
+            };
+
+            constructor() {
+                super();
+            }
+            render() {
+                return this.on ? html`
+                    <div class="mask">
+                        
+                    </div>` : html``;
+            ;
+            }
+        }
+        customElements.define('table-cover', TableCover);
+    </script>
+    <body style="width:1920px; height:1080px; background-image: url('LL26_Top8_2P_V6.png'); margin: 0;">
+        <title-bar id="title-bar" left="577" top="606" matchTitle="quarterfinals"></title-bar>
+        <table-cover on="true"></table-cover>
+    </body>
+    <script type="module" src="../../../js/ladder_league_2026_top8.js"></script>
+</html>

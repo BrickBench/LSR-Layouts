@@ -635,6 +635,72 @@ connectToSocket('/ws?high_rate=true', function(data) {
         active = "splits-table";
     }
 
+    var lowerThirds = document.querySelector("lower-thirds");
+
+    if (lowerThirds != null) {
+        /*contentBoxHeight: {type: Number},
+                lowerThirdsHeader: {type: String},
+                image: {type: String},
+                headerText: {type: String},
+                mainText: {type: String},
+                left: {type: Number},
+                _onScreen: {type: Boolean}*/
+
+        lowerThirds.lowerThirdsHeader = cf['lower-banner-title'];
+        lowerThirds.headerText = cf['lower-box-title'];
+        lowerThirds.mainText = cf['lower-box-tagline'];
+        
+        if(!lowerThirds._onScreen && (cf["lower-thirds-on:bool"] === "true"))
+        {
+            lowerThirds.reveal();
+        }else if(lowerThirds._onScreen && !(cf["lower-thirds-on:bool"] === "true"))
+        {
+            lowerThirds.hide();
+        }
+    }
+
+    var commentatorNames = document.querySelector("commentator-names");
+    if (commentatorNames != null) {
+
+        var names = [];
+        var socials = [];
+
+        const socialsMap = {"dragon76": "Cragon76", "eroadhouse" : "ERoadhouse", "anorak": "AnorakDT", "zac": "ZacMuffin", 
+            "scynor" : "Scynor_", "wiisuper": "WiiSuper", "bricko": "BrickoFett",  "jared": "ItsJared97", 
+            "flaminglazer": "Flaming_Lazer", "anonymous": "AnAnonymousSource", "jav": "Javster101",
+            "p53": "P53P", "saber" : "Saber1658", "wazzip": "vvazzip", "thecrazedcap": "TheCrazedCap", "mellovro" : "MelloVro"
+        }
+
+        if(cf['comm-1:person'] && cf['comm-1:person'].length > 0){
+            const selectedUser = data.people[cf['comm-1:person']];
+            names.push(selectedUser.name);
+            socials.push(socialsMap[selectedUser.name.toLowerCase()] ?? "Temp");
+        }
+
+        if(cf['comm-2:person'] && cf['comm-2:person'].length > 0){
+            const selectedUser = data.people[cf['comm-2:person']];
+            names.push(selectedUser.name);  
+            socials.push(socialsMap[selectedUser.name.toLowerCase()] ?? "Temp");
+        }
+
+        if(cf['comm-3:person'] && cf['comm-3:person'].length > 0){
+            const selectedUser = data.people[cf['comm-3:person']];
+            names.push(selectedUser.name);
+            socials.push(socialsMap[selectedUser.name.toLowerCase()] ?? "Temp");
+        }
+
+        commentatorNames.names = names;
+        commentatorNames.socials = socials;
+        
+        if(!commentatorNames._onScreen && (cf["comms-on:bool"] === "true"))
+        {
+            commentatorNames.reveal();
+        }else if(commentatorNames._onScreen && !(cf["comms-on:bool"] === "true"))
+        {
+            commentatorNames.hide();
+        }
+    }
+
     if (last_active != active) {
         var slides = ['splits-table', 'win-prob'];
         if (document.querySelector("splits-table") != null) {
