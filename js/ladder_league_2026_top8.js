@@ -544,6 +544,9 @@ function setBracketData(data, event) {
         if (top_runner) {
             box.p1Name = top_runner.name;
             box.p1Seed = user_meta.get(top_runner.name).top8_seed;
+            if(top_time){
+                box.p1Time = top_time;
+            }
         } else {
             box.p1Name = null;
             box.p1Seed = null;
@@ -552,6 +555,9 @@ function setBracketData(data, event) {
         if (bottom_runner) {
             box.p2Name = bottom_runner.name;
             box.p2Seed = user_meta.get(bottom_runner.name).top8_seed;
+            if(bottom_time){
+                box.p2Time = bottom_time;
+            }
         } else {
             box.p2Name = null;
             box.p2Seed = null;
