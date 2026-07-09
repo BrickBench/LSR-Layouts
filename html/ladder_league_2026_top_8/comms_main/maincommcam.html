@@ -36,12 +36,13 @@
             var lowerThirds = document.getElementById("low-thirds");
             var comms = document.getElementById("comms");
             setTimeout(() => {
-                lowerThirds.reveal();
-                //comms.names=["ERoadhouse","Jared", "Dragon"];
-                //comms.reveal();
+                //lowerThirds.reveal();
+                comms.names=["ERoadhouse","Jared"];
+                comms.socials=["ERoadhouse","ItsJared97"];
+                comms.reveal();
                 setTimeout(() => {
-                    lowerThirds.hide();
-                    //comms.hide();
+                    //lowerThirds.hide();
+                    comms.hide();
                 }, 5000);
             }, 1000); 
         });
@@ -93,7 +94,7 @@
 
                 .main-box::before{
                     content: "";
-                    background-image: url("../noise.svg");
+                    background-image: url("../noise.png");
                     filter: contrast(470%) brightness(50%);
                     opacity: 0.05;
                     zIndex: -1;
@@ -158,14 +159,14 @@
 
             static properties = {
                 top: { type: Number },
-                left: { type: Number },
                 name: { type: String },
                 width: {type: Number},
                 contentBoxHeight: {type: Number},
                 lowerThirdsHeader: {type: String},
                 image: {type: String},
                 headerText: {type: String},
-                mainText: {type: String}
+                mainText: {type: String},
+                left: {type: Number}
             };
 
             reveal(){
@@ -201,7 +202,7 @@
             }
             render() {
                 return html`
-                    <div class="reveal-element" style="display: flex; flex-direction: row; width: 1920px; justify-content: center; align-items: center; position: absolute; top: ${this.top}px; margin-left: -10px;">
+                    <div class="reveal-element" style="display: flex; flex-direction: row; width: 1920px; justify-content: center; align-items: center; position: absolute; top: ${this.top}px;">
                         ${this.image && html`<div class="lower-thirds-side">
                         </div>`}
                         <div class="lower-thirds" style="width: ${this.width}px; margin-left: -${this.image ? LOWER_THIRDS_RADIUS : 0}px; overflow:visible;">
@@ -235,10 +236,18 @@
                     align-items: center;
                     justify-content: space-evenly;
                 }
+
                 .commentator-entry{
-                    color: white;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    position: relative;
+                }
+
+                .names-mics{
+                    color: var(--ladder-league-white);
                     background-color: var(--ladder-league-dark-blue);
-                    font-size: 4em;
+                    font-size: 3.4em;
                     width: 500px;
                     border-bottom-right-radius: 25px;
                     border-top-left-radius: 25px;
@@ -248,16 +257,43 @@
                     justify-content: center;
                     align-items: center;
                     gap: 10px;
+                    font-weight: bold;
                     border: 5px solid var(--ladder-league-white);
-                    box-shadow: 10px 10px 30px rgba(0,0,0,0.6);
-                    position: relative;
+                    box-shadow: 10px 10px 30px rgba(0,0,0,0.8);
+                    height: 64%;
+                    z-index: 3;
                 }
 
-                .commentator-entry::before{
+                .socials-comms{
+                    border-top-left-radius: 25px;
+                    color: var(--ladder-league-white);
+                    background-color: var(--ladder-league-dark-blue);
+                    border-top: 5px solid var(--ladder-league-white);
+                    border-left: 5px solid var(--ladder-league-white);
+                    border-right: 5px solid var(--ladder-league-white);
+                    box-shadow: 10px 10px 30px rgba(0,0,0,0.9);
+                    display: flex;
+                    flex-direction: row;
+                    width: 250px;
+                    height: 36%;
+                    text-align: center;
+                    font-style: italic;
+                    justify-items: center;
+                    align-items: center;
+                    font-size: 1.7em;
+                    gap: 10px;
+                    box-sizing: border-box;
+                    padding: 10px;
+                    opacity: 0;
+                    visibility: hidden;
+                    z-index: 2;
+                }
+
+                .name-mics::before{
                     content: "";
-                    background-image: url("../noise.svg");
+                    background-image: url("../noise.png");
                     filter: contrast(470%) brightness(40%);
-                    opacity: 0.15;
+                    opacity: 0.12;
                     zIndex: -1;
                     position: absolute;
                     top: 0;
@@ -267,6 +303,21 @@
                     border-bottom-right-radius: 25px;
                     border-top-left-radius: 25px;
                 }
+
+                .socials-comms::before{
+                    content: "";
+                    background-image: url("../noise.png");
+                    filter: contrast(470%) brightness(40%);
+                    opacity: 0.12;
+                    zIndex: -1;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    border-top-left-radius: 25px;
+                }
+
 
                 .reveal-element{
                     opacity: 0;
@@ -278,12 +329,20 @@
                 top: { type: Number },
                 height: {type: Number },
                 names: { type: Array },
+                socials: {type: Array },
                 enable: { type: Boolean }
             };
 
-            reveal(){
+            async reveal(){
+                this.requestUpdate(); 
+                await this.updateComplete; 
+
                 const box = this.renderRoot?.querySelector('.reveal-element');
-                gsap.fromTo(box, 
+                const elements = this.renderRoot?.querySelectorAll('.socials-comms');
+
+                const tl = gsap.timeline();
+                
+                tl.fromTo(box, 
                 { 
                     autoAlpha: 0,
                     y: 50,
@@ -297,9 +356,28 @@
                     ease: "power2.out"
                 }
                 );
+                
+                elements.forEach((element, index) => {
+                    tl.fromTo(element, 
+                    { 
+                        autoAlpha: 0,
+                        y: 50,
+                        duration: 0.5,
+                        ease: "power2.out"
+                    },
+                    {
+                        autoAlpha: 1,
+                        y: 0,
+                        duration: 0.5,
+                        ease: "power2.out"
+                    }, (index == 0 ? "0.1" : "-=0.5")
+                    );
+                });
             }
 
-            hide(){
+            async hide(){
+                this.requestUpdate(); 
+                await this.updateComplete; 
                 const box = this.renderRoot?.querySelector('.reveal-element');
                 gsap.fromTo(box, 
                 {
@@ -325,7 +403,13 @@
                     <div class="reveal-element commentator-row" style="position: absolute; top: ${this.top}px; width: 1920px;">
                         ${this.names.map((entry, index) => { return html`
                             <div class="commentator-entry" style="height: ${this.height}px;">
-                                <img src="./microphone.png" width=70/>${entry}    
+                               <div class="socials-comms">
+                                    <svg style="fill: var(--ladder-league-white); " xmlns="http://www.w3.org/2000/svg" width="35"  viewBox="0 0 620 620"><!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M455.4 167.5L416.8 167.5L416.8 277.2L455.4 277.2L455.4 167.5zM349.2 167L310.6 167L310.6 276.8L349.2 276.8L349.2 167zM185 64L88.5 155.4L88.5 484.6L204.3 484.6L204.3 576L300.8 484.6L378.1 484.6L551.9 320L551.9 64L185 64zM513.3 301.8L436.1 374.9L358.9 374.9L291.3 438.9L291.3 374.9L204.4 374.9L204.4 100.6L513.3 100.6L513.3 301.8z"/></svg>
+                                    ${this.socials && this.socials[index]}   
+                                </div>
+                                <div class="names-mics">
+                                    <img src="./microphone.png" width=50/>${entry}
+                                </div>    
                             </div>
                         `})}
                     </div>
@@ -336,8 +420,8 @@
     </script>
 
     <body style="width:1920px; height:1080px; background-image: url('image2.png');">
-        <commentator-names id="comms" class="comm-names" names='["ERoadhouse","Anonymous"]' top="770" height="120"></commentator-names>
-        <lower-thirds id="low-thirds" top="700" width="1600" contentBoxHeight="150" lowerThirdsHeader="Ladder League" headerText="What do we say here" mainText="Filler text for something and later"></lower-thirds>
+        <commentator-names id="comms" class="comm-names" names='["ERoadhouse","Anonymous"]' top="770" height="150"></commentator-names>
+        <lower-thirds style="margin-left: -100px;" id="low-thirds" top="800" width="1100" left={-100} contentBoxHeight="150" lowerThirdsHeader="Ladder League" headerText="What do we say here" mainText="Filler text for something and later"></lower-thirds>
     </body>
     <script type="module" src="../../../js/ladder_league_2026_top8.js"></script>
 
