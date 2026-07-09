@@ -231,6 +231,7 @@
 
             static properties = {
                 eventName: { type: String },
+                finalTimes: {type: Array},
                 splits: { type: Array },
                 p1Name: {type: String},
                 p2Name: {type: String},
@@ -267,6 +268,50 @@
                             p2Display.push("-");
                         }else{
                             p2Display.push(toStringTime(split[1]));
+                        }
+                    }
+                }
+
+                var placementP1;
+                var placementP2;
+
+                var p1Tokens;
+                var p2Tokens;
+                var displayTimeP1;
+                var displayTimeP2;
+
+                
+                if(this.finalTimes && this.finalTimes[0]){
+                    p1Tokens = this.finalTimes[0].split(".");
+                    displayTimeP1 = p1Tokens[0].trim();
+                }
+                
+                if(this.finalTimes && this.finalTimes[1]){
+                    p2Tokens = this.finalTimes[1].split(".");
+                    displayTimeP2 = p2Tokens[0].trim();
+                }
+
+                 if(this.finalTimes && this.finalTimes[0] && this.finalTimes[1]){
+                    if(displayTimeP2.toLowerCase().includes("dnf")){
+                        placementP1 = "1st";
+                        placementP2 = "2nd";
+                    }else if(displayTimeP1.toLowerCase().includes("dnf")){
+                        placementP1 = "2nd";
+                        placementP2 = "1st"
+                    }else{
+                        if(p1Tokens.length == 1){
+                            p1Tokens.push("000");
+                        }
+                        if(p2Tokens.length == 1){
+                            p2Tokens.push("000");
+                        }
+
+                        if((p1Tokens[0]+"."+p1Tokens[1]) < (p2Tokens[0]+"."+p2Tokens[1])){
+                            placementP1 = "1st";
+                            placementP2 = "2nd";
+                        }else{
+                            placementP1 = "2nd";
+                            placementP2 = "1st"
                         }
                     }
                 }
@@ -322,7 +367,7 @@
                             FINAL TIME
                         </div>
                         <div id="result-1-ep-5" class="results-final-time">
-                            ${p1Display[5]}
+                            ${displayTimeP1 ?? "-"}
                         </div>
                     </div>
 
@@ -355,7 +400,7 @@
                             FINAL TIME
                         </div>
                         <div id="result-2-ep-5" class="results-final-time">
-                            ${p2Display[5]}
+                            ${displayTimeP2 ?? "-"}
                         </div>
                     </div>
 

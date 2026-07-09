@@ -668,10 +668,17 @@ connectToSocket('/ws?high_rate=true', function(data) {
     var countdownBug = document.querySelector("countdown-bug");
 
     if (countdownBug != null) {
+        var runners = getRunnersBySeed(data, event);
+
+        countdownBug.p1Name = data.people[runners[0]].name;
+        countdownBug.p2Name = data.people[runners[1]].name;
+        countdownBug.eventName = event.name;
+        countdownBug.countdownEndtime = isFinite(cf['countdown-end:date']) ? parseInt(cf['countdown-end:date']) : Date.now();
+
         if(!countdownBug._onScreen && (cf["countdown-bug:bool"] === "true"))
         {
             countdownBug.reveal();
-        }else if(countdownBug._onScreen && !(cf["countdown-bug:bool"] === "true"))
+        } else if(countdownBug._onScreen && !(cf["countdown-bug:bool"] === "true"))
         {
             countdownBug.hide();
         }
@@ -779,9 +786,9 @@ setInterval(function() {
     } else {
         if (starter_element != null) {
             let cf = state.custom_fields;
-            let timer = cf['countdown-end-time'] ? parseInt(cf['countdown-end-time']) : undefined;
+            let timer = cf['countdown-end:date'] ? parseInt(cf['countdown-end:date']) : undefined;
             let time = timer ? timer - Date.now() : undefined;
-            if (time && time >= 0 && cf) {
+            if (time && time >= 0) {
                 starter_element.innerHTML = toStringTime(time, false, true);
             } else {
                 starter_element.innerHTML = "<span style=\"font-size:34px;\">Starting</span><span style=\"font-size:34px;\">Soon</span>";
