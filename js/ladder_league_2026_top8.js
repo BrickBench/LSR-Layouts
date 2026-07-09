@@ -665,6 +665,18 @@ connectToSocket('/ws?high_rate=true', function(data) {
         }
     }
 
+    var countdownBug = document.querySelector("countdown-bug");
+
+    if (countdownBug != null) {
+        if(!countdownBug._onScreen && (cf["countdown-bug:bool"] === "true"))
+        {
+            countdownBug.reveal();
+        }else if(countdownBug._onScreen && !(cf["countdown-bug:bool"] === "true"))
+        {
+            countdownBug.hide();
+        }
+    }
+
     var commentatorNames = document.querySelector("commentator-names");
     if (commentatorNames != null) {
 
@@ -679,20 +691,27 @@ connectToSocket('/ws?high_rate=true', function(data) {
 
         if(cf['comm-1:person'] && cf['comm-1:person'].length > 0){
             const selectedUser = data.people[cf['comm-1:person']];
-            names.push(selectedUser.name);
-            socials.push(socialsMap[selectedUser.name.toLowerCase()] ?? "Temp");
+            console.log(selectedUser.name);
+            if(selectedUser.name.toLowerCase() != "tba"){
+                names.push(selectedUser.name);
+                socials.push(socialsMap[selectedUser.name.toLowerCase()] ?? "Temp");
+            }
         }
 
         if(cf['comm-2:person'] && cf['comm-2:person'].length > 0){
             const selectedUser = data.people[cf['comm-2:person']];
-            names.push(selectedUser.name);  
-            socials.push(socialsMap[selectedUser.name.toLowerCase()] ?? "Temp");
+            if(selectedUser.name.toLowerCase() != "tba"){
+                names.push(selectedUser.name);  
+                socials.push(socialsMap[selectedUser.name.toLowerCase()] ?? "Temp");
+            }
         }
 
         if(cf['comm-3:person'] && cf['comm-3:person'].length > 0){
             const selectedUser = data.people[cf['comm-3:person']];
-            names.push(selectedUser.name);
-            socials.push(socialsMap[selectedUser.name.toLowerCase()] ?? "Temp");
+            if(selectedUser.name.toLowerCase() != "tba"){
+                names.push(selectedUser.name);
+                socials.push(socialsMap[selectedUser.name.toLowerCase()] ?? "Temp");
+            }
         }
 
         commentatorNames.names = names;

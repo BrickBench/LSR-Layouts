@@ -28,7 +28,7 @@
     </head>
     <body style="width:1920px; height:1080px; /*background-image: url('image.png')*/">
         <!--<countdown-bug  eventName="QUARTERFINAL 1" top="66" left="84" p1Name="Eroadhouse" p2Name="Jared" p1Seed="3" p2Seed="5" ></countdown-bug>-->
-        <countdown-bug eventName="QUARTERFINAL 1" top="870" left="1390" p1Name="Eroadhouse" p2Name="WiiSuper" p1Seed="3" p2Seed="5" ></countdown-bug>
+        <countdown-bug eventName="QUARTERFINAL 1" top="910" left="1365" p1Name="Eroadhouse" p2Name="WiiSuper" p1Seed="3" p2Seed="5" ></countdown-bug>
     </body>
     <script type="module">
         import { LitElement, html, css } from 'https://esm.run/lit';
@@ -69,7 +69,7 @@
                     text-transform: uppercase;
                     font-weight: bold;
                     text-align: center;
-                    box-shadow: 4px 4px 16px rgba(0,0,0,0.5);
+                    box-shadow: 12px 12px 16px rgba(0,0,0,0.8);
                 }
 
                 .top8Placeholder{
@@ -92,7 +92,7 @@
                     text-align: center;
                     height: 80px;
                     width: 220px;
-                    box-shadow: 4px 4px 16px rgba(0,0,0,0.5);
+                    box-shadow: 12px 12px 16px rgba(0,0,0,0.8);
                 }
                 .matchTitleRegion{
                     border-top-left-radius: 15px; 
@@ -108,7 +108,7 @@
                     grid-template-columns: 1fr;
                     grid-template-rows: 1fr;
                     font-size: 1.5em;
-                    box-shadow: 0px 0px 10px rgba(0,0,0,0.1) inset;
+                    box-shadow: 0px 0px 10px rgba(0,0,0,0.3) inset;
                     text-align: center;
                 }
 
@@ -132,6 +132,11 @@
                 .vs-img{
                     font-size: 2em;
                 }
+
+                .reveal-element{
+                    opacity: 0;
+                    visibility: hidden;
+                }
             `;
 
             static properties = {
@@ -147,7 +152,8 @@
                 p1Image: {type: String},
                 p2Image: {type: String},
                 _currSlide: {type: Number},
-                lastSlideTransition: {type: Number}
+                lastSlideTransition: {type: Number},
+                _onScreen: {type: Boolean}
             };
 
             static get transitionInterval() {
@@ -198,6 +204,7 @@
                 this.countdownEndtime = Date.now() + 40000;
                 this.lastSlideTransition = Date.now();
                 this._currSlide = 0;
+                this._onScreen = false;
                 window.setInterval(() => {
                     this._time = this.countdownEndtime ? (this.countdownEndtime - Date.now()) : -1;
                     if(Date.now() - this.lastSlideTransition > CountdownBug.transitionInterval){
@@ -214,9 +221,49 @@
                 return `${countDownStr}`;
             }
 
+            reveal(){
+                const box = this.renderRoot?.querySelector('.reveal-element');
+                const tl = gsap.timeline();
+                tl.fromTo(box, 
+                { 
+                    autoAlpha: 0,
+                    y: 50,
+                    duration: 0.5,
+                    ease: "power2.out"
+                },
+                {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.5,
+                    ease: "power2.out"
+                }
+                );
+                this._onScreen = true;
+            }
+
+            hide(){
+                const box = this.renderRoot?.querySelector('.reveal-element');
+                const tl = gsap.timeline();
+                tl.fromTo(box, 
+                {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.5,
+                    ease: "power2.out"
+                },
+                { 
+                    autoAlpha: 0,
+                    y: 50,
+                    duration: 0.5,
+                    ease: "power2.out"
+                }
+                );
+                this._onScreen = false;
+            }
+
             render() {
                 return html`
-                    <div style="display: flex; flex-direction: column; gap: 0px; width: 500px; position: absolute; top: ${this.top}px; left: ${this.left}px; align-items: flex-end;">
+                    <div class="reveal-element" style="display: flex; flex-direction: column; gap: 0px; width: 500px; position: absolute; top: ${this.top}px; left: ${this.left}px; align-items: flex-end;">
                         <div class="matchTitleRegion" id="bottom-scroll">
                             <div>
                                 <b>UP NEXT: ${this.eventName}</b>
@@ -247,4 +294,5 @@
 
         customElements.define('countdown-bug', CountdownBug);
   </script>
+  <script type="module" src="../../../js/ladder_league_2026_top8.js"></script>
 </html>
