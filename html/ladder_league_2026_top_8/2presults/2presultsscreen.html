@@ -32,7 +32,7 @@
         </style>
     </head>
     <body style="width:1920px; height:1080px; background-image: url('LL26_MatchResults_Background.png'); margin: 0;">
-        <match-results p1Icon="../icons/zac.png" p2Icon="../icons/scynor.png" p1MainImage="./images/jared_Left.png" p2MainImage="./images/jared_Right.png" p1Name="Eroadhouse"></match-results>
+        <match-results p1MainImage="./images/jared_Left.png" p2MainImage="./images/jared_Right.png" p1Name="Eroadhouse"></match-results>
     </body>
     <script type="module">
         import { LitElement, html, css } from 'https://esm.run/lit';
@@ -316,6 +316,13 @@
                     }
                 }
 
+                var leftMargin = 0;
+                var rightMargin = 0;
+
+                if(this.p1MainImage.endsWith("Anorak_Left.png")){
+                    leftMargin = 130;
+                }
+
                 return html`
                     <div class="match-3p-results-header" style="position: absolute; width: 1920px; height: 258px; top: 0px; left: 0px">
                         <div class="match-3p-results-header-name">
@@ -329,7 +336,7 @@
                     <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 80px; margin-top: 100px; margin-left: -3px; width: 1920px; height: 1080px;">
                     
                     <div class="runner-profile-column name-column">
-                        <img class="portrait" src="${this.p1MainImage}"/>
+                        <img class="portrait" src="${this.p1MainImage}" style="margin-left: ${leftMargin}px;"/>
                         <div class="runner-profile-name">
                             ${this.p1Name}
                         </div>

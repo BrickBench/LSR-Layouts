@@ -9,7 +9,7 @@ import {
     setInnerHtml
 } from "./automarathon.js";
 
-const odds_endpoint = "https://ladderleague.run/stats/calculate"
+const odds_endpoint = "http://10.0.0.244:8080/calculate"
 const this_host = "main";
 
 var user_meta = new Map();
@@ -54,7 +54,7 @@ QUALS_DATA.set("QUARTERFINAL 4", { id: "qf-4", top_seeds: [3], bottom_seeds: [6]
 QUALS_DATA.set("SEMIFINAL 1", { id: "sf-1", top_seeds: [1, 8], bottom_seeds: [4, 5] });
 QUALS_DATA.set("SEMIFINAL 2", { id: "sf-2", top_seeds: [2, 7], bottom_seeds: [3, 6] });
 QUALS_DATA.set("GRAND FINALS", { id: "final", top_seeds: [1, 8, 4, 5], bottom_seeds: [3, 6, 2, 7] });
-QUALS_DATA.set("THIRD PLACE MATCH", { id: "3rd", top_seeds: [1, 8, 4, 5], bottom_seeds: [3, 6, 2, 7] });
+QUALS_DATA.set("3RD PLACE MATCH", { id: "3rd", top_seeds: [1, 8, 4, 5], bottom_seeds: [3, 6, 2, 7] });
 
 var raw_predictions = null;
 var last_active = "splits-table";
@@ -774,7 +774,8 @@ connectToSocket('/ws?high_rate=true', function(data) {
         if (event.name.startsWith("QUARTERFINAL") ||
             event.name.startsWith("SEMIFINAL") ||
             event.name.startsWith("GRAND FINALS") ||
-            event.name.startsWith("THIRD PLACE MATCH")) {
+            event.name.startsWith("THIRD PLACE MATCH") ||
+            event.name.startsWith("3RD PLACE MATCH")) {
             setBracketData(data, event);
         }
     }

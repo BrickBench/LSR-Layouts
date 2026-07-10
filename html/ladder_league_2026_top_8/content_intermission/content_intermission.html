@@ -262,10 +262,10 @@
             }
 
             render() {
-                const imageCrops = {"Jared_Forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092}};
+                const imageCrops = {"jared_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092}};
                 
-                const p1ImagePath = this.p1Image && this.p1Image.split(/[/\\]/).pop();
-                const p2ImagePath = this.p2Image && this.p2Image.split(/[/\\]/).pop();
+                const p1ImagePath = this.p1Image && this.p1Image.split(/[/\\]/).pop().toLowerCase();
+                const p2ImagePath = this.p2Image && this.p2Image.split(/[/\\]/).pop().toLowerCase();
 
                 const iconWidth = 50;
 
