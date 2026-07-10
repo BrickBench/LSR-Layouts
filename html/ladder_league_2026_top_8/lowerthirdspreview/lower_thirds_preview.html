@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html style="background-color: transparent;">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+        <style>
+            :root {
+                --ladder-league-white: #cacacb;
+                --ladder-league-shadow: #131524;
+                --ladder-league-green: #6cc46c;
+                --ladder-league-red: #e46a6a;
+                --ladder-league-split-green: #95d895;
+                --ladder-league-split-red: #e67b7b;
+                --ladder-league-p1-color: #6cc46c;
+                --ladder-league-p2-color: #00a2ff;
+                --ladder-league-p3-color: #ffbc09;
+                --ladder-league-bright-white: #dadadb;
+                --ladder-league-grey: #A8A8A8;
+                --ladder-league-blue: #1562D1;
+                --ladder-league-gold: #FFC80B;
+                --ladder-league-dark-blue: #1B243C;
+                --ladder-league-teal: #193952;
+                --transition-offset: 3.1s;
+            }
+        </style>
+    </head>
+    <body style="width:1920px; height:1080px; /*background-image: url('image.png')*/">
+        <!--<countdown-bug  eventName="QUARTERFINAL 1" top="66" left="84" p1Name="Eroadhouse" p2Name="Jared" p1Seed="3" p2Seed="5" ></countdown-bug>-->
+        <countdown-bug p1Image="../images/jared_forward.png" p2Image="../images/jared_forward.png" eventName="QUARTERFINAL 1" top="910" left="1365" p1Name="Eroadhouse" p2Name="WiiSuper" p1Seed="3" p2Seed="5" ></countdown-bug>
+        <commentator-names id="comms" class="comm-names" names='["ERoadhouse","Anonymous"]' top="720" height="150"></commentator-names>
+        <lower-thirds style="margin-left: -100px;" id="low-thirds" top="815" width="1100" left={-100} contentBoxHeight="150" lowerThirdsHeader="Ladder League" headerText="What do we say here" mainText="Filler text for something and later"></lower-thirds>
+    </body>
+    <script type="module">
+        import { LitElement, html, css } from 'https://esm.run/lit';
+        import {connectToSocket, getEventForHost, toStringTime} from '../../../js/automarathon.js'
+        import { gsap } from "https://esm.sh/gsap";
+
+        connectToSocket('/ws?high_rate=true', function(data) {
+            const countdownElement = document.querySelector('countdown-bug');
+
+            let cf = data.custom_fields;
+            //countdownElement.countdownEndtime = cf['countdown-end-time'] ? parseInt(cf['countdown-end-time']) : 0;
+
+            /*var event_id = getEventForHost(data, this_host);
+            if (event_id == null) {
+                return;
+            }*/
+        });
+
+        class CountdownBug extends LitElement {
+            static styles = css`
+                :host {
+                    font-family: Rubik;
+                }
+                .playerIconRegion{
+                    display: flex; 
+                    border-top-left-radius: 10px; 
+                    border-bottom-left-radius: 10px; 
+                    background-color: var(--ladder-league-dark-blue);
+                    color: var(--ladder-league-white);
+                    box-sizing: border-box;
+                    padding: 20px;
+                    height: 80px;
+                    line-height: 80px;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    text-transform: uppercase;
+                    font-weight: bold;
+                    text-align: center;
+                    box-shadow: 12px 12px 16px rgba(0,0,0,0.8);
+                }
+
+                .top8Placeholder{
+                    font-size: 2.82em;
+                }
+
+                .countdownRegion{
+                    border-bottom-right-radius: 10px; 
+                    color: var(--ladder-league-dark-blue);
+                    background-color: var(--ladder-league-white);
+                    box-sizing: border-box;
+                    padding: 5px;
+                    font-variant-numeric: tabular-nums; 
+                    font-weight: bold;
+                    font-size: 2.82em;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    height: 80px;
+                    width: 220px;
+                    box-shadow: 12px 12px 16px rgba(0,0,0,0.8);
+                }
+                .matchTitleRegion{
+                    border-top-left-radius: 15px; 
+                    border-top-right-radius: 15px; 
+                    color: var(--ladder-league-white);
+                    background-color: var(--ladder-league-teal);
+                    align-items: flex-start;
+                    box-sizing: border-box;
+                    padding: 10px;
+                    width: 380px; 
+                    height: 42px;
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    grid-template-rows: 1fr;
+                    font-size: 1.5em;
+                    box-shadow: 0px 0px 10px rgba(0,0,0,0.3) inset;
+                    text-align: center;
+                }
+
+                .matchTitleRegion > * {
+                    grid-column: 1;
+                    grid-row: 1;
+                    font-style: italic;
+                    text-transform: uppercase;
+                }
+
+                .ladder-icon{
+                    height: 60px;
+                }
+
+                .img-icon{
+                    width: 50px;
+                    height: 50px;
+                    background-color: white;
+                }
+                
+                .vs-img{
+                    font-size: 2em;
+                }
+
+                .reveal-element{
+                }
+            `;
+
+            static properties = {
+                countdownEndtime: { type: Number },
+                _time: {type: Number},
+                eventName: {type: String},
+                top: {type: Number},
+                left: {type: Number},
+                p1Name: {type: String},
+                p2Name: {type: String},
+                p1Seed: {type: Number},
+                p2Seed: {type: Number},
+                p1Image: {type: String},
+                p2Image: {type: String},
+                _currSlide: {type: Number},
+                lastSlideTransition: {type: Number},
+                _onScreen: {type: Boolean}
+            };
+
+            static get transitionInterval() {
+                return 13000;
+            }
+            static duration = 1;
+
+            updateSlides(){
+                const parent = this.renderRoot.querySelector('#bottom-scroll');
+                if(this._currSlide == 1){
+                    if(this.p1Name && this.p2Name){
+                    }else{
+                        this._currSlide = 0;
+                    }
+                }
+                Array.from(parent.children).forEach((element,index) => {
+                    gsap.set(element, { autoAlpha: (index == this._currSlide ? 1 : 0) });
+                });
+                this.lastSlideTransition = Date.now();
+            }
+
+            nextSlide(){
+                let prevSlide = this._currSlide;
+                if(this._currSlide == 0){
+                    if(this.p1Name && this.p2Name){
+                        this._currSlide = 1;
+                    }
+                }else{
+                    this._currSlide = 0;
+                }
+
+                const parent = this.renderRoot.querySelector('#bottom-scroll');
+
+                const tl = gsap.timeline();
+                tl.to(parent.children[prevSlide], { autoAlpha: 0, duration: CountdownBug.duration })
+                    .to(parent.children[this._currSlide], { autoAlpha: 1, duration: CountdownBug.duration }, `-=${CountdownBug.duration}`)
+
+                this.lastSlideTransition = Date.now();
+            }
+
+            firstUpdated(changedProperties) {
+                this.updateSlides();
+            }
+
+            constructor() {
+                super();
+                this._time = 0;
+                this.countdownEndtime = Date.now() + 40000;
+                this.lastSlideTransition = Date.now();
+                this._currSlide = 0;
+                this._onScreen = false;
+                window.setInterval(() => {
+                    this._time = this.countdownEndtime ? (this.countdownEndtime - Date.now()) : -1;
+                    if(Date.now() - this.lastSlideTransition > CountdownBug.transitionInterval){
+                        this.nextSlide();
+                    }
+                }, 100);
+            }
+
+            get _formattedTime() {
+                let countDownStr = toStringTime(this._time, false, true);
+                if(!this._time || this._time < 0){
+                    countDownStr = "00:00";
+                }
+                return `${countDownStr}`;
+            }
+
+            render() {
+                const imageCrops = {"jared_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "eroadhouse_forward.png" : {"top": 24, "left": 318, "width": 1303, "height":1067},
+                                    "bricko_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "dragon76_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "anorak_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "wiisuper_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "scynor_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "zac_forward.png" : {"top": 32, "left": 355, "width": 1368, "height":1127}, };
+                
+                const p1ImagePath = this.p1Image && this.p1Image.split(/[/\\]/).pop().toLowerCase();
+                const p2ImagePath = this.p2Image && this.p2Image.split(/[/\\]/).pop().toLowerCase();
+
+                const iconWidth = 93;
+                const iconHeight = 78;
+
+                var leftrightmargin = (!this.p1Image || !this.p2Image) ? 0 : 20;
+
+                return html`
+                    <div class="reveal-element" style="display: flex; flex-direction: column; gap: 0px; width: 500px; position: absolute; top: ${this.top}px; left: ${this.left}px; align-items: flex-end;">
+                        <div class="matchTitleRegion" id="bottom-scroll">
+                            <div>
+                                <b>UP NEXT: ${this.eventName}</b>
+                            </div>
+                            <div>
+                            <b>${this.p1Name}</b> VS. <b>${this.p2Name}</b>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: row;">
+                            <div class="playerIconRegion" style="padding-left: ${leftrightmargin}px !important; padding-right: ${leftrightmargin}px !important;">
+                                ${(!this.p1Image || !this.p2Image) ? html`
+                                    <img src="./ladder.png" class="ladder-icon"/>
+                                    <span class="top8Placeholder">TOP 8</span>
+                                ` : html`
+                                    <div style="width: ${iconWidth}px; height: ${iconHeight}px;
+                                    overflow: hidden; position: relative;">
+                                        <div style=" width: ${imageCrops[p1ImagePath].width}px;         
+                                                    height: ${imageCrops[p1ImagePath].height}px;        
+                                                    position: absolute;
+                                                    top: 0;
+                                                    left: 0;
+                                                    overflow: hidden;
+                                                    transform-origin: top left;
+                                                    transform: scale(${iconWidth / imageCrops[p1ImagePath].width}, ${iconHeight / imageCrops[p1ImagePath].height}); ">
+                                            <img src="${this.p1Image}" style="position: absolute;
+                                                margin-top: ${-imageCrops[p1ImagePath].top}px;
+                                                margin-left: ${-imageCrops[p1ImagePath].left}px; 
+                                                display: block;
+                                                max-width: none;
+                                            }">                                  
+                                        </div>
+                                    </div>
+
+                                    <span class="vs-img">VS.</span>
+                                    <div style="width: ${iconWidth}px; height: ${iconHeight}px;
+                                        overflow: hidden; position: relative;">
+                                        <div style=" width: ${imageCrops[p2ImagePath].width}px;         
+                                                    height: ${imageCrops[p2ImagePath].height}px;        
+                                                    position: absolute;
+                                                    top: 0;
+                                                    left: 0;
+                                                    overflow: hidden;
+                                                    transform-origin: top left;
+                                                    transform: scale(${iconWidth / imageCrops[p2ImagePath].width}, ${iconHeight / imageCrops[p2ImagePath].height}); ">
+                                            <img src="${this.p2Image}" style="position: absolute;
+                                                margin-top: ${-imageCrops[p2ImagePath].top}px;
+                                                margin-left: ${-imageCrops[p2ImagePath].left}px; 
+                                                display: block;
+                                                max-width: none;
+                                            }">                                  
+                                        </div>
+                                    </div>
+                                `}
+                            </div>
+                            <div class="countdownRegion">
+                                <span>${this._formattedTime}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        customElements.define('countdown-bug', CountdownBug);
+
+        class LowerThirds2 extends LitElement {
+            static styles = css`
+                :host {
+                    font-family: Rubik;
+                }
+            `;
+
+            static properties = {
+                top: { type: Number },
+                left: { type: Number },
+                name: { type: String },
+            };
+
+            constructor() {
+                super();
+            }
+            render() {
+                return html`
+                    <div style="display: flex; flex-direction: column; width: 600px;">
+                        ${this.name}
+                    </div>
+                `;
+            }
+        }
+
+        const LOWER_THIRDS_RADIUS = 120;
+        const LOWER_THIRDS_RADIUS_PADDING = 20; 
+
+        class LowerThirds extends LitElement {
+            static styles = css`
+                :host {
+                    font-family: Rubik;
+                    padding: 10px;
+                }
+
+                .main-box{
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .main-box::before{
+                    content: "";
+                    background-image: url("../noise.png");
+                    filter: contrast(470%) brightness(50%);
+                    opacity: 0.05;
+                    zIndex: -1;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .lower-thirds{
+                    display: flex;
+                    flex-direction: column;
+                }
+                .lower-thirds-header{
+                    background-color: var(--ladder-league-white);
+                    align-self: flex-start; 
+                    font-size: 2em;
+                    text-transform: uppercase;
+                    padding: 10px;
+                    padding-right: 30px;
+                    border-top-right-radius: 40px;
+                    border-top-left-radius: 40px;
+                    box-sizing: border-box;
+                    font-weight: bold;
+                    color: var(--ladder-league-dark-blue);
+                    box-shadow: inset 0px 0px 16px rgba(0, 0, 0, 0.4);
+                }
+                .main-box{
+                    background-color: var(--ladder-league-dark-blue);
+                    display: flex;
+                    flex-direction: column;
+                    color: var(--ladder-league-white);
+                    border-bottom-right-radius: 40px;
+                    border-bottom-left-radius: 40px;
+                    justify-content: space-evenly;
+                    box-shadow: var(--ladder-league-dark-blue2) 0px 0px 16px inset;
+                    box-shadow: rgba(0,0,0,0.3) 4px 4px 4px;
+                    border: 3px solid var(--ladder-league-white);
+                }
+                .main-box-header{
+                    font-size: 3em;
+                    font-weight: bold;
+                }
+                .main-box-content{
+                    font-size: 2.4em;
+                }
+                .lower-thirds-side{
+                    height: ${LOWER_THIRDS_RADIUS * 2}px;
+                    width: ${LOWER_THIRDS_RADIUS * 2}px;
+                    border-radius: ${LOWER_THIRDS_RADIUS}px;
+                    background-color: var(--ladder-league-dark-blue);
+                    box-shadow: var(--ladder-league-dark-blue2) 0px 0px 16px inset;
+                    border: 5px solid var(--ladder-league-white);
+                    z-index: 2;
+                    margin-top: ${LOWER_THIRDS_RADIUS * 0.10}px;
+                    position: relative;
+                      contain: paint; 
+                }
+                .reveal-element{
+                }
+            `;
+
+            static properties = {
+                top: { type: Number },
+                name: { type: String },
+                width: {type: Number},
+                contentBoxHeight: {type: Number},
+                lowerThirdsHeader: {type: String},
+                image: {type: String},
+                headerText: {type: String},
+                mainText: {type: String},
+                left: {type: Number},
+                _onScreen: {type: Boolean}
+            };
+
+            constructor() {
+                super();
+                this._onScreen = false;
+            }
+            render() {
+                const imageCrops = {"jared_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "eroadhouse_forward.png" : {"top": 24, "left": 318, "width": 1303, "height":1067},
+                                    "bricko_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "dragon76_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "anorak_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "wiisuper_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "scynor_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "zac_forward.png" : {"top": 32, "left": 355, "width": 1368, "height":1127}, };
+                
+                const p1ImagePath = this.image && this.image.split(/[/\\]/).pop().toLowerCase();
+
+                const iconWidth = 280;
+                const iconHeight = 248;
+
+                return html`
+                    <div class="reveal-element" style="display: flex; flex-direction: row; width: 1920px; align-items: center; position: absolute; top: ${this.top}px; padding-left: 80px;">
+                        ${this.image && html`<div class="lower-thirds-side">
+                            <div style="width: ${iconWidth}px; height: ${iconHeight}px;
+                                overflow: hidden; position: relative; z-index: -1;">
+                                    <div style=" width: ${imageCrops[p1ImagePath].width}px;         
+                                                height: ${imageCrops[p1ImagePath].height}px;        
+                                                position: absolute;
+                                                top: 0;
+                                                left: 0;
+                                                overflow: hidden;
+                                                transform-origin: top left;
+                                                transform: scale(${iconWidth / imageCrops[p1ImagePath].width}, ${iconHeight / imageCrops[p1ImagePath].height}); ">
+                                        <img src="${this.image}" style="position: absolute;
+                                            margin-top: ${-imageCrops[p1ImagePath].top}px;
+                                            margin-left: ${-imageCrops[p1ImagePath].left}px; 
+                                            display: block;
+                                            max-width: none;
+                                        }">                                  
+                                    </div>
+                                </div>
+                        </div>`}
+                        <div class="lower-thirds" style="width: ${this.width}px; margin-left: -${this.image ? LOWER_THIRDS_RADIUS : 0}px; overflow:visible;">
+                            <div class="lower-thirds-header" style="padding-left: ${this.image ? LOWER_THIRDS_RADIUS+LOWER_THIRDS_RADIUS_PADDING : 40}px;">
+                                ${this.lowerThirdsHeader}
+                            </div>
+                            <div class="main-box" style="height: ${this.contentBoxHeight}px; padding-left: ${this.image ? LOWER_THIRDS_RADIUS+LOWER_THIRDS_RADIUS_PADDING : 40}px; overflow:visible;">
+                                <div class="main-box-header">
+                                ${this.headerText}
+                                </div>
+                                <div class="main-box-content">
+                                ${this.mainText}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        customElements.define('lower-thirds', LowerThirds);
+
+        class CommentatorNames extends LitElement {
+            static styles = css`
+                :host {
+                    font-family: Rubik;
+                }
+                .commentator-row{
+                    display: flex; 
+                    flex-direction: row; 
+                    align-items: center;
+                    justify-content: space-evenly;
+                }
+
+                .commentator-entry{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    position: relative;
+                }
+
+                .names-mics{
+                    color: var(--ladder-league-white);
+                    background-color: var(--ladder-league-dark-blue);
+                    font-size: 3.4em;
+                    width: 500px;
+                    border-bottom-right-radius: 25px;
+                    border-top-left-radius: 25px;
+                    text-align: center;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 10px;
+                    font-weight: bold;
+                    border: 5px solid var(--ladder-league-white);
+                    box-shadow: 10px 10px 30px rgba(0,0,0,0.8);
+                    height: 64%;
+                    z-index: 3;
+                }
+
+                .socials-comms{
+                    border-top-left-radius: 25px;
+                    color: var(--ladder-league-white);
+                    background-color: var(--ladder-league-dark-blue);
+                    border-top: 5px solid var(--ladder-league-white);
+                    border-left: 5px solid var(--ladder-league-white);
+                    border-right: 5px solid var(--ladder-league-white);
+                    box-shadow: 10px 10px 30px rgba(0,0,0,0.9);
+                    display: flex;
+                    flex-direction: row;
+                    min-width: 280px;
+                    height: 36%;
+                    font-style: italic;
+                    justify-items: center;
+                    align-items: center;
+                    font-size: 1.6em;
+                    gap: 10px;
+                    box-sizing: border-box;
+                    padding: 10px;
+
+                    z-index: 2;
+                }
+
+                .name-mics::before{
+                    content: "";
+                    background-image: url("../noise.png");
+                    filter: contrast(470%) brightness(40%);
+                    opacity: 0.12;
+                    zIndex: -1;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    border-bottom-right-radius: 25px;
+                    border-top-left-radius: 25px;
+                }
+
+                .socials-comms::before{
+                    content: "";
+                    background-image: url("../noise.png");
+                    filter: contrast(470%) brightness(40%);
+                    opacity: 0.12;
+                    zIndex: -1;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    border-top-left-radius: 25px;
+                }
+
+
+                .reveal-element{
+                }
+
+                .left-box, 
+                .right-spacer {
+                flex: 1; 
+                }
+
+                .left-box {
+                    text-align: left;
+                }
+
+                .center-box {
+                    flex-shrink: 0; 
+                    text-align: center;
+                }
+            `;
+
+            static properties = {
+                top: { type: Number },
+                height: {type: Number },
+                names: { type: Array },
+                socials: {type: Array },
+                enable: { type: Boolean },
+                _onScreen: {type: Boolean}
+            };
+
+            async reveal(){
+                this.requestUpdate(); 
+                await this.updateComplete; 
+
+                const box = this.renderRoot?.querySelector('.reveal-element');
+                const elements = this.renderRoot?.querySelectorAll('.socials-comms');
+
+                const tl = gsap.timeline();
+                
+                
+
+                this._onScreen = true;
+            }
+
+            async hide(){
+                this.requestUpdate(); 
+                await this.updateComplete; 
+                const box = this.renderRoot?.querySelector('.reveal-element');
+                this._onScreen = false;
+            }
+
+            constructor() {
+                super();
+                this._onScreen = false;
+            }
+            render() {
+                return html`
+                    <div class="reveal-element commentator-row" style="position: absolute; top: ${this.top}px; width: 1920px;">
+                        ${this.names.map((entry, index) => { return html`
+                            <div class="commentator-entry" style="height: ${this.height}px;">
+                               <div class="socials-comms">
+                                    <div class="left-box"><svg style="fill: var(--ladder-league-white); " xmlns="http://www.w3.org/2000/svg" width="35"  viewBox="0 0 620 620"><!--!Font Awesome Free v7.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M455.4 167.5L416.8 167.5L416.8 277.2L455.4 277.2L455.4 167.5zM349.2 167L310.6 167L310.6 276.8L349.2 276.8L349.2 167zM185 64L88.5 155.4L88.5 484.6L204.3 484.6L204.3 576L300.8 484.6L378.1 484.6L551.9 320L551.9 64L185 64zM513.3 301.8L436.1 374.9L358.9 374.9L291.3 438.9L291.3 374.9L204.4 374.9L204.4 100.6L513.3 100.6L513.3 301.8z"/></svg></div>
+                                    <div class="center-box">${this.socials && this.socials[index]}</div>
+                                    <div class="right-spacer"></div> 
+                                </div>
+                                <div class="names-mics">
+                                    <img src="./microphone.png" width=50/>${entry}
+                                </div>    
+                            </div>
+                        `})}
+                    </div>
+                `;
+            }
+        }
+        customElements.define('commentator-names', CommentatorNames);
+  </script>
+  <script type="module" src="../../../js/ladder_league_2026_top8.js"></script>
+</html>
