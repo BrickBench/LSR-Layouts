@@ -28,7 +28,7 @@
     </head>
     <body style="width:1920px; height:1080px; /*background-image: url('image.png')*/">
         <!--<countdown-bug  eventName="QUARTERFINAL 1" top="66" left="84" p1Name="Eroadhouse" p2Name="Jared" p1Seed="3" p2Seed="5" ></countdown-bug>-->
-        <countdown-bug eventName="QUARTERFINAL 1" top="910" left="1365" p1Name="Eroadhouse" p2Name="WiiSuper" p1Seed="3" p2Seed="5" ></countdown-bug>
+        <countdown-bug p1Image="../images/jared_forward.png" p2Image="../images/jared_forward.png" eventName="QUARTERFINAL 1" top="910" left="1365" p1Name="Eroadhouse" p2Name="WiiSuper" p1Seed="3" p2Seed="5" ></countdown-bug>
     </body>
     <script type="module">
         import { LitElement, html, css } from 'https://esm.run/lit';
@@ -262,6 +262,13 @@
             }
 
             render() {
+                const imageCrops = {"jared_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092}};
+                
+                const p1ImagePath = this.p1Image && this.p1Image.split(/[/\\]/).pop();
+                const p2ImagePath = this.p2Image && this.p2Image.split(/[/\\]/).pop();
+
+                const iconWidth = 50;
+
                 return html`
                     <div class="reveal-element" style="display: flex; flex-direction: column; gap: 0px; width: 500px; position: absolute; top: ${this.top}px; left: ${this.left}px; align-items: flex-end;">
                         <div class="matchTitleRegion" id="bottom-scroll">
@@ -278,9 +285,19 @@
                                     <img src="./ladder.png" class="ladder-icon"/>
                                     <span class="top8Placeholder">TOP 8</span>
                                 ` : html`
-                                    <img class="img-icon" src=${this.p1Image}/>
+                                    <div style="width: ${imageCrops[p1ImagePath].width}px; height: ${imageCrops[p1ImagePath].height}px;
+                                        background-image: url('${this.p1Image}');
+                                        background-repeat: no-repeat;
+                                        background-size: ${imageCrops[p1ImagePath].width}px ${imageCrops[p1ImagePath].height}px;
+                                        background-position: ${-imageCrops[p1ImagePath].left}px ${-imageCrops[p1ImagePath].top}px; ">
+                                    </div>
                                     <span class="vs-img">VS.</span>
-                                    <img class="img-icon" src=${this.p2Image}/>
+                                    <div style="width: ${iconWidth}px; height: ${iconWidth}px;
+                                        background-image: url('${this.p2Image}');
+                                        background-repeat: no-repeat;
+                                        background-size: ${imageCrops[p2ImagePath].width}px ${imageCrops[p2ImagePath].height}px;
+                                        background-position: ${-imageCrops[p2ImagePath].left}px ${-imageCrops[p2ImagePath].top}px;>
+                                    </div>
                                 `}
                             </div>
                             <div class="countdownRegion">
