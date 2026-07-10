@@ -340,8 +340,8 @@
                         <div class="runner-profile-name">
                             ${this.p1Name}
                         </div>
-                        <div class="runner-profile-status ${this.splits && ((this.splits[35][0] < this.splits[35][1]) || (!this.splits[35][1]) ? "win": "lose")}">
-                            ${this.splits && ((this.splits[35][0] < this.splits[35][1]) || (!this.splits[35][1]) ? "Winner": "Loser")}
+                        <div class="runner-profile-status ${(this.splits && placementP1 == "1st") ? "win": "lose"}">
+                            ${(this.splits && placementP1 == "1st") ? "Winner": "Loser"}
                         </div>
                     </div>
                     
@@ -416,8 +416,8 @@
                         <div class="runner-profile-name">
                             ${this.p2Name}
                         </div>
-                        <div class="runner-profile-status ${this.splits && ((this.splits[35][1] < this.splits[35][0]) || (!this.splits[35][0]) ? "win": "lose")}">
-                            ${this.splits && ((this.splits[35][1] < this.splits[35][0]) || (!this.splits[35][0]) ? "Winner": "Loser")}
+                        <div class="runner-profile-status ${(this.splits && placementP2 == "1st") ? "win": "lose"}">
+                            ${(this.splits && placementP2 == "1st") ? "Winner": "Loser"}
                         </div>
                     </div>
 
