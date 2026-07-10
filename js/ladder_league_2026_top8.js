@@ -166,8 +166,25 @@ function displayLiveDeltas(data, event, splits, run_info) {
 
     for (var i = 0; i < 2; i++) {
         var run = run_info[runners[i]];
+        var run_splits_bpt = []
+        var last_split = 0
         if (run != null) {
-            ui_bpts[i] = run.bestPossible;
+            for (var j = 0; j < 36; j++) {
+                if (run.splits[j] != null) {
+                    if (run.splits[j].splitTime != null) {
+                        last_split = run.splits[j].splitTime;
+                    } else {
+                        run_splits_bpt.push(run.splits[j].bestPossible);
+                    }
+                }
+            }
+
+            var bpt = last_split;
+            for (const split of run_splits_bpt) {
+                bpt += split;
+            }
+
+            ui_bpts[i] = bpt;
         }
     }
 
@@ -663,13 +680,13 @@ connectToSocket('/ws?high_rate=true', function(data) {
                 mainText: {type: String},
                 left: {type: Number},
                 _onScreen: {type: Boolean}*/
-        
+
         var p1 = cf['lower-box-image:person'] && data.people[cf['lower-box-image:person']];
-        if(p1){
+        if (p1) {
             var p1Name = p1.name.charAt(0).toUpperCase() + p1.name.slice(1);
-            if(p1Name != "TBA"){
+            if (p1Name != "TBA") {
                 lowerThirds.image = "../images/" + p1Name + "_Forward.png";
-            }else{
+            } else {
                 lowerThirds.image = undefined;
             }
 
