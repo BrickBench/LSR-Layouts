@@ -151,6 +151,8 @@
                     border: 5px solid var(--ladder-league-white);
                     z-index: 2;
                     margin-top: ${LOWER_THIRDS_RADIUS * 0.10}px;
+                    position: relative;
+                      contain: paint; 
                 }
                 .reveal-element{
                     clip-path: polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%);
@@ -205,9 +207,41 @@
                 this._onScreen = false;
             }
             render() {
+                const imageCrops = {"jared_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "eroadhouse_forward.png" : {"top": 24, "left": 318, "width": 1303, "height":1067},
+                                    "bricko_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "dragon76_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "anorak_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "wiisuper_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "scynor_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "zac_forward.png" : {"top": 32, "left": 355, "width": 1368, "height":1127}, };
+                
+                const p1ImagePath = this.image && this.image.split(/[/\\]/).pop().toLowerCase();
+
+                const iconWidth = 280;
+                const iconHeight = 248;
+
                 return html`
                     <div class="reveal-element" style="display: flex; flex-direction: row; width: 1920px; align-items: center; position: absolute; top: ${this.top}px; padding-left: 80px;">
                         ${this.image && html`<div class="lower-thirds-side">
+                            <div style="width: ${iconWidth}px; height: ${iconHeight}px;
+                                overflow: hidden; position: relative; z-index: -1;">
+                                    <div style=" width: ${imageCrops[p1ImagePath].width}px;         
+                                                height: ${imageCrops[p1ImagePath].height}px;        
+                                                position: absolute;
+                                                top: 0;
+                                                left: 0;
+                                                overflow: hidden;
+                                                transform-origin: top left;
+                                                transform: scale(${iconWidth / imageCrops[p1ImagePath].width}, ${iconHeight / imageCrops[p1ImagePath].height}); ">
+                                        <img src="${this.image}" style="position: absolute;
+                                            margin-top: ${-imageCrops[p1ImagePath].top}px;
+                                            margin-left: ${-imageCrops[p1ImagePath].left}px; 
+                                            display: block;
+                                            max-width: none;
+                                        }">                                  
+                                    </div>
+                                </div>
                         </div>`}
                         <div class="lower-thirds" style="width: ${this.width}px; margin-left: -${this.image ? LOWER_THIRDS_RADIUS : 0}px; overflow:visible;">
                             <div class="lower-thirds-header" style="padding-left: ${this.image ? LOWER_THIRDS_RADIUS+LOWER_THIRDS_RADIUS_PADDING : 40}px;">

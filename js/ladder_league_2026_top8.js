@@ -663,11 +663,21 @@ connectToSocket('/ws?high_rate=true', function(data) {
                 mainText: {type: String},
                 left: {type: Number},
                 _onScreen: {type: Boolean}*/
+        
+        var p1 = cf['lower-box-image:person'] && data.people[cf['lower-box-image:person']];
+        if(p1){
+            var p1Name = p1.name.charAt(0).toUpperCase() + p1.name.slice(1);
+            if(p1Name != "TBA"){
+                lowerThirds.image = "../images/" + p1Name + "_Forward.png";
+            }else{
+                lowerThirds.image = undefined;
+            }
+
+        }
 
         lowerThirds.lowerThirdsHeader = cf['lower-banner-title'];
         lowerThirds.headerText = cf['lower-box-title'];
         lowerThirds.mainText = cf['lower-box-tagline'];
-        lowerThirds.image = cf['lower-box-image:person'];
 
         if (!lowerThirds._onScreen && (cf["lower-thirds-on:bool"] === "true")) {
             lowerThirds.reveal();
