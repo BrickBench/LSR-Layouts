@@ -9,7 +9,7 @@ import {
     setInnerHtml
 } from "./automarathon.js";
 
-const odds_endpoint = "http://10.0.0.244:8080/calculate"
+const odds_endpoint = "http://10.0.0.60:8080/calculate"
 const this_host = "main";
 
 var user_meta = new Map();
@@ -667,6 +667,7 @@ connectToSocket('/ws?high_rate=true', function(data) {
         lowerThirds.lowerThirdsHeader = cf['lower-banner-title'];
         lowerThirds.headerText = cf['lower-box-title'];
         lowerThirds.mainText = cf['lower-box-tagline'];
+        lowerThirds.image = cf['lower-box-image:person'];
 
         if (!lowerThirds._onScreen && (cf["lower-thirds-on:bool"] === "true")) {
             lowerThirds.reveal();
@@ -684,11 +685,11 @@ connectToSocket('/ws?high_rate=true', function(data) {
 
         countdownBug.p1Name = runner_1.name;
         countdownBug.p1Seed = user_meta.get(runner_1.name).seed;
-        countdownBug.p1Image = "./images/" + runner_1.name + "_Forward.png";
+        countdownBug.p1Image = "../images/" + runner_1.name + "_Forward.png";
 
         countdownBug.p2Name = runner_2.name;
         countdownBug.p2Seed = user_meta.get(runner_2.name).seed;
-        countdownBug.p2Image = "./images/" + runner_2.name + "_Forward.png";
+        countdownBug.p2Image = "../images/" + runner_2.name + "_Forward.png";
 
         countdownBug.eventName = event.name;
         countdownBug.countdownEndtime = isFinite(cf['countdown-end:date']) ? parseInt(cf['countdown-end:date']) : Date.now();

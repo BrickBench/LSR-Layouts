@@ -262,12 +262,22 @@
             }
 
             render() {
-                const imageCrops = {"jared_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092}};
+                const imageCrops = {"jared_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "eroadhouse_forward.png" : {"top": 24, "left": 318, "width": 1303, "height":1067},
+                                    "bricko_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "dragon76_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "anorak_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "wiisuper_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "scynor_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "zac_forward.png" : {"top": 32, "left": 355, "width": 1368, "height":1127}, };
                 
                 const p1ImagePath = this.p1Image && this.p1Image.split(/[/\\]/).pop().toLowerCase();
                 const p2ImagePath = this.p2Image && this.p2Image.split(/[/\\]/).pop().toLowerCase();
 
-                const iconWidth = 50;
+                const iconWidth = 93;
+                const iconHeight = 78;
+
+                var leftrightmargin = (!this.p1Image || !this.p2Image) ? 0 : 20;
 
                 return html`
                     <div class="reveal-element" style="display: flex; flex-direction: column; gap: 0px; width: 500px; position: absolute; top: ${this.top}px; left: ${this.left}px; align-items: flex-end;">
@@ -280,23 +290,48 @@
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: row;">
-                            <div class="playerIconRegion">
+                            <div class="playerIconRegion" style="padding-left: ${leftrightmargin}px !important; padding-right: ${leftrightmargin}px !important;">
                                 ${(!this.p1Image || !this.p2Image) ? html`
                                     <img src="./ladder.png" class="ladder-icon"/>
                                     <span class="top8Placeholder">TOP 8</span>
                                 ` : html`
-                                    <div style="width: ${imageCrops[p1ImagePath].width}px; height: ${imageCrops[p1ImagePath].height}px;
-                                        background-image: url('${this.p1Image}');
-                                        background-repeat: no-repeat;
-                                        background-size: ${imageCrops[p1ImagePath].width}px ${imageCrops[p1ImagePath].height}px;
-                                        background-position: ${-imageCrops[p1ImagePath].left}px ${-imageCrops[p1ImagePath].top}px; ">
+                                    <div style="width: ${iconWidth}px; height: ${iconHeight}px;
+                                    overflow: hidden; position: relative;">
+                                        <div style=" width: ${imageCrops[p1ImagePath].width}px;         
+                                                    height: ${imageCrops[p1ImagePath].height}px;        
+                                                    position: absolute;
+                                                    top: 0;
+                                                    left: 0;
+                                                    overflow: hidden;
+                                                    transform-origin: top left;
+                                                    transform: scale(${iconWidth / imageCrops[p1ImagePath].width}, ${iconHeight / imageCrops[p1ImagePath].height}); ">
+                                            <img src="${this.p1Image}" style="position: absolute;
+                                                margin-top: ${-imageCrops[p1ImagePath].top}px;
+                                                margin-left: ${-imageCrops[p1ImagePath].left}px; 
+                                                display: block;
+                                                max-width: none;
+                                            }">                                  
+                                        </div>
                                     </div>
+
                                     <span class="vs-img">VS.</span>
-                                    <div style="width: ${iconWidth}px; height: ${iconWidth}px;
-                                        background-image: url('${this.p2Image}');
-                                        background-repeat: no-repeat;
-                                        background-size: ${imageCrops[p2ImagePath].width}px ${imageCrops[p2ImagePath].height}px;
-                                        background-position: ${-imageCrops[p2ImagePath].left}px ${-imageCrops[p2ImagePath].top}px;>
+                                    <div style="width: ${iconWidth}px; height: ${iconHeight}px;
+                                        overflow: hidden; position: relative;">
+                                        <div style=" width: ${imageCrops[p2ImagePath].width}px;         
+                                                    height: ${imageCrops[p2ImagePath].height}px;        
+                                                    position: absolute;
+                                                    top: 0;
+                                                    left: 0;
+                                                    overflow: hidden;
+                                                    transform-origin: top left;
+                                                    transform: scale(${iconWidth / imageCrops[p2ImagePath].width}, ${iconHeight / imageCrops[p2ImagePath].height}); ">
+                                            <img src="${this.p2Image}" style="position: absolute;
+                                                margin-top: ${-imageCrops[p2ImagePath].top}px;
+                                                margin-left: ${-imageCrops[p2ImagePath].left}px; 
+                                                display: block;
+                                                max-width: none;
+                                            }">                                  
+                                        </div>
                                     </div>
                                 `}
                             </div>
