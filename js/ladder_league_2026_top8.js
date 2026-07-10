@@ -3,7 +3,7 @@ import {
     getEventTimerValue,
     getEventById, getEventForHost, toStringTime,
     getEventRunners,
-    getUpcomingEvents, 
+    getUpcomingEvents,
     getParticipantByName,
     getRunnerScore, compareTime,
     setInnerHtml
@@ -182,8 +182,18 @@ function displayLiveDeltas(data, event, splits, run_info) {
     if (results_table != null) {
         results_table.eventName = event.name;
         results_table.splits = ui_splits;
-        results_table.p1Name = data.people[runners[0]].name;
-        results_table.p2Name = data.people[runners[1]].name;
+        results_table.finalTimes = [getRunnerScore(event, runners[0]).final_result, getRunnerScore(event, runners[1]).final_result];
+
+        var runner_1 = data.people[runners[0]];
+        var runner_2 = data.people[runners[1]];
+
+        results_table.p1Name = runner_1.name;
+        results_table.p1Icon = "../icons/" + user_meta.get(runner_1.name).icon;
+        results_table.p1MainImage = "./images/" + runner_1.name + "_Left.png";
+
+        results_table.p2Name = runner_2.name;
+        results_table.p2Icon = "../icons/" + user_meta.get(runner_2.name).icon;
+        results_table.p2MainImage = "./images/" + runner_2.name + "_Right.png";
     }
 }
 function normalizeWinProbability(state, predictions) {
@@ -544,7 +554,7 @@ function setBracketData(data, event) {
         if (top_runner) {
             box.p1Name = top_runner.name;
             box.p1Seed = user_meta.get(top_runner.name).top8_seed;
-            if(top_time){
+            if (top_time) {
                 box.p1Time = top_time;
             }
         } else {
@@ -555,7 +565,9 @@ function setBracketData(data, event) {
         if (bottom_runner) {
             box.p2Name = bottom_runner.name;
             box.p2Seed = user_meta.get(bottom_runner.name).top8_seed;
-            if(bottom_time){
+            box.p2Icon = user_meta.get(top_runner.name).icon;
+            box.p1MainImage = "./images/" + top_runner.name + "_Right.jpg";
+            if (bottom_time) {
                 box.p2Time = bottom_time;
             }
         } else {
@@ -655,12 +667,10 @@ connectToSocket('/ws?high_rate=true', function(data) {
         lowerThirds.lowerThirdsHeader = cf['lower-banner-title'];
         lowerThirds.headerText = cf['lower-box-title'];
         lowerThirds.mainText = cf['lower-box-tagline'];
-        
-        if(!lowerThirds._onScreen && (cf["lower-thirds-on:bool"] === "true"))
-        {
+
+        if (!lowerThirds._onScreen && (cf["lower-thirds-on:bool"] === "true")) {
             lowerThirds.reveal();
-        }else if(lowerThirds._onScreen && !(cf["lower-thirds-on:bool"] === "true"))
-        {
+        } else if (lowerThirds._onScreen && !(cf["lower-thirds-on:bool"] === "true")) {
             lowerThirds.hide();
         }
     }
@@ -669,17 +679,23 @@ connectToSocket('/ws?high_rate=true', function(data) {
 
     if (countdownBug != null) {
         var runners = getRunnersBySeed(data, event);
+        var runner_1 = data.people[runners[0]];
+        var runner_2 = data.people[runners[1]];
 
-        countdownBug.p1Name = data.people[runners[0]].name;
-        countdownBug.p2Name = data.people[runners[1]].name;
+        countdownBug.p1Name = runner_1.name;
+        countdownBug.p1Seed = user_meta.get(runner_1.name).seed;
+        countdownBug.p1Image = "./images/" + runner_1.name + "_Forward.png";
+
+        countdownBug.p2Name = runner_2.name;
+        countdownBug.p2Seed = user_meta.get(runner_2.name).seed;
+        countdownBug.p2Image = "./images/" + runner_2.name + "_Forward.png";
+
         countdownBug.eventName = event.name;
         countdownBug.countdownEndtime = isFinite(cf['countdown-end:date']) ? parseInt(cf['countdown-end:date']) : Date.now();
 
-        if(!countdownBug._onScreen && (cf["countdown-bug:bool"] === "true"))
-        {
+        if (!countdownBug._onScreen && (cf["countdown-bug:bool"] === "true")) {
             countdownBug.reveal();
-        } else if(countdownBug._onScreen && !(cf["countdown-bug:bool"] === "true"))
-        {
+        } else if (countdownBug._onScreen && !(cf["countdown-bug:bool"] === "true")) {
             countdownBug.hide();
         }
     }
@@ -690,32 +706,33 @@ connectToSocket('/ws?high_rate=true', function(data) {
         var names = [];
         var socials = [];
 
-        const socialsMap = {"dragon76": "Cragon76", "eroadhouse" : "ERoadhouse", "anorak": "AnorakDT", "zac": "ZacMuffin", 
-            "scynor" : "Scynor_", "wiisuper": "WiiSuper", "bricko": "BrickoFett",  "jared": "ItsJared97", 
+        const socialsMap = {
+            "dragon76": "Cragon76", "eroadhouse": "ERoadhouse", "anorak": "AnorakDT", "zac": "ZacMuffin",
+            "scynor": "Scynor_", "wiisuper": "WiiSuper", "bricko": "BrickoFett", "jared": "ItsJared97",
             "flaminglazer": "Flaming_Lazer", "anonymous": "AnAnonymousSource", "jav": "Javster101",
-            "p53": "P53P", "saber" : "Saber1658", "wazzip": "vvazzip", "thecrazedcap": "TheCrazedCap", "mellovro" : "MelloVro"
+            "p53": "P53P", "saber": "Saber1658", "wazzip": "vvazzip", "thecrazedcap": "TheCrazedCap", "mellovro": "MelloVro"
         }
 
-        if(cf['comm-1:person'] && cf['comm-1:person'].length > 0){
+        if (cf['comm-1:person'] && cf['comm-1:person'].length > 0) {
             const selectedUser = data.people[cf['comm-1:person']];
             console.log(selectedUser.name);
-            if(selectedUser.name.toLowerCase() != "tba"){
+            if (selectedUser.name.toLowerCase() != "tba") {
                 names.push(selectedUser.name);
                 socials.push(socialsMap[selectedUser.name.toLowerCase()] ?? "Temp");
             }
         }
 
-        if(cf['comm-2:person'] && cf['comm-2:person'].length > 0){
+        if (cf['comm-2:person'] && cf['comm-2:person'].length > 0) {
             const selectedUser = data.people[cf['comm-2:person']];
-            if(selectedUser.name.toLowerCase() != "tba"){
-                names.push(selectedUser.name);  
+            if (selectedUser.name.toLowerCase() != "tba") {
+                names.push(selectedUser.name);
                 socials.push(socialsMap[selectedUser.name.toLowerCase()] ?? "Temp");
             }
         }
 
-        if(cf['comm-3:person'] && cf['comm-3:person'].length > 0){
+        if (cf['comm-3:person'] && cf['comm-3:person'].length > 0) {
             const selectedUser = data.people[cf['comm-3:person']];
-            if(selectedUser.name.toLowerCase() != "tba"){
+            if (selectedUser.name.toLowerCase() != "tba") {
                 names.push(selectedUser.name);
                 socials.push(socialsMap[selectedUser.name.toLowerCase()] ?? "Temp");
             }
@@ -723,12 +740,10 @@ connectToSocket('/ws?high_rate=true', function(data) {
 
         commentatorNames.names = names;
         commentatorNames.socials = socials;
-        
-        if(!commentatorNames._onScreen && (cf["comms-on:bool"] === "true"))
-        {
+
+        if (!commentatorNames._onScreen && (cf["comms-on:bool"] === "true")) {
             commentatorNames.reveal();
-        }else if(commentatorNames._onScreen && !(cf["comms-on:bool"] === "true"))
-        {
+        } else if (commentatorNames._onScreen && !(cf["comms-on:bool"] === "true")) {
             commentatorNames.hide();
         }
     }
