@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html style="background-color: transparent;">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+        <link href="https://fonts.cdnfonts.com/css/aurebesh" rel="stylesheet">
+        <style>
+            :root {
+                --ladder-league-white: #cacacb;
+                --ladder-league-shadow: #131524;
+                --ladder-league-green: #6cc46c;
+                --ladder-league-red: #e46a6a;
+                --ladder-league-split-green: #95d895;
+                --ladder-league-split-red: #e67b7b;
+                --ladder-league-p1-color: #6cc46c;
+                --ladder-league-p2-color: #00a2ff;
+                --ladder-league-p3-color: #ffbc09;
+                --ladder-league-bright-white: #dadadb;
+                --ladder-league-grey: #A8A8A8;
+                --ladder-league-blue: #1562D1;
+                --ladder-league-gold: #FFC80B;
+                --ladder-league-dark-blue: #1B243C;
+                --ladder-league-teal: #193952;
+                --transition-offset: 3.1s;
+            }
+
+            .img-cont{
+                width: 400px;
+                z-index: 1;
+                mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+            }
+
+            .name{
+                font-size: 3em;
+                font-family: "Rubik";
+                font-weight: bold;
+                color: var(--ladder-league-white);
+                text-transform: uppercase;
+                text-align: center;
+                text-shadow: 8px 8px 16px rgb(10, 10, 10); 
+                margin-top: -50px
+            }
+            .seed{
+                font-size: 2em;
+                font-family: "Rubik";
+                font-weight: bold;
+                font-style: italic;
+                color: var(--ladder-league-white);
+                text-transform: uppercase;
+                text-align: center;
+                text-shadow: 8px 8px 16px rgb(10, 10, 10); 
+            }
+             .match-3p-results-header{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    align-content: center;
+                    box-sizing: border-box;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                    justify-content: center;
+                }
+                .match-3p-results-header-name{
+                    text-shadow: 2px 2px 7px rgb(10, 10, 10); 
+                    color: var(--ladder-league-white);
+                    text-transform: uppercase;
+                    text-align: center;
+                    font-family: "Rubik";
+                    font-weight: bold;
+                    font-size: 75px;
+                }
+                .match-3p-results-header-caption{
+                    font-family: "Aurebesh";
+                    color: var(--ladder-league-grey);
+                    text-shadow: 2px 2px 7px rgb(10, 10, 10); 
+                    font-size: 37px;
+                }
+        </style>
+    </head>
+    <body style="background-image: url('LL26_MatchResults_Background.png'); width: 1920px; height: 1080px;">
+        <div class="match-3p-results-header" style="position: absolute; width: 1920px; height: 258px; top: 0px; left: 0px">
+            <div class="match-3p-results-header-name">
+                LADDER LEAGUE TOP 8 LINEUP
+            </div>
+            <div class="match-3p-results-header-caption">
+                LADDER LEAGUE TOP 8 LINEUP
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: row; justify-content: space-evenly; position: absolute; top: 300px; width: 1920px;">
+            <div>
+                <img class="img-cont" src="../images/Dragon76_Forward.png">
+                <div class="name">Dragon</div>
+                <div class="seed">Seed 5</div>
+            </div>
+            <div>
+                <img class="img-cont" src="../images/Anorak_Forward.png">
+                <div class="name">Anorak</div>
+                <div class="seed">Seed 6</div>
+
+            </div>
+            <div>
+                <img class="img-cont" src="../images/Evan_Alt.png">
+                <div class="name">ERoadhouse</div>
+                <div class="seed">Seed 7</div>
+            </div>
+            <div>
+                <img class="img-cont" src="../images/Zac_Forward.png">
+                <div class="name">Zac</div>
+                <div class="seed">Seed 8</div>
+            </div>
+        </div>
+    </body>
+</html>
