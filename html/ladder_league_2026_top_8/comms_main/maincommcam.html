@@ -206,7 +206,7 @@
             }
             render() {
                 return html`
-                    <div class="reveal-element" style="display: flex; flex-direction: row; width: 1920px; justify-content: center; align-items: center; position: absolute; top: ${this.top}px;">
+                    <div class="reveal-element" style="display: flex; flex-direction: row; width: 1920px; align-items: center; position: absolute; top: ${this.top}px; padding-left: 80px;">
                         ${this.image && html`<div class="lower-thirds-side">
                         </div>`}
                         <div class="lower-thirds" style="width: ${this.width}px; margin-left: -${this.image ? LOWER_THIRDS_RADIUS : 0}px; overflow:visible;">
