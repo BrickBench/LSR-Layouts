@@ -173,6 +173,7 @@ function displayLiveDeltas(data, event, splits, run_info) {
                 if (run.splits[j] != null) {
                     if (run.splits[j].splitTime != null) {
                         last_split = run.splits[j].splitTime;
+                        run_splits_bpt = []
                     } else {
                         run_splits_bpt.push(run.splits[j].bestPossible);
                     }
@@ -314,7 +315,7 @@ function getRunnersBySeed(data, event) {
     for (const runner of Object.keys(event.runner_state)) {
         var meta = user_meta.get(data.people[runner].name);
         if (meta != null) {
-            var seed = meta.seed;
+            var seed = meta.top8_seed;
             runners.push({
                 id: runner,
                 seed
@@ -804,6 +805,16 @@ connectToSocket('/ws?high_rate=true', function(data) {
             event.name.startsWith("GRAND FINALS") ||
             event.name.startsWith("THIRD PLACE MATCH") ||
             event.name.startsWith("3RD PLACE MATCH")) {
+            var title_bar = document.getElementById("title-bar");
+            if (title_bar != null) {
+                if (event.name.startsWith("SEMIFINAL")) {
+                    title_bar.matchTitle = "SEMIFINALS";
+                } else if (event.name.startsWith("GRAND FINALS")) {
+                    title_bar.matchTitle = "GRAND FINALS";
+                } else {
+                    title_bar.matchTitle = event.name;
+                }
+            }
             setBracketData(data, event);
         }
     }
