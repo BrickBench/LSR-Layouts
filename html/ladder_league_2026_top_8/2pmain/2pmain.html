@@ -240,13 +240,13 @@
                     <div class="splits-table" style="position: absolute; left: ${this.left}px; top: ${this.top}px; width: 771px; height: 236px;">
                         ${this.splits.slice(cleanSplitIndex, cleanSplitIndex + 3).map((entry, index) => {  return html`
                              <div class="splits-row">
-                                <div class="splits-entry ${entry[0] ? (entry[0] <= entry[1] ? "ahead" : "behind") : ""}">
+                                <div class="splits-entry ${entry[0] ? (entry[0] <= entry[1] || entry[1] == null ? "ahead" : "behind") : ""}">
                                     ${entry[0] ? toStringTime(entry[0], false, true, false) : "--:--"}
                                 </div>
                                 <div class="row-header">
                                     ${this._getSplitName(cleanSplitIndex + index)}
                                 </div>
-                                <div class="splits-entry ${entry[1] ? (entry[1] <= entry[0] ? "ahead" : "behind") : ""}">
+                                <div class="splits-entry ${entry[1] ? (entry[1] <= entry[0] || entry[0] == null ? "ahead" : "behind") : ""}">
                                     ${entry[1] ? toStringTime(entry[1], false, true, false) : "--:--"}
                                 </div>
                             </div
