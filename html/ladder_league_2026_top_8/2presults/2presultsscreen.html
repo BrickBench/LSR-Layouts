@@ -291,6 +291,7 @@
                     displayTimeP2 = p2Tokens[0].trim();
                 }
 
+                this.finalTimes[1] = "2:43:32";
                  if(this.finalTimes && this.finalTimes[0] && this.finalTimes[1]){
                     if(displayTimeP2.toLowerCase().includes("dnf")){
                         placementP1 = "1st";
@@ -318,6 +319,8 @@
 
                 var leftMargin = 0;
                 var rightMargin = 0;
+
+                console.log(placementP1, placementP2, this.finalTimes)
 
                 if(this.p1MainImage.endsWith("Anorak_Left.png")){
                     leftMargin = 130;

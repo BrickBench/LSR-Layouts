@@ -209,12 +209,12 @@
             render() {
                 const imageCrops = {"jared_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
                                     "eroadhouse_forward.png" : {"top": 24, "left": 318, "width": 1303, "height":1067},
-                                    "bricko_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
-                                    "dragon76_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "bricko_forward.png" : {"top": 24, "left": 349, "width": 1287, "height":1092},
+                                    "dragon76_forward.png" : {"top": 24, "left": 424, "width": 1287, "height":1092},
                                     "anorak_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
-                                    "wiisuper_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
+                                    "wiisuper_forward.png" : {"top": 24, "left": 386, "width": 1444, "height":1238},
                                     "scynor_forward.png" : {"top": 24, "left": 254, "width": 1287, "height":1092},
-                                    "zac_forward.png" : {"top": 32, "left": 355, "width": 1368, "height":1127}, };
+                                    "zac_forward.png" : {"top": 32, "left": 450, "width": 1368, "height":1127}, };
                 
                 const p1ImagePath = this.image && this.image.split(/[/\\]/).pop().toLowerCase();
 
@@ -251,7 +251,7 @@
                                 <div class="main-box-header">
                                 ${this.headerText}
                                 </div>
-                                <div class="main-box-content">
+                                <div class="main-box-content" style="color: ${this.image ? "var(--ladder-league-gold)" : "var(--ladder-league-white)"}">
                                 ${this.mainText}
                                 </div>
                             </div>
