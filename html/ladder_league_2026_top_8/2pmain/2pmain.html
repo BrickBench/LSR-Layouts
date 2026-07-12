@@ -334,7 +334,9 @@
                 }else if(this.matchTitle.toLowerCase().includes("grand"))
                 {
                     matchElements = html`<div>GRAND</div><div>FINALS</div>`;
-                }else{
+                }else if (this.matchTitle.toLowerCase().includes("3rd")) {
+                    matchElements = html`<div>THIRD PLACE</div><div>MATCH</div>`;
+                } else {
                     matchElements = html`<div>${this.matchTitle}</div>`;
                 }
 

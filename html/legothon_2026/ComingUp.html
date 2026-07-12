@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html style="background-color: transparent;">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+    </head>
+    <body style="background-color: black; background-image: url('./backgrounds/Coming_Up_Video_Screen.png')">
+        <video id="video" autoplay muted loop style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px; object-fit: cover; z-index: 1;">
+            <source src="./videos/default.mp4" type="video/mp4">
+    </body>
+    <script type="module" defer>
+        import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById} from '../../../../js/automarathon.js'
+
+        const this_host = "main";
+
+        var state;
+
+        const game_to_video = {
+            "LEGO Star Wars: The Complete Saga": "lswtcs.mp4"
+        }
+
+        connectToSocket('/ws', function(data) {
+            state = data;
+            var event_id = getEventForHost(data, this_host);
+            if (event_id == null) {
+                return;
+            }
+
+            var event = getEventById(data, event_id);
+
+            var video_file = game_to_video[event.game] || "default.mp4";
+
+            if (video_file != document.getElementById("video").src.split("/").pop()) {
+                document.getElementById("video").src = "./videos/" + video_file;
+            }
+        });
+    </script>
+</html>

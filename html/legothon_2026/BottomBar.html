@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html style="background-color: transparent;">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+    </head>
+    <body style="background-color: black; background-image: url('./backgrounds/Coming_Up_Video_Screen.png')">
+    </body>
+    <script type="module" defer>
+        import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById} from '../../../../js/automarathon.js'
+
+        // Non-carousel bar elements
+        class StaticBar extends LitElement {
+            static properties = {
+                // percent from 0 to 1
+                donoPercent: {type: Number},
+                // total donated money
+                donoTotal: {type: Number}
+            };
+
+            constructor() {
+            }
+            render() {}
+        }
+
+        // list of up next elements
+        class UpNext extends LitElement {
+            static properties = {
+                idx: {type: Number},
+                game: {type: String},
+                category: {type: String},
+                console: {type: String},
+                // array of names
+                runners: {type: Array},
+                time: {type: Number},
+            };
+
+            constructor() {
+            }
+            render() {}
+        }
+
+        class DonationGoal extends LitElement {
+            static properties = {
+                total: {type: Number},
+                goal: {type: Number}
+            };
+
+            constructor() {
+            }
+            render() {}
+        }
+
+        class RecentDonations extends LitElement {
+            static properties = {
+                amounts: {type: Number},
+                donator: {type: String}
+            };
+
+            constructor() {
+            }
+            render() {}
+        }
+
+        class SingleIncentive extends LitElement {
+            static properties = {
+                game: {type: String},
+                incentive: {type: String},
+                amount: {type: Number},
+                target: {type: Number}
+            };
+
+            constructor() {
+            }
+            render() {}
+        }
+
+        // competing incentive race
+        class MultiIncentive extends LitElement {
+            static properties = {
+                game: {type: String},
+                incentive: {type: String},
+                values: {type: Array},
+                amounts: {type: Array},
+            };
+
+            constructor() {
+            }
+            render() {}
+        }
+
+        class BottomBarControl extends LitElement {
+            static properties = {
+                // donation total is always good
+                donationsGood: {type: Boolean},
+                upNext1Good: {type: Boolean},
+                upNext2Good: {type: Boolean},
+                upNext3Good: {type: Boolean},
+                singleIncentive1Good: {type: Boolean},
+                singleIncentive2Good: {type: Boolean},
+                multiIncentive1Good: {type: Boolean},
+                multiIncentive2Good: {type: Boolean},
+                readyToChange: {type: Boolean}
+            };
+
+            constructor() {
+            }
+            render() {}
+        }
+
+        
+
+        const this_host = "main";
+
+        connectToSocket('/ws', function(data) {
+            var next_events = getUpcomingEvents(data);
+
+            if (next_events.length > 0) {
+                valid_bottom_bar.set("next-event", true);
+                next_event = next_events[0];
+                setInnerHtml("up-next-game", next_event.game);
+                setInnerHtml("up-next-category", "<i>" + next_event.category + "</i>");
+                setInnerHtml("up-next-subtitle", getEventSubtitle(next_event));
+
+                setInnerHtml("up-next-runners", getRunnerComboName(state, getEventRunners(next_event), "&"));
+            } else {
+                valid_bottom_bar.set("next-event", false);
+            }
+
+            if (next_events.length > 1) {
+                next_event_2 = next_events[1];
+                setInnerHtml("up-next-game-2", next_event_2.game);
+                setInnerHtml("up-next-subtitle-2", getEventSubtitle(next_event_2));
+                setInnerHtml("up-next-runners-2", getRunnerComboName(state, getEventRunners(next_event_2), "&"));
+            }
+
+
+            if (next_events.length > 2) {
+                next_event_3 = next_events[2];
+                setInnerHtml("up-next-game-3", next_event_3.game);
+                setInnerHtml("up-next-subtitle-3", getEventSubtitle(next_event_3));
+                setInnerHtml("up-next-runners-3", getRunnerComboName(state, getEventRunners(next_event_3), "&"));
+            }
+
+            var cf = state.custom_fields;
+
+            var recent_donations = [];
+
+            for (var i = 0; i < 4; i++) {
+                var donation = cf["donation-" + (i + 1)];
+
+                var split = donation.split(";");
+                if (split.length >= 2) {
+                    var name = split[0].trim();
+                    var amount = split[1].trim();
+
+                    if (amount != "" && name != "") {
+                        setInnerHtml("dono-" + (i + 1) + "-name", name.toUpperCase());
+                        setInnerHtml("dono-" + (i + 1) + "-amount", amount);
+                        recent_donations.push({
+                            amount: amount,
+                            name: name
+                        });
+                    }
+                }
+            }
+
+            setInnerHtml(
+                "dono-amount",
+                "$" + cf["total-donations"] + "/$" + Math.ceil(cf["goal-donations"])
+            )
+            setInnerHtml(
+                "donation-total",
+                "$" + cf["total-donations"]
+            )
+
+            setBarValue("dono-bar", cf["total-donations"], cf["goal-donations"]);
+
+            valid_bottom_bar.set("recent-donations", recent_donations.length == 4);
+            valid_bottom_bar.set("single-incentive-1", setIncentive(cf["single-incentive-1"], true, 1));
+            valid_bottom_bar.set("single-incentive-2", setIncentive(cf["single-incentive-2"], true, 2));
+            valid_bottom_bar.set("multi-incentive-1", setIncentive(cf["multi-incentive-1"], false, 1));
+            valid_bottom_bar.set("multi-incentive-2", setIncentive(cf["multi-incentive-2"], false, 2));
+        }
+    </script>
+</html>

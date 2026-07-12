@@ -744,7 +744,6 @@ connectToSocket('/ws?high_rate=true', function(data) {
 
         if (cf['comm-1:person'] && cf['comm-1:person'].length > 0) {
             const selectedUser = data.people[cf['comm-1:person']];
-            console.log(selectedUser.name);
             if (selectedUser.name.toLowerCase() != "tba") {
                 names.push(selectedUser.name);
                 socials.push(socialsMap[selectedUser.name.toLowerCase()] ?? "Temp");
@@ -799,22 +798,16 @@ connectToSocket('/ws?high_rate=true', function(data) {
 
     last_active = table_setting;
 
+    if (document.getElementById("title-bar") != null) {
+        document.getElementById("title-bar").matchTitle = event.name;
+    }
+
     for (const event of Object.values(data.events)) {
         if (event.name.startsWith("QUARTERFINAL") ||
             event.name.startsWith("SEMIFINAL") ||
             event.name.startsWith("GRAND FINALS") ||
             event.name.startsWith("THIRD PLACE MATCH") ||
             event.name.startsWith("3RD PLACE MATCH")) {
-            var title_bar = document.getElementById("title-bar");
-            if (title_bar != null) {
-                if (event.name.startsWith("SEMIFINAL")) {
-                    title_bar.matchTitle = "SEMIFINALS";
-                } else if (event.name.startsWith("GRAND FINALS")) {
-                    title_bar.matchTitle = "GRAND FINALS";
-                } else {
-                    title_bar.matchTitle = event.name;
-                }
-            }
             setBracketData(data, event);
         }
     }
