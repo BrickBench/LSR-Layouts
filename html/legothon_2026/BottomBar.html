@@ -110,12 +110,67 @@
             render() {}
         }
 
-        
-
         const this_host = "main";
+        var next_data = null;
+
+        function populateNextEvent(data, event, element) {
+            element.game = event.game;
+            element.category = event.category;
+            element.console = event.console;
+            element.runners = getEventRunners(event);
+            element.startTime = event.event_start_time;
+        }
+
+        function populateBottomBar(data) {
+            var next_event_1_elem = document.getElementById("up-next-1");
+            var next_event_2_elem = document.getElementById("up-next-2");
+            var next_event_3_elem = document.getElementById("up-next-3");
+
+            var bar_control = document.getElementById("bottom-bar-control");
+            var next_events = getUpcomingEvents(data);
+            if (next_events.length > 0) {
+                populateNextEvent(data, next_events[0], next_event_1_elem);
+                bar_control.upNext1Good = true;
+            } else {
+                bar_control.upNext1Good = false;
+            }
+
+            if (next_events.length > 1) {
+                populateNextEvent(data, next_events[1], next_event_2_elem);
+                bar_control.upNext2Good = true;
+            } else {
+                bar_control.upNext2Good = false;
+            }
+
+            if (next_events.length > 2) {
+                populateNextEvent(data, next_events[2], next_event_3_elem);
+                bar_control.upNext3Good = true;
+            } else {
+                bar_control.upNext3Good = false;
+            }
+        }
+
+        setInterval(function() {
+            var bar_control = document.getElementById("bottom-bar-control");
+            if (next_data != null && bar_control.readyToChange) {
+                populateBottomBar(next_data);
+                next_data = null;
+            }
+        }, 500);
 
         connectToSocket('/ws', function(data) {
             var next_events = getUpcomingEvents(data);
+
+            var static_bottom_bar = document.getElementById("static-bottom-bar");
+            static_bottom_bar.donoPercent = data.custom_fields["total-donations"] / data.custom_fields["goal-donations"];
+            static_bottom_bar.donoTotal = data.custom_fields["total-donations"];
+
+            var bar_control = document.getElementById("bottom-bar-control");
+            if (bar_control.readyToChange) {
+
+            } else {
+                next_data = data;
+            }
 
             if (next_events.length > 0) {
                 valid_bottom_bar.set("next-event", true);
