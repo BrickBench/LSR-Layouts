@@ -10,11 +10,103 @@
                 --legothon-greyborder: rgb(120,120,120);
                 --border-width: 4px;
             }
+            .header{
+                text-align: center;
+                font-weight: bold;
+                font-family: "Bebas Neue", sans-serif;
+                color: var(--legothon-white);
+                font-size: 9em;
+                margin-top: 30px;
+            }
+            .mainbox{
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-evenly;
+                color: var(--legothon-white);
+                font-weight: bold;
+                font-family: "Bebas Neue", sans-serif;
+                margin-top: 70px;
+            }
+            .optionColumn{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex: 1;
+            }
+            .levelName{
+                font-size: 3.2em;
+                text-align: center;
+                min-height: 150px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-transform: uppercase;
+            }
+            .game{
+                font-size: 2.2em;
+                text-align: center;
+                font-style: italic;
+                min-height: 100px;
+                margin-top: 30px;
+            }
+            .levelImage{
+                border-radius: 10px;
+                width: 410px;
+                height: auto;
+                aspect-ratio: 16 / 9; 
+                object-fit: cover;  
+                border: 2px solid white;
+                object-position: 0 0;
+                box-shadow: 4px 4px 10px black;
+            }
         </style>
     </head>
     <body style="width: 1920px; height: 1080px; margin: 0; background-image: url('boxless_background/Generic_Blank_Template_2026.png');">
-        <div style="">
-
+        <div style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px; display: flex; flex-direction: column;
+                    box-sizing: border-box;
+                    padding: 35px;">
+            <div class="header">
+                TT LEVEL NAMES THROWDOWN
+            </div>
+            <div class="mainbox">
+                <div class="optionColumn">
+                    <div class="levelName">
+                        Reap What You Solo
+                    </div>
+                    <img class="levelImage" src="contest1/Reap What You Solo.png"/>
+                    <div class="game">
+                        LEGO Star Wars: The Skywalker Saga
+                    </div>
+                </div>
+                <div class="optionColumn">
+                    <div class="levelName">
+                        Rock up at the Lock Up
+                    </div>
+                    <img class="levelImage" src="contest1/RockUpattheLockUp.png"/>
+                    <div class="game">
+                        Lego Marvel Super Heroes
+                    </div>
+                </div>
+                <div class="optionColumn">
+                    <div class="levelName">
+                        Rail Hydra
+                    </div>
+                    <img class="levelImage" src="contest1/RailHydraOption1.png"/>
+                     <div class="game">
+                        LEGO Marvel's Avengers
+                    </div>
+                </div>
+                <div class="optionColumn">
+                    <div class="levelName">
+                        All Your Bricks Are Belong To Us
+                    </div>
+                    <img class="levelImage" src="contest1/AllYourBricks.PNG"/>
+                    <div class="game">
+                        LEGO Dimensions
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
