@@ -16,14 +16,14 @@
             }
         </style>
     </head>
-    <body style="background-color: black; background-image: url('./backgrounds/Coming_Up_Video_Screen.png')">
+    <body style="background-color: transparent;">
         <static-bar donoTotal="9999"></static-bar>
         <bottom-bar-control multiIncentive1Good="true" multiIncentive2Good="true" donationsGood="true"></bottom-bar-control>
     </body>
     <script type="module" defer>
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
         import {classMap} from 'https://esm.run/lit/directives/class-map.js';
-        import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById} from '../../js/automarathon.js'
+        import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById, getUpcomingEvents} from '../../js/automarathon.js'
 
         const intervalId = setInterval(() => {
             const slideshow = document.querySelector("bottom-bar-control");
@@ -305,14 +305,14 @@
                 let curSlideElem = this.renderRoot.getElementById(slideIDs[this._slideIndex]);
 
                 var tl = gsap.timeline({});
-                tl.swapText(header, {text: slideHeaders[this._slideIndex], delay: 1}).to(prevSlideElem, { 
+                tl.swapText(header, {text: slideHeaders[this._slideIndex], delay: 1}).to(curSlideElem, { 
+                    autoAlpha: 1, 
+                    duration: 0.5 
+                }, "-=0.5")
+                .from(prevSlideElem, { 
                     autoAlpha: 0, 
                     duration: 0.5 
-                }, "<")
-                .from(curSlideElem, { 
-                    autoAlpha: 0, 
-                    duration: 0.5 
-                }, "<");
+                }, "-=0.5");
 
             }
 
@@ -413,7 +413,7 @@
         connectToSocket('/ws', function(data) {
             var next_events = getUpcomingEvents(data);
 
-            var static_bottom_bar = document.getElementById("static-bottom-bar");
+            var static_bottom_bar = document.getElementById("static-bar");
             static_bottom_bar.donoPercent = data.custom_fields["total-donations"] / data.custom_fields["goal-donations"];
             static_bottom_bar.donoTotal = data.custom_fields["total-donations"];
 
