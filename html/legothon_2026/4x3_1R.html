@@ -153,6 +153,8 @@
                     display: flex;
                     flex-direction: row;
                     font-weight: bold;
+                    align-items: center;
+                    gap: 10px;
                 }
                 .commsPronounBox{
                     display: flex;
@@ -179,7 +181,7 @@
                     <div class="commsColumn">
                         ${this.commentatorNames.map((name,index)=>{
                             return html`<div class="commsBox">
-                                ${name}
+                                 <img src="miccropped.png" style="margin-top: -2px;"/> <span>${name}</span>
                             </div>`
                         })}
                     </div>

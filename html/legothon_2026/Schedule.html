@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html style="background-color: transparent;">
+    <head>
+        <link href="https://fonts.cdnfonts.com/css/gobold" rel="stylesheet">
+        <link href="https://fonts.cdnfonts.com/css/bebas-neue" rel="stylesheet">              
+        <style>
+            :root {
+                --legothon-white: #e8e8e6;
+                --legothon-darkgreen: 14, 101, 45;
+                --legothon-greyborder: rgb(120,120,120);
+                --border-width: 4px;
+            }
+        </style>
+    </head>
+    <script type="module" defer>
+        import { LitElement, html, css, nothing } from 'https://esm.run/lit';
+        import {classMap} from 'https://esm.run/lit/directives/class-map.js';
+        import {connectToSocket, getEventForHost, toStringTime, compareTime} from '../../../js/automarathon.js'
+
+        class ScheduleBox extends LitElement {
+            static properties = {
+                runners: {type: Array},
+                game : {type: String},
+                category: {type: String},
+                platform: {type: String},
+                estimate: {type: String},
+                time: {type: Number},
+                index: {type: Number}
+            };
+
+            static styles = css`
+                :host {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 2.5em;
+                    font-weight: bold;
+                    color: var(--legothon-white);
+                    text-transform: uppercase;
+                }
+                .schedule-box{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 7px;
+                }
+                .run-box{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+                    background-color: rgba(var(--legothon-darkgreen), 0.6);
+                    box-sizing: border-box;
+                    padding: 15px;
+                    border-radius: 10px;  
+                    border: var(--border-width) solid var(--legothon-greyborder);  
+                    width: 800px;
+                }
+                .time-box{
+                    background-color: #1B884A;
+                    box-sizing: border-box;
+                    padding: 5px;
+                    border-radius: 10px;  
+                    text-align: center;
+                    border: var(--border-width) solid #cfcfcf;
+                    width: 400px;
+                    font-size: 0.9em;
+                }
+                .game{
+                    font-size: 1em;
+                }
+                .otherInfo{
+                    font-size: 0.7em;
+                    color: #CFCFCF;
+                }
+                .runner-box{
+                    background-color: #1B884A;
+                    box-sizing: border-box;
+                    padding: 5px;
+                    border-radius: 10px;  
+                    text-align: center;
+                    border: var(--border-width) solid #cfcfcf;
+                    width: 400px;
+                    font-size: 0.7em;
+                }
+            `;
+
+            constructor() {
+                super();
+            }
+
+            getRelativeTimeString(unix_time) {
+                var time = unix_time - Date.now();
+                var text = "Later"
+                if (time) {
+                    var mins = time / (1000 * 60);
+                    if (mins > 2) {
+                        if (mins < 60) {
+                            text = "IN " + Math.floor(mins) + " MINUTES";
+                        } else if (mins < 120) {
+                            text = "IN 1 HOUR";
+                        } else {
+                            text = "IN " + Math.floor(mins / 60) + " HOURS";
+                        }
+                    }
+
+                }
+                return text;
+            }
+            
+            render() {
+                return html`
+                    <div class="schedule-box">
+                        <div class="time-box">
+                            ${this.index == 0 ? "UP NEXT" : this.getRelativeTimeString(this.time)}
+                        </div>
+                        <div class="run-box">
+                            <div class="game">
+                                ${this.game}
+                            </div>
+                            <div class="otherInfo">
+                                ${this.category} | ${this.platform} | ${this.estimate}
+                            </div>
+                        </div>
+                        <div class="runner-box">
+                            <div>${this.runners.slice(0,2).join(" & ")}${this.runners.length >= 2 && " & More"}</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        customElements.define('schedule-box', ScheduleBox);
+    </script>
+    <body style="width: 1920px; height: 1080px; margin: 0px; background-image: url('boxless_background/Schedule_Page_Template_2026.png');">
+        <div style="position: absolute; top: 0px; left: 0px; width: 1011px; height: 881px; display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; 
+            box-sizing: border-box;
+            padding: 5px; gap: 10px;">
+            <schedule-box index=0 game="LEGO Indiana Jones: The Original Adventures"
+        category="Raiders of the Lost Ark No 0HP" platform="DS" estimate="1:23:23"
+        runners='["Benny", "carkoon", "Colten", "firmynator", "flup", "Lunar", "Mugen", "Sonic7"]'></schedule-box>
+            <schedule-box index=1 time="1784356295000" game="LEGO Indiana Jones: The Original Adventures"
+        category="Raiders of the Lost Ark No 0HP" platform="DS" estimate="1:23:23"
+        runners='["Benny", "carkoon", "Colten", "firmynator", "flup", "Lunar", "Mugen", "Sonic7"]'></schedule-box>
+            <schedule-box index=2 time="1784456295000" game="LEGO Indiana Jones: The Original Adventures"
+        category="Raiders of the Lost Ark No 0HP" platform="DS" estimate="1:23:23"
+        runners='["Benny", "carkoon", "Colten", "firmynator", "flup", "Lunar", "Mugen", "Sonic7"]'></schedule-box>
+        </div>
+    </body>
+</html>
