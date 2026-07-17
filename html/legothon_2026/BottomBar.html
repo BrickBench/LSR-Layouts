@@ -272,12 +272,12 @@
                 return html`
                     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; padding-top: 5px;
                     width: 192px;">
-                        <div class="name">
+                        ${(this.donator != null && this.amounts != null && this.donator.length > 0) ? html`<div class="name">
                             ${this.donator}
                         </div>
                         <div class="donation">
                             $${this.amounts}
-                        </div>
+                        </div>` : ""}
                     </div>
                 `;
             }
@@ -722,7 +722,7 @@
         setInterval(function() {
             var bar_control = document.querySelector("bottom-bar-control");
             bar_control.nextSlide();
-        }, 8000);
+        }, 12000);
 
         connectToSocket('/ws', function(data) {
             var next_events = getUpcomingEvents(data);
