@@ -1,4 +1,4 @@
-const host = "ws://localhost:28010"//"wss://automarathon.opengg.dev";
+const host = "wss://automarathon.opengg.dev";
 
 export function connectToSocket(endpoint, onData) {
     const socket = new WebSocket(host + endpoint);

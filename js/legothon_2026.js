@@ -56,7 +56,7 @@ function setRunState(state, event) {
 
         var runners_info = document.querySelector("name-plates")
         
-        if (runner_info != null) {
+        if (runners_info != null) {
             var runners = getEventRunners(event)
             
             if (runners.length >= 1) {
@@ -66,7 +66,7 @@ function setRunState(state, event) {
             }
 
             if (runners.length >= 2) {
-                var runner1 = state.people[runners[1]]
+                var runner2 = state.people[runners[1]]
                 runners_info.runner2 = runner2.name
                 runners_info.runner2Pronoun = runner2.pronouns
             }
@@ -78,11 +78,16 @@ function setRunState(state, event) {
     if (comms_box != null) {
         var names = []
         var pronouns = []
-        var comms = getCommentatorsOrdered(data, event)
+        var comms = getCommentatorsOrdered(state, event)
         for (var id of comms) {
             var participant = state.people[id]
             names.push(participant.name)
             pronouns.push(participant.pronouns)
+        }
+
+        if (comms.length < 2) {
+            names.push(state.custom_fields["host"] + " (Host)")
+            pronouns.push("He/Him")
         }
 
         comms_box.commentatorNames = names
@@ -103,7 +108,6 @@ connectToSocket('/ws', function(data) {
     this_event = event;
 
     setRunState(data, event);
-    setAMBottomBarData(data);
 })
 
 var current_bar_id = 0
