@@ -16,7 +16,7 @@
             }
         </style>
     </head>
-    <body style="background-color: transparent;">
+    <body style="background-color: black; background-image: url('./backgrounds/Coming_Up_Video_Screen.png');/*background-color: transparent;*/">
         <static-bar donoTotal="9999"></static-bar>
         <bottom-bar-control multiIncentive1Good="true" multiIncentive2Good="true" donationsGood="true"></bottom-bar-control>
     </body>
@@ -27,7 +27,7 @@
 
         const intervalId = setInterval(() => {
             const slideshow = document.querySelector("bottom-bar-control");
-            slideshow.nextSlide();
+            //slideshow.nextSlide();
         }, 8000);
 
         gsap.registerEffect({
@@ -87,10 +87,82 @@
                 time: {type: Number},
             };
 
+            static styles = css`
+                :host {
+                    font-family: 'Bebas Neue', sans-serif;
+                    width: 100%;
+                    height: 100%;
+                    color: white;
+                }
+                
+                .bottom-bar-container{
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                }
+
+                .game{
+                    font-size: 1.7em;
+                    font-weight: bold;
+                }
+
+                .category{
+                    font-size: 1.7em;
+                    font-weight: bold;
+                    font-style: italic;
+                }
+
+                .time{
+                    font-size: 2.4em;
+                    font-weight: bold;
+                }
+            `;
+
             constructor() {
+                super();
             }
-            render() {}
+
+            getRelativeTimeString(unix_time) {
+                var time = unix_time - Date.now();
+                var text = "Later"
+                if (time) {
+                    var mins = time / (1000 * 60);
+                    if (mins > 2) {
+                        if (mins < 60) {
+                            text = "IN " + Math.floor(mins) + " MINUTES";
+                        } else if (mins < 120) {
+                            text = "IN 1 HOUR";
+                        } else {
+                            text = "IN " + Math.floor(mins / 60) + " HOURS";
+                        }
+                    }
+
+                }
+                return text;
+            }
+
+            render() {
+                return html`
+                    <div class="bottom-bar-container">
+                        <div style="display: flex; flex-direction: column; justify-content: center; margin-right: auto;">
+                            <div class="game">
+                                ${this.game}
+                            </div>
+                            <div class="category">
+                                ${this.category}
+                            </div>
+                        </div>
+                        <div class="time">
+                            ${this.getRelativeTimeString(this.time)}
+                        </div>
+                    </div>
+                `;
+            }
         }
+
+        customElements.define('up-next', UpNext);
 
         class DonationGoal extends LitElement {
             static properties = {
@@ -326,7 +398,7 @@
                     <div class="header" style="position: absolute; top: 989px; left: 370px; width: 235px; height: 79px; line-height: 79px;" id="slide-header">
                         DONATIONS
                     </div>
-                    <div id="donation-slide" class="bottom-slide" style="display: flex; flex-direction: row; gap: 10px;">
+                    <div id="donation-slide" class="bottom-slide" style="display: flex; flex-direction: row; gap: 10px; opacity: 0;"">
                         <recent-donation donator="Gustative" amounts="12.32"></recent-donation>
                         <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px;"viewBox="0 0 20 77">
                             <line x1="20" y1="0" x2="0" y2="77" stroke-width="4" stroke="white" />
@@ -342,12 +414,16 @@
                         <recent-donation donator="Gustative" amounts="12.32"></recent-donation>
                     </div>
                     <div id="upNext" class="bottom-slide">
+                        <up-next time="1784456295000" game="LEGO Indiana Jones: The Original Adventures"
+        category="Raiders of the Lost Ark No 0HP"></up-next>
                     </div>
-                    <div id="later" class="bottom-slide">
+                    <div id="later" class="bottom-slide" style="opacity: 0;">
+                        <up-next time="1784456295000" game="LEGO Indiana Jones: The Original Adventures"
+        category="Raiders of the Lost Ark No 0HP"></up-next>
                     </div>
-                    <div id="singleIncentive1" class="bottom-slide">
+                    <div id="singleIncentive1" class="bottom-slide" style="opacity: 0;">
                     </div>
-                    <div id="singleIncentive2" class="bottom-slide">
+                    <div id="singleIncentive2" class="bottom-slide" style="opacity: 0;">
                     </div>
                     <div id="multiIncentive1" class="bottom-slide" style="opacity: 0;">
                         <multi-incentive game="LEGO Star Wars II: The Original Trilogy" incentive="Category Bid War" values='["Any%","Intended%"]' amounts='[0,0]' ></multi-incentive>
