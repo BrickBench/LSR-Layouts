@@ -20,12 +20,12 @@
         <div style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px; background-image: url('./backgrounds/Coming_Up_Video_Screen.png'); margin: 0; z-index: 1;"></div>
         <img src="LEGOthon Logo 2026.png" style="width: 600px; position: absolute; top: 0px; left: 40px; z-index: 2;"/>
         <run-info game="LEGO Indiana Jones: The Original Adventures" category="Any% NTS" platform="Gamecube" estimate="2:32:23" runners='["Benny", "carkoon", "Colten", "firmynator", "flup", "Lunar", "Mugen", "Sonic7"]'></run-info>
-        <video-background-box video="sample.mp4" audio="sample.mp3" style="z-index:-1;"></video-background-box>
+        <video-background-box video="./videos/legothon_rockbandds.mp4" audio="sample.mp3" style="z-index:-1;"></video-background-box>
     </body>
     <script type="module" defer>
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
         import {classMap} from 'https://esm.run/lit/directives/class-map.js';
-        import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById} from '../../js/automarathon.js'
+        import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById, getEventRunners} from '../../js/automarathon.js'
 
         class VideoBackgroundBox extends LitElement {
             static properties = {
@@ -80,8 +80,7 @@
             render() {
                 return html`
                 <div>
-                    <video id="video" autoplay muted loop style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px; object-fit: cover; z-index: -2;">
-                    <source src=${this.video} type="video/mp4">
+                    <video id="video" src=${this.video} autoplay muted loop style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px; object-fit: cover; z-index: -2;">
                     <audio id="audio" src=${this.audio} loop></audio>
                 </div>
                 `;
@@ -168,7 +167,13 @@
         var state;
 
         const game_to_video = {
-            "LEGO Star Wars: The Complete Saga": "lswtcs.mp4"
+            "LEGO Star Wars: The Video Game": {video: "Legothon26-LSW1.mp4", audio: "lsw1.mp3"},
+            "LEGO Star Wars: The Force Awakens": {video: "legothon_tfa.mp4", audio: "lswtcs.mp3"},
+            "LEGO Dimensions": {video: "legothon_dinemsions.mp4", audio: "lswtcs.mp3"},
+            "LEGO Batman: The Videogame": {video: "legothon_lb1.mp4", audio: "lswtcs.mp3"},
+            "LEGO My Style: Preschool": {video: "legothon_mystyle.mp4", audio: "lswtcs.mp3"},
+            "LEGO Rock Band": {video: "legothon_rockbandds.mp4", audio: "lswtcs.mp3"},
+            "LEGO Batman: Legacy of the Dark Knight": {video: "legothon_lb4.mp4", audio: "lswtcs.mp3"},
         }
 
         connectToSocket('/ws', function(data) {
@@ -180,11 +185,25 @@
 
             var event = getEventById(data, event_id);
 
-            var video_file = game_to_video[event.game] || "default.mp4";
+            var content = game_to_video[event.game];
+            console.log("Content for game " + event.game + ": ", content);
 
-            if (video_file != document.getElementById("video").src.split("/").pop()) {
-                document.getElementById("video").src = "./videos/" + video_file;
-            }
+            var videoBox = document.querySelector('video-background-box');
+            videoBox.video = "./videos/" + content.video;
+            videoBox.audio = "./audio/" + content.audio;
+
+            var runInfo = document.querySelector('run-info');
+            runInfo.game = event.game;
+            runInfo.category = event.category;
+            runInfo.platform = event.console;
+
+            var estimate_sec = event.estimate % 60;
+            var estimate_min = Math.floor(event.estimate / 60) % 60;
+            var estimate_hr = Math.floor(event.estimate / 3600);
+            runInfo.estimate = estimate_hr + ":" + (estimate_min < 10 ? "0" : "") + estimate_min + ":" + (estimate_sec < 10 ? "0" : "") + estimate_sec;
+            
+            var runners = getEventRunners(event).map(runner => data.people[runner].name);
+            runInfo.runners = runners;
         });
 
         window.addEventListener('click', function(event) {
