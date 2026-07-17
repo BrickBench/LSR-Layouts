@@ -18,7 +18,7 @@
     </head>
     <body style="background-color: black; background-image: url('./backgrounds/Coming_Up_Video_Screen.png');/*background-color: transparent;*/">
         <static-bar donoTotal="0"></static-bar>
-        <bottom-bar-control multiIncentive1Good="true" multiIncentive2Good="true" donationsGood="true"></bottom-bar-control>
+        <bottom-bar-control upNext1Good="true" upNext2Good="true" singleIncentive1Good="true" singleIncentive2Good="true" multiIncentive1Good="true" multiIncentive2Good="true" donationsGood="true"></bottom-bar-control>
     </body>
     <script type="module" defer>
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
@@ -27,7 +27,7 @@
 
         const intervalId = setInterval(() => {
             const slideshow = document.querySelector("bottom-bar-control");
-            //slideshow.nextSlide();
+            slideshow.nextSlide();
         }, 8000);
 
         gsap.registerEffect({
@@ -112,6 +112,7 @@
                     font-size: 1.7em;
                     font-weight: bold;
                     font-style: italic;
+                    color: #DFDFDF;
                 }
 
                 .time{
@@ -167,14 +168,84 @@
 
         class DonationGoal extends LitElement {
             static properties = {
-                total: {type: Number},
-                goal: {type: Number}
+                goal: {type: String},
+                amount: {type: Number},
+                target: {type: Number}
             };
 
+             static styles = css`
+                :host {
+                    font-family: 'Bebas Neue', sans-serif;
+                    width: 100%;
+                    height: 100%;
+                    color: white;
+                }
+                
+                .bottom-bar-container{
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 30px;
+                }
+
+                .game{
+                    font-size: 1.7em;
+                    font-weight: bold;
+                }
+
+                .category{
+                    font-size: 1.7em;
+                    font-weight: bold;
+                    font-style: italic;
+                }
+                
+                .bar{
+                    flex-grow: 1;
+                    height: 32px;
+                    accent-color: #25bb65; 
+                    border-radius: 0;
+                    -webkit-appearance: none;
+                    appearance: none;
+                }
+
+                progress::-webkit-progress-bar {
+                    background-color: #434343;
+                    border-radius: 4px;
+                }
+
+                progress::-webkit-progress-value {
+                    background-color: #25bb65;
+                    border-radius: 4px;
+                }
+
+                .barNumbers{
+                    font-size: 2.1em;
+                    font-weight: bold;
+                    font-style: italic;
+                }
+            `;
+
             constructor() {
+                super();
             }
-            render() {}
+            render() {
+                return html`
+                    <div class="bottom-bar-container">
+                        <div class="barNumbers">
+                            ${this.goal}
+                        </div>
+                        <progress id="progress" class="bar" max=${this.target} value=${this.amount}></progress>
+                        <div class="barNumbers">
+                            $${this.amount}/$${this.target}
+                        </div>
+                    </div>
+                `;
+            }
         }
+        customElements.define('donation-goal', DonationGoal);
 
         class RecentDonations extends LitElement {
             static properties = {
@@ -226,27 +297,85 @@
                 target: {type: Number}
             };
 
+             static styles = css`
+                :host {
+                    font-family: 'Bebas Neue', sans-serif;
+                    width: 100%;
+                    height: 100%;
+                    color: white;
+                }
+                
+                .bottom-bar-container{
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 30px;
+                }
+
+                .game{
+                    font-size: 1.7em;
+                    font-weight: bold;
+                }
+
+                .category{
+                    font-size: 1.7em;
+                    font-weight: bold;
+                    font-style: italic;
+                    color: #DFDFDF;
+                }
+                
+                .bar{
+                    flex-grow: 1;
+                    height: 32px;
+                    accent-color: #25bb65; 
+                    border-radius: 0;
+                    -webkit-appearance: none;
+                    appearance: none;
+                }
+
+                progress::-webkit-progress-bar {
+                    background-color: #434343;
+                    border-radius: 4px;
+                }
+
+                progress::-webkit-progress-value {
+                    background-color: #25bb65;
+                    border-radius: 4px;
+                }
+
+                .barNumbers{
+                    font-size: 1.8em;
+                    font-weight: bold;
+                    font-style: italic;
+                }
+            `;
+
             constructor() {
                 super();
             }
             render() {
                 return html`
                     <div class="bottom-bar-container">
-                        <div style="display: flex; flex-direction: column; justify-content: center; margin-right: auto;">
+                        <div style="display: flex; flex-direction: column; justify-content: center;">
                             <div class="game">
                                 ${this.game}
                             </div>
                             <div class="category">
-                                ${this.category}
+                                ${this.incentive}
                             </div>
                         </div>
-                        <div class="time">
-                            ${this.getRelativeTimeString(this.time)}
+                        <progress id="progress" class="bar" max=${this.target} value=${this.amount}></progress>
+                        <div class="barNumbers">
+                            $<span id="amount">${this.amount}</span>/$${this.target}
                         </div>
                     </div>
                 `;
             }
         }
+        customElements.define('single-incentive', SingleIncentive);
 
         // competing incentive race
         class MultiIncentive extends LitElement {
@@ -282,6 +411,7 @@
                     font-size: 1.7em;
                     font-weight: bold;
                     font-style: italic;
+                    color: #DFDFDF;
                 }
 
                 .multi-box{
@@ -343,7 +473,6 @@
                 donationsGood: {type: Boolean},
                 upNext1Good: {type: Boolean},
                 upNext2Good: {type: Boolean},
-                upNext3Good: {type: Boolean},
                 singleIncentive1Good: {type: Boolean},
                 singleIncentive2Good: {type: Boolean},
                 multiIncentive1Good: {type: Boolean},
@@ -378,6 +507,7 @@
                 const slideBools = [this.donationsGood, this.upNext1Good, this.upNext2Good, this.singleIncentive1Good, this.singleIncentive2Good,
                     this.multiIncentive1Good, this.multiIncentive2Good, true];
                 const slideIDs = ["donation-slide","upNext","later","singleIncentive1","singleIncentive2","multiIncentive1","multiIncentive2","target"];
+                const slideContentID = ["donation-slide","upNext","later","s1","s2","multiIncentive1","multiIncentive2","dono-goal"];
 
                 let header = this.renderRoot.getElementById("slide-header");
 
@@ -393,16 +523,37 @@
 
                 let prevSlideElem = this.renderRoot.getElementById(slideIDs[prevSlide]);
                 let curSlideElem = this.renderRoot.getElementById(slideIDs[this._slideIndex]);
+                let curSlideContent = this.renderRoot.getElementById(slideContentID[this._slideIndex]);
 
                 var tl = gsap.timeline({});
-                tl.swapText(header, {text: slideHeaders[this._slideIndex], delay: 1}).to(curSlideElem, { 
-                    autoAlpha: 1, 
-                    duration: 0.5 
-                }, "-=0.5")
-                .from(prevSlideElem, { 
+
+                tl.swapText(header, {text: slideHeaders[this._slideIndex], delay: 1, 
+                    duration: (slideHeaders[prevSlide] != slideHeaders[this._slideIndex]) ? 0.75 : 0})
+                
+                tl.fromTo(curSlideElem, { 
                     autoAlpha: 0, 
-                    duration: 0.5 
-                }, "-=0.5");
+                }, { 
+                    autoAlpha: 1, 
+                    duration: 0.75 
+                }, "-=0.75");
+                tl.fromTo(prevSlideElem, { 
+                    autoAlpha: 1, 
+                }, { 
+                    autoAlpha: 0, 
+                    duration: 0.75 
+                }, "-=0.75");
+
+                if(this._slideIndex == 3 || this._slideIndex == 4 || this._slideIndex == 7){
+                    var progress = curSlideContent.renderRoot.getElementById("progress");
+                    if(progress){
+                        tl.from(progress, { 
+                            attr:{
+                                value: 0
+                            }, 
+                            duration: 1.5 
+                        });
+                    }
+                }
 
             }
 
@@ -431,7 +582,7 @@
                         </svg>
                         <recent-donation id="donor-4" donator="Gustative" amounts="12.32"></recent-donation>
                     </div>
-                    <div id="upNext" class="bottom-slide">
+                    <div id="upNext" class="bottom-slide" style="opacity: 0;">
                         <up-next id="next-1" time="1784456295000" game="LEGO Indiana Jones: The Original Adventures"
         category="Raiders of the Lost Ark No 0HP"></up-next>
                     </div>
@@ -440,16 +591,19 @@
         category="Raiders of the Lost Ark No 0HP"></up-next>
                     </div>
                     <div id="singleIncentive1" class="bottom-slide" style="opacity: 0;">
+                        <single-incentive id="s1" game="LEGO Star Wars II: The Original Trilogy" incentive="Category Bid War" target="100" amount='30' ></single-incentive>
                     </div>
                     <div id="singleIncentive2" class="bottom-slide" style="opacity: 0;">
+                        <single-incentive id="s2" game="LEGO Star Wars II: The Original Trilogy" incentive="Category Bid War" target="100" amount='100' ></single-incentive>
                     </div>
                     <div id="multiIncentive1" class="bottom-slide" style="opacity: 0;">
-                        <multi-incentive game="LEGO Star Wars II: The Original Trilogy" incentive="Category Bid War" values='["Any%","Intended%"]' amounts='[0,0]' ></multi-incentive>
+                        <multi-incentive id="m1" game="LEGO Star Wars II: The Original Trilogy" incentive="Category Bid War" values='["Any%","Intended%"]' amounts='[0,0]' ></multi-incentive>
                     </div>
                     <div id="multiIncentive2" class="bottom-slide" style="opacity: 0;">
-                        <multi-incentive game="LEGO Star Wars III: The Original Trilogy" incentive="Category Bid War" values='["Any%","Intended%"]' amounts='[0,0]' ></multi-incentive>
+                        <multi-incentive id="m2" game="LEGO Star Wars III: The Original Trilogy" incentive="Category Bid War" values='["Any%","Intended%"]' amounts='[0,0]' ></multi-incentive>
                     </div>
                     <div id="target" class="bottom-slide" style="opacity: 0;">
+                        <donation-goal id="dono-goal" goal="Legothon 2025" target="100" amount='30'>
                     </div>
                 `;
             }
@@ -465,6 +619,51 @@
             element.console = event.console;
             element.runners = getEventRunners(event);
             element.time = event.event_start_time;
+        }
+
+        function populateSingleIncentive(element,data){
+            var tokens = data.split(";");
+
+            if(tokens.length != 4){
+                return false;
+            }
+
+            element.game = tokens[0].trim();
+            element.incentive = tokens[1].trim();
+            element.amount = tokens[3].trim();
+            element.target = tokens[2].trim();
+
+            return true;
+        }
+
+        function populateMultiIncentive(element,data){
+            var tokens = data.split(";");
+
+            if(tokens.length < 4){
+                return false;
+            }
+            element.game = tokens[0].trim();
+            element.incentive = tokens[1].trim();
+            
+            var amounts = [];
+            var values = [];
+
+            for(var i=2; i<tokens.length;i++){
+                if(i % 2 == 0){
+                    values.push(tokens[i].trim());
+                }else{
+                    amounts.push(tokens[i].trim());
+                }
+            }
+
+            if(amounts.length != values.length){
+                return false;
+            }
+
+            element.amounts = amounts;
+            element.values = values;
+
+            return true;
         }
 
         function populateDonation(donation, root, idx) {
@@ -501,16 +700,31 @@
                 main.upNext2Good = false;
             }
 
+            var target = main.renderRoot.getElementById("dono-goal");
+            target.goal = data.custom_fields["goal-name"];
+            target.amount = data.custom_fields["total-donations"];
+            target.target = data.custom_fields["goal-donations"];
  
             populateDonation(data.custom_fields["donation-1"], main, 1);
             populateDonation(data.custom_fields["donation-2"], main, 2);
             populateDonation(data.custom_fields["donation-3"], main, 3);
             populateDonation(data.custom_fields["donation-4"], main, 4);
+
+            var single1 = main.renderRoot.getElementById("s1");
+            populateSingleIncentive(single1, data.custom_fields["single-incentive-1"]);
+            var single2 = main.renderRoot.getElementById("s2");
+            populateSingleIncentive(single2, data.custom_fields["single-incentive-2"]);
+
+            var single1 = main.renderRoot.getElementById("m1");
+            populateMultiIncentive(single1, data.custom_fields["multi-incentive-1"]);
+            var single2 = main.renderRoot.getElementById("m2");
+            populateMultiIncentive(single2, data.custom_fields["multi-incentive-2"]);
+
             main.donationsGood = true;
         }
 
         setInterval(function() {
-            var bar_control = document.getElementById("bottom-bar-control");
+            var bar_control = document.querySelector("bottom-bar-control");
             if (next_data != null && bar_control.readyToChange) {
                 populateBottomBar(next_data);
                 next_data = null;
