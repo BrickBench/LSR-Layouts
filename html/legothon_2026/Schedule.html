@@ -15,7 +15,7 @@
     <script type="module" defer>
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
         import {classMap} from 'https://esm.run/lit/directives/class-map.js';
-        import {connectToSocket, getEventForHost, toStringTime, compareTime} from '../../../js/automarathon.js'
+        import {connectToSocket, getEventForHost, toStringTime, compareTime, getUpcomingEvents, getEventRunners} from '../../../js/automarathon.js'
 
         class ScheduleBox extends LitElement {
             static properties = {
@@ -119,13 +119,38 @@
                             </div>
                         </div>
                         <div class="runner-box">
-                            <div>${this.runners.slice(0,2).join(" & ")}${this.runners.length >= 2 && " & More"}</div>
+                            <div>${this.runners.slice(0,2).join(" & ")}${this.runners.length >= 2 ? " & More" : ""}</div>
                         </div>
                     </div>
                 `;
             }
         }
         customElements.define('schedule-box', ScheduleBox);
+
+
+        function populateEvent(state, event, index) {
+             var scheduleBox = document.querySelector(`schedule-box[index="${index}"]`);
+
+            scheduleBox.game = event.game;
+            scheduleBox.category = event.category;
+            scheduleBox.platform = event.console;
+            var estimate_sec = event.estimate % 60;
+            var estimate_min = Math.floor(event.estimate / 60) % 60;
+            var estimate_hr = Math.floor(event.estimate / 3600);
+            scheduleBox.estimate = estimate_hr + ":" + (estimate_min < 10 ? "0" : "") + estimate_min + ":" + (estimate_sec < 10 ? "0" : "") + estimate_sec;
+            scheduleBox.time = event.event_start_time;
+
+            var runners = getEventRunners(event).map(runner => state.people[runner].name);
+            scheduleBox.runners = runners;
+        }
+
+        connectToSocket('/ws', function(data) {
+            var next_events = getUpcomingEvents(data);
+
+            populateEvent(data, next_events[0], 0);
+            populateEvent(data, next_events[1], 1);
+            populateEvent(data, next_events[2], 2);
+        });
     </script>
     <body style="width: 1920px; height: 1080px; margin: 0px; background-image: url('boxless_background/Schedule_Page_Template_2026.png');">
         <div style="position: absolute; top: 0px; left: 0px; width: 1011px; height: 881px; display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; 
