@@ -15,7 +15,45 @@
     <script type="module" defer>
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
         import {classMap} from 'https://esm.run/lit/directives/class-map.js';
-        import {connectToSocket, getEventForHost, toStringTime, compareTime} from '../../../js/automarathon.js'
+        import {connectToSocket, getEventForHost, toStringTime, compareTime} from '../../js/automarathon.js'
+
+        class TimerElement extends LitElement {
+            static properties = {
+                time: {type: String},
+            };
+
+            static styles = css`
+                .timer{
+                    font-family: "Bebas Neue", sans-serif;
+                    font-size: 120px;
+                    color: white;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-weight: bold;
+                    color: var(--legothon-white);
+                    -webkit-text-stroke: 2.5px black;
+                    margin-top: 2px;
+                    text-align: center;
+                    position:absolute; left: 0px; top: 0px;
+                }
+            `;
+
+            constructor() {
+                super();
+                this.time = 0;
+            }
+
+            render() {
+                return html`
+                    <div class="timer">
+                        ${this.time}
+                    </div>
+                `;
+            }
+        }
+
+        customElements.define('event-timer', TimerElement);
         
         class NamePlates extends LitElement {
             static properties = {
@@ -291,6 +329,7 @@
     <body style="width: 1920px; height: 1080px; margin: 0px; background-image: url('boxless_background/16x9_1R_Template_2026.png');">
         <name-plates runner1="Siedemnastek" runner1Pronoun="he/him" runner2="Olive" runner2Pronoun="she/her"></name-plates>
         <run-info game="Bionicle: The Game" category="Any% NTS" platform="Gamecube" estimate="2:32:23"></run-info>
+        <event-timer style="position: absolute; top: 12px; left: 25px; width: 250px; height: 100px;"></event-timer>
         <div style="position: absolute; top: 127px; left: 0px; width: 428px; height: 716px; box-sizing: border-box; padding: 10px; display: flex; flex-direction: column; gap: 20px;">
             <commentator-box commentatorNames='["Siedemnastek","Javster101 [HOST]"]' commentatorPronouns='["he/him", "he/him"]'></commentator-box>
             <div style="flex-grow: 1;"></div>
@@ -298,4 +337,5 @@
             <socials-box></socials-box>
         </div>
     </body>
+    <script type="module" src="../../js/legothon_2026.js"></script>
 </html>

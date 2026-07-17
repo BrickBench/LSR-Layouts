@@ -56,17 +56,17 @@ function setRunState(state, event) {
 
         var runners_info = document.querySelector("name-plates")
         
-        if (runner_info != null) {
+        if (runners_info != null) {
             var runners = getEventRunners(event)
             
-            if (runners.length >= 1) {
+            if (runners.length == 1) {
                 var runner1 = state.people[runners[0]]
                 runners_info.runner1 = runner1.name
                 runners_info.runner1Pronoun = runner1.pronouns
-            }
-
-            if (runners.length >= 2) {
-                var runner1 = state.people[runners[1]]
+                runners_info.runner2 = null
+                runners_info.runner2Pronoun = null
+            } else if (runners.length >= 2) {
+                var runner2 = state.people[runners[1]]
                 runners_info.runner2 = runner2.name
                 runners_info.runner2Pronoun = runner2.pronouns
             }
@@ -78,11 +78,17 @@ function setRunState(state, event) {
     if (comms_box != null) {
         var names = []
         var pronouns = []
-        var comms = getCommentatorsOrdered(data, event)
+        var comms = getCommentatorsOrdered(state, event)
         for (var id of comms) {
             var participant = state.people[id]
             names.push(participant.name)
             pronouns.push(participant.pronouns)
+        }
+
+        if (comms.length < 2) {
+            var host = state.custom_fields["host:person"]
+            names.push(state.people[host].name + " (Host)")
+            pronouns.push(state.people[host].pronouns)
         }
 
         comms_box.commentatorNames = names
@@ -103,40 +109,25 @@ connectToSocket('/ws', function(data) {
     this_event = event;
 
     setRunState(data, event);
-    setAMBottomBarData(data);
 })
 
-var current_bar_id = 0
 setInterval(function() {
-    if (document.getElementById("bottom-switch") == null) {
+
+    if (state == null) {
         return;
     }
 
-    console.log("valid_bottom_bar", valid_bottom_bar)
-    // 0 IS ALWAYS VALID
-    var i = 0;
-var next_bar_id = 0;
-    for (const key of valid_bottom_bar.keys()) {
-        if (i > current_bar_id) {
-            if (valid_bottom_bar.get(key)) {
-                next_bar_id = i;
-                break;
-            }
-        }
-
-        i++;
+    var event_id = getEventForHost(state, this_host);
+    if (event_id == null) {
+        return;
     }
 
-    current_bar_id = next_bar_id;
+    var event = getEventById(state, event_id);
 
-    var i = 0;
-    for (const key of valid_bottom_bar.keys()) {
-        if (i == current_bar_id) {
-            document.getElementById(key).classList.add("show");
-        } else {
-            document.getElementById(key).classList.remove("show");
-        }
-        i++;
+    let timer_element = document.querySelector("event-timer");
+    if (timer_element != null) {
+        var time = getEventTimerValue(event);
+        var time_string = toStringTime(time, false, true, false);
+        timer_element.time = time_string;
     }
-
-}, 8000)
+}, 100)

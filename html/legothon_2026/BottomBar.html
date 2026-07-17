@@ -23,7 +23,7 @@
     <script type="module" defer>
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
         import {classMap} from 'https://esm.run/lit/directives/class-map.js';
-        import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById} from '../../../../js/automarathon.js'
+        import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById} from '../../js/automarathon.js'
 
         const intervalId = setInterval(() => {
             const slideshow = document.querySelector("bottom-bar-control");
@@ -418,78 +418,8 @@
             static_bottom_bar.donoTotal = data.custom_fields["total-donations"];
 
             var bar_control = document.getElementById("bottom-bar-control");
-            if (bar_control.readyToChange) {
 
-            } else {
-                next_data = data;
-            }
-
-            if (next_events.length > 0) {
-                valid_bottom_bar.set("next-event", true);
-                next_event = next_events[0];
-                setInnerHtml("up-next-game", next_event.game);
-                setInnerHtml("up-next-category", "<i>" + next_event.category + "</i>");
-                setInnerHtml("up-next-subtitle", getEventSubtitle(next_event));
-
-                setInnerHtml("up-next-runners", getRunnerComboName(state, getEventRunners(next_event), "&"));
-            } else {
-                valid_bottom_bar.set("next-event", false);
-            }
-
-            if (next_events.length > 1) {
-                next_event_2 = next_events[1];
-                setInnerHtml("up-next-game-2", next_event_2.game);
-                setInnerHtml("up-next-subtitle-2", getEventSubtitle(next_event_2));
-                setInnerHtml("up-next-runners-2", getRunnerComboName(state, getEventRunners(next_event_2), "&"));
-            }
-
-
-            if (next_events.length > 2) {
-                next_event_3 = next_events[2];
-                setInnerHtml("up-next-game-3", next_event_3.game);
-                setInnerHtml("up-next-subtitle-3", getEventSubtitle(next_event_3));
-                setInnerHtml("up-next-runners-3", getRunnerComboName(state, getEventRunners(next_event_3), "&"));
-            }
-
-            var cf = state.custom_fields;
-
-            var recent_donations = [];
-
-            for (var i = 0; i < 4; i++) {
-                var donation = cf["donation-" + (i + 1)];
-
-                var split = donation.split(";");
-                if (split.length >= 2) {
-                    var name = split[0].trim();
-                    var amount = split[1].trim();
-
-                    if (amount != "" && name != "") {
-                        setInnerHtml("dono-" + (i + 1) + "-name", name.toUpperCase());
-                        setInnerHtml("dono-" + (i + 1) + "-amount", amount);
-                        recent_donations.push({
-                            amount: amount,
-                            name: name
-                        });
-                    }
-                }
-            }
-
-            setInnerHtml(
-                "dono-amount",
-                "$" + cf["total-donations"] + "/$" + Math.ceil(cf["goal-donations"])
-            )
-            setInnerHtml(
-                "donation-total",
-                "$" + cf["total-donations"]
-            )
-
-            setBarValue("dono-bar", cf["total-donations"], cf["goal-donations"]);
-
-            valid_bottom_bar.set("recent-donations", recent_donations.length == 4);
-            valid_bottom_bar.set("single-incentive-1", setIncentive(cf["single-incentive-1"], true, 1));
-            valid_bottom_bar.set("single-incentive-2", setIncentive(cf["single-incentive-2"], true, 2));
-            valid_bottom_bar.set("multi-incentive-1", setIncentive(cf["multi-incentive-1"], false, 1));
-            valid_bottom_bar.set("multi-incentive-2", setIncentive(cf["multi-incentive-2"], false, 2));
+            next_data = data;
         });
     </script>
 </html>
