@@ -226,8 +226,25 @@
             };
 
             constructor() {
+                super();
             }
-            render() {}
+            render() {
+                return html`
+                    <div class="bottom-bar-container">
+                        <div style="display: flex; flex-direction: column; justify-content: center; margin-right: auto;">
+                            <div class="game">
+                                ${this.game}
+                            </div>
+                            <div class="category">
+                                ${this.category}
+                            </div>
+                        </div>
+                        <div class="time">
+                            ${this.getRelativeTimeString(this.time)}
+                        </div>
+                    </div>
+                `;
+            }
         }
 
         // competing incentive race
