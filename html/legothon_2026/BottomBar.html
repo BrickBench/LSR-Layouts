@@ -502,7 +502,7 @@
                 }
             `;
 
-            nextSlide(){
+            async nextSlide(){
                 const slideHeaders = ["DONATIONS", "UP NEXT", "LATER", "INCENTIVE", "INCENTIVE", "INCENTIVE", "INCENTIVE", "TARGET"];
                 const slideBools = [this.donationsGood, this.upNext1Good, this.upNext2Good, this.singleIncentive1Good, this.singleIncentive2Good,
                     this.multiIncentive1Good, this.multiIncentive2Good, true];
@@ -525,6 +525,7 @@
                 let curSlideElem = this.renderRoot.getElementById(slideIDs[this._slideIndex]);
                 let curSlideContent = this.renderRoot.getElementById(slideContentID[this._slideIndex]);
 
+                await this.requestUpdate(); 
                 var tl = gsap.timeline({});
 
                 tl.swapText(header, {text: slideHeaders[this._slideIndex], delay: 1, 
