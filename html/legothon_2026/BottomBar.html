@@ -16,7 +16,7 @@
             }
         </style>
     </head>
-    <body style="background-color: black; background-image: url('./backgrounds/Coming_Up_Video_Screen.png');/*background-color: transparent;*/">
+    <body style="background-color: transparent;">
         <static-bar donoTotal="0"></static-bar>
         <bottom-bar-control upNext1Good="true" upNext2Good="true" singleIncentive1Good="true" singleIncentive2Good="true" multiIncentive1Good="true" multiIncentive2Good="true" donationsGood="true"></bottom-bar-control>
     </body>
@@ -24,11 +24,6 @@
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
         import {classMap} from 'https://esm.run/lit/directives/class-map.js';
         import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById, getUpcomingEvents, getEventRunners} from '../../js/automarathon.js'
-
-        const intervalId = setInterval(() => {
-            const slideshow = document.querySelector("bottom-bar-control");
-            slideshow.nextSlide();
-        }, 8000);
 
         gsap.registerEffect({
             name: "swapText",
@@ -622,7 +617,7 @@
             element.time = event.event_start_time;
         }
 
-        function populateSingleIncentive(element,data){
+        function populateSingleIncentive(element, data, main){
             var tokens = data.split(";");
 
             if(tokens.length != 4){
@@ -712,25 +707,22 @@
             populateDonation(data.custom_fields["donation-4"], main, 4);
 
             var single1 = main.renderRoot.getElementById("s1");
-            populateSingleIncentive(single1, data.custom_fields["single-incentive-1"]);
+            main.singleIncentive1Good = populateSingleIncentive(single1, data.custom_fields["single-incentive-1"]);
             var single2 = main.renderRoot.getElementById("s2");
-            populateSingleIncentive(single2, data.custom_fields["single-incentive-2"]);
+            main.singleIncentive2Good = populateSingleIncentive(single2, data.custom_fields["single-incentive-2"]);
 
             var single1 = main.renderRoot.getElementById("m1");
-            populateMultiIncentive(single1, data.custom_fields["multi-incentive-1"]);
+            main.multiIncentive1Good = populateMultiIncentive(single1, data.custom_fields["multi-incentive-1"]);
             var single2 = main.renderRoot.getElementById("m2");
-            populateMultiIncentive(single2, data.custom_fields["multi-incentive-2"]);
+            main.multiIncentive2Good = populateMultiIncentive(single2, data.custom_fields["multi-incentive-2"]);
 
             main.donationsGood = true;
         }
 
         setInterval(function() {
             var bar_control = document.querySelector("bottom-bar-control");
-            if (next_data != null && bar_control.readyToChange) {
-                populateBottomBar(next_data);
-                next_data = null;
-            }
-        }, 500);
+            bar_control.nextSlide();
+        }, 8000);
 
         connectToSocket('/ws', function(data) {
             var next_events = getUpcomingEvents(data);
