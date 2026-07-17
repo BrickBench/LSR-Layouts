@@ -3,15 +3,165 @@
     <head>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.cdnfonts.com/css/gobold" rel="stylesheet">
+        <link href="https://fonts.cdnfonts.com/css/bebas-neue" rel="stylesheet"> 
         <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+        <style>
+            :root {
+                --legothon-white: #e8e8e6;
+                --legothon-darkgreen: 14, 101, 45;
+                --legothon-greyborder: rgb(120,120,120);
+                --border-width: 4px;
+            }
+        </style>
     </head>
-    <body style="background-color: black; background-image: url('./backgrounds/Coming_Up_Video_Screen.png')">
-        <video id="video" autoplay muted loop style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px; object-fit: cover; z-index: 1;">
-            <source src="./videos/default.mp4" type="video/mp4">
+    <body style="background-color: black; background-image: url('./backgrounds/Coming_Up_Video_Screen.png'); margin: 0;">
+        <div style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px; background-image: url('./backgrounds/Coming_Up_Video_Screen.png'); margin: 0; z-index: 1;"></div>
+        <img src="LEGOthon Logo 2026.png" style="width: 600px; position: absolute; top: 0px; left: 40px; z-index: 2;"/>
+        <run-info game="LEGO Indiana Jones: The Original Adventures" category="Any% NTS" platform="Gamecube" estimate="2:32:23" runners='["Benny", "carkoon", "Colten", "firmynator", "flup", "Lunar", "Mugen", "Sonic7"]'></run-info>
+        <video-background-box video="sample.mp4" audio="sample.mp3" style="z-index:-1;"></video-background-box>
     </body>
     <script type="module" defer>
+        import { LitElement, html, css, nothing } from 'https://esm.run/lit';
+        import {classMap} from 'https://esm.run/lit/directives/class-map.js';
         import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById} from '../../../../js/automarathon.js'
+
+        class VideoBackgroundBox extends LitElement {
+            static properties = {
+                video: {type: String},
+                audio: {type: String},
+                _played: {type: Boolean}
+            };
+
+            static styles = css`
+                :host {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 2.1em;
+                    font-weight: bold;
+                    color: var(--legothon-white);
+                }
+                .socialsBox{
+                    display: grid;
+                    grid-template-columns: 1fr 8fr; 
+                    gap: 5px 10px;
+                    background-color: rgba(var(--legothon-darkgreen), 0.6);
+                    box-sizing: border-box;
+                    padding: 15px;
+                    border-radius: 10px;  
+                    align-items: center;
+                    border: var(--border-width) solid var(--legothon-greyborder);  
+                }
+                svg{
+                   fill: var(--legothon-white);
+                   stroke:  var(--legothon-white);
+                }
+            `;
+
+            constructor() {
+                super();
+                this._played = false;
+            }
+
+            play(){
+                if(this._played) return;
+                const video = this.renderRoot.querySelector('video');
+                const audio = this.renderRoot.querySelector('audio');
+                if (video) {
+                    video.play().catch(error => console.log("Video play failed:", error));
+                }
+
+                if (audio) {
+                    audio.play().catch(error => console.log("Audio play failed:", error));
+                }
+                this._played=true;
+            }
+            
+            render() {
+                return html`
+                <div>
+                    <video id="video" autoplay muted loop style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px; object-fit: cover; z-index: -2;">
+                    <source src=${this.video} type="video/mp4">
+                    <audio id="audio" src=${this.audio} loop></audio>
+                </div>
+                `;
+            }
+        }
+        customElements.define('video-background-box', VideoBackgroundBox);
+
+        class RunInfo extends LitElement {
+            static properties = {
+                game : {type: String},
+                category: {type: String},
+                platform: {type: String},
+                estimate: {type: String},
+                runners: {type: Array}
+            };
+
+            static styles = css`
+                :host {
+                    font-family: 'Bebas Neue', sans-serif;
+                }
+                
+                .runInfoBox{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+                    color: var(--legothon-white);
+                    box-sizing: border-box;
+                    padding: 45px;
+                    position: absolute;
+                    left: 0px;
+                    top: 265px;
+                    width: 684px;
+                    height: 565px;
+                    z-index: 2;
+                }
+                .game{
+                    font-size: 3.5em;
+                    font-weight: bold;
+                }
+                .category{
+                    font-size: 3em;
+                    font-weight: bold;
+                    color: #CFCFCF;
+                }
+                .otherInfo{
+                    font-size: 2.4em;
+                    font-weight: bold;
+                    color: #CFCFCF;
+                }
+                .runner{
+                    font-size: 2.9em;
+                    font-weight: bold;
+                    color: #CFCFCF;
+                }
+            `;
+
+            constructor() {
+                super();
+            }
+            
+            render() {
+                return html`
+                    <div class="runInfoBox">
+                        <div class="game">
+                            ${this.game}
+                        </div>
+                        <div class="category">
+                            ${this.category}
+                        </div>
+                        <div class="otherInfo">
+                            ${this.platform} | EST: ${this.estimate}
+                        </div>
+                        <div class="runner">
+                            ${this.runners.join(", ")}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        customElements.define('run-info', RunInfo);
 
         const this_host = "main";
 
@@ -35,6 +185,10 @@
             if (video_file != document.getElementById("video").src.split("/").pop()) {
                 document.getElementById("video").src = "./videos/" + video_file;
             }
+        });
+
+        window.addEventListener('click', function(event) {
+            document.querySelector('video-background-box').play();
         });
     </script>
 </html>
