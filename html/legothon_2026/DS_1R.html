@@ -190,9 +190,53 @@
             }
         }
         customElements.define('commentator-box', CommentatorBox);
+
+        class TimerElement extends LitElement {
+            static properties = {
+                time: {type: String},
+            };
+
+            static styles = css`
+                .timer{
+                    font-family: "Bebas Neue", sans-serif;
+                    font-size: 110px;
+                    color: white;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-weight: bold;
+                    color: var(--legothon-white);
+                    -webkit-text-stroke: 2.5px black;
+                    margin-top: 4px;
+                    text-align: center;
+                    position:absolute; left: 0px; top: 457px;
+                    width: 390px;
+                    height: 100px;
+                    line-height: 100px;
+                    font-variant-numeric: tabular-nums; 
+                }
+            `;
+
+            constructor() {
+                super();
+                this.time = 0;
+            }
+
+            render() {
+                return html`
+                    <div class="timer">
+                        ${this.time}
+                    </div>
+                `;
+            }
+        }
+
+        customElements.define('event-timer', TimerElement);
     </script>
+    <script type="module" src="../../js/legothon_2026.js"></script>
     <body style="width: 1920px; height: 1080px; margin: 0px; background-image: url('boxless_background/DS_1R_Template_2026.png');">
         <name-plates runner1="Siedemnastek" runner1Pronoun="he/him" runner2="Olive" runner2Pronoun="she/her"></name-plates>
+        <event-timer></event-timer>
         <div style="position: absolute; left: 0px; top: 620px; width: 603px; height: 264px; box-sizing: border-box; padding: 25px; padding-left: 40px; padding-right: 40px; display: flex; flex-direction: column; justify-content: space-evenly; gap: 10px;">
             <run-info game="LEGO Indiana Jones: The Original Adventures" category="Raiders of the Lost Ark No 0HP" platform="Gamecube" estimate="2:32:23"></run-info>
             <commentator-box commentatorNames='["Siedemnastek","Javster101 [HOST]"]' commentatorPronouns='["he/him", "he/him"]'></commentator-box>
