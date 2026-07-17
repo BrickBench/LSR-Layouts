@@ -7,14 +7,41 @@
         <link href="https://fonts.cdnfonts.com/css/gobold" rel="stylesheet">
         <link href="https://fonts.cdnfonts.com/css/bebas-neue" rel="stylesheet"> 
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+        <style>
+            :root {
+                --legothon-white: #e8e8e6;
+                --legothon-darkgreen: 14, 101, 45;
+                --legothon-greyborder: rgb(120,120,120);
+                --border-width: 4px;
+            }
+        </style>
     </head>
     <body style="background-color: black; background-image: url('./backgrounds/Coming_Up_Video_Screen.png')">
         <static-bar donoTotal="9999"></static-bar>
+        <bottom-bar-control multiIncentive1Good="true" multiIncentive2Good="true" donationsGood="true"></bottom-bar-control>
     </body>
     <script type="module" defer>
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
         import {classMap} from 'https://esm.run/lit/directives/class-map.js';
         import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById} from '../../../../js/automarathon.js'
+
+        const intervalId = setInterval(() => {
+            const slideshow = document.querySelector("bottom-bar-control");
+            slideshow.nextSlide();
+        }, 8000);
+
+        gsap.registerEffect({
+            name: "swapText",
+            effect: (targets, config) => {
+            let tl = gsap.timeline({delay: config.delay});
+            tl.to(targets, {opacity: 0, duration: config.duration / 2});
+            tl.add(() => targets[0].innerText = config.text);
+            tl.to(targets, {opacity: 1, duration: config.duration});
+            return tl;
+            },
+            defaults: {duration: 0.5}, 
+            extendTimeline: true
+        });
 
         // Non-carousel bar elements
         class StaticBar extends LitElement {
@@ -82,10 +109,41 @@
                 donator: {type: String}
             };
 
+            static styles = css`
+                .name{
+                    text-align: center;
+                    font-family: 'Bebas Neue', sans-serif;
+                    color: white;
+                    font-weight: bold;
+                    font-size: 1.8em;
+                }
+                .donation{
+                    text-align: center;
+                    font-family: 'Bebas Neue', sans-serif;
+                    color: white;
+                    font-weight: bold;
+                    font-size: 1.8em;
+                }
+            `;
+
             constructor() {
+                super();
             }
-            render() {}
+            render() {
+                return html`
+                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; padding-top: 5px;
+                    width: 192px;">
+                        <div class="name">
+                            ${this.donator}
+                        </div>
+                        <div class="donation">
+                            $${this.amounts}
+                        </div>
+                    </div>
+                `;
+            }
         }
+        customElements.define('recent-donation', RecentDonations);
 
         class SingleIncentive extends LitElement {
             static properties = {
@@ -109,10 +167,85 @@
                 amounts: {type: Array},
             };
 
+            static styles = css`
+                :host {
+                    font-family: 'Bebas Neue', sans-serif;
+                    width: 100%;
+                    height: 100%;
+                    color: white;
+                }
+                
+                .bottom-bar-container{
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                }
+
+                .game{
+                    font-size: 1.7em;
+                    font-weight: bold;
+                }
+
+                .incentive{
+                    font-size: 1.7em;
+                    font-weight: bold;
+                    font-style: italic;
+                }
+
+                .multi-box{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+                
+                .incentive-name{
+                    font-size: 1.75em;
+                    font-weight: bold;
+                    text-align: center;
+                }
+
+                .incentive-amount{
+                    font-size: 1.75em;
+                    font-weight: bold;
+                    text-align: center;
+                }
+            `;
+
             constructor() {
+                super();
             }
-            render() {}
+            render() {
+                return html`
+                    <div class="bottom-bar-container">
+                        <div style="display: flex; flex-direction: column; justify-content: center;">
+                            <div class="game">
+                                ${this.game}
+                            </div>
+                            <div class="incentive">
+                                ${this.incentive}
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: row; justify-content: space-evenly; flex-grow: 1; ">
+                        ${this.amounts.map((entry, index)=>{
+                            return html`
+                                <div class="multi-box">
+                                    <div class="incentive-name">
+                                        ${this.values[index]}
+                                    </div>
+                                    <div class="incentive-amount">
+                                        $${entry}
+                                    </div>  
+                                </div>
+                            `;
+                        })}
+                        </div>
+                    </div>
+                `;
+            }
         }
+        customElements.define('multi-incentive', MultiIncentive);
 
         class BottomBarControl extends LitElement {
             static properties = {
@@ -125,13 +258,109 @@
                 singleIncentive2Good: {type: Boolean},
                 multiIncentive1Good: {type: Boolean},
                 multiIncentive2Good: {type: Boolean},
-                readyToChange: {type: Boolean}
+                readyToChange: {type: Boolean},
+                _slideIndex: {type: Number}
             };
 
-            constructor() {
+            static styles = css`
+                .header{
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 3.3em;
+                    font-weight: bold;
+                    text-align: center;
+                    color: white;
+                }
+                
+                .bottom-slide{
+                    position: absolute;
+                    width: 1022px;
+                    height: 79px;
+                    left: 597px;
+                    top: 989px;
+                    padding-left: 30px;
+                    padding-right: 30px;
+                    box-sizing: border-box;
+                }
+            `;
+
+            nextSlide(){
+                const slideHeaders = ["DONATIONS", "UP NEXT", "LATER", "INCENTIVE", "INCENTIVE", "INCENTIVE", "INCENTIVE", "TARGET"];
+                const slideBools = [this.donationsGood, this.upNext1Good, this.upNext2Good, this.singleIncentive1Good, this.singleIncentive2Good,
+                    this.multiIncentive1Good, this.multiIncentive2Good, true];
+                const slideIDs = ["donation-slide","upNext","later","singleIncentive1","singleIncentive2","multiIncentive1","multiIncentive2","target"];
+
+                let header = this.renderRoot.getElementById("slide-header");
+
+                let prevSlide = this._slideIndex;
+
+                while(true){
+                    this._slideIndex += 1;
+                    this._slideIndex %= slideHeaders.length;
+                    if(slideBools[this._slideIndex]){
+                        break;
+                    }
+                }
+
+                let prevSlideElem = this.renderRoot.getElementById(slideIDs[prevSlide]);
+                let curSlideElem = this.renderRoot.getElementById(slideIDs[this._slideIndex]);
+
+                var tl = gsap.timeline({});
+                tl.swapText(header, {text: slideHeaders[this._slideIndex], delay: 1}).to(prevSlideElem, { 
+                    autoAlpha: 0, 
+                    duration: 0.5 
+                }, "<")
+                .from(curSlideElem, { 
+                    autoAlpha: 0, 
+                    duration: 0.5 
+                }, "<");
+
             }
-            render() {}
+
+            constructor() {
+                super();
+                this._slideIndex = 7;
+
+            }
+            render() {
+                return html`
+                    <div class="header" style="position: absolute; top: 989px; left: 370px; width: 235px; height: 79px; line-height: 79px;" id="slide-header">
+                        DONATIONS
+                    </div>
+                    <div id="donation-slide" class="bottom-slide" style="display: flex; flex-direction: row; gap: 10px;">
+                        <recent-donation donator="Gustative" amounts="12.32"></recent-donation>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px;"viewBox="0 0 20 77">
+                            <line x1="20" y1="0" x2="0" y2="77" stroke-width="4" stroke="white" />
+                        </svg>
+                        <recent-donation donator="CAPTAINPAXO" amounts="12.32"></recent-donation>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px;"viewBox="0 0 20 77">
+                            <line x1="20" y1="0" x2="0" y2="77" stroke-width="4" stroke="white" />
+                        </svg>
+                        <recent-donation donator="SIEDEMNASTEK" amounts="12.32"></recent-donation>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px;"viewBox="0 0 20 77">
+                            <line x1="20" y1="0" x2="0" y2="77" stroke-width="4" stroke="white" />
+                        </svg>
+                        <recent-donation donator="Gustative" amounts="12.32"></recent-donation>
+                    </div>
+                    <div id="upNext" class="bottom-slide">
+                    </div>
+                    <div id="later" class="bottom-slide">
+                    </div>
+                    <div id="singleIncentive1" class="bottom-slide">
+                    </div>
+                    <div id="singleIncentive2" class="bottom-slide">
+                    </div>
+                    <div id="multiIncentive1" class="bottom-slide" style="opacity: 0;">
+                        <multi-incentive game="LEGO Star Wars II: The Original Trilogy" incentive="Category Bid War" values='["Any%","Intended%"]' amounts='[0,0]' ></multi-incentive>
+                    </div>
+                    <div id="multiIncentive2" class="bottom-slide" style="opacity: 0;">
+                        <multi-incentive game="LEGO Star Wars III: The Original Trilogy" incentive="Category Bid War" values='["Any%","Intended%"]' amounts='[0,0]' ></multi-incentive>
+                    </div>
+                    <div id="target" class="bottom-slide" style="opacity: 0;">
+                    </div>
+                `;
+            }
         }
+        customElements.define('bottom-bar-control', BottomBarControl);
 
         const this_host = "main";
         var next_data = null;
