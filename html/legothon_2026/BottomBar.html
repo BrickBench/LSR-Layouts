@@ -17,13 +17,13 @@
         </style>
     </head>
     <body style="background-color: black; background-image: url('./backgrounds/Coming_Up_Video_Screen.png');/*background-color: transparent;*/">
-        <static-bar donoTotal="9999"></static-bar>
+        <static-bar donoTotal="0"></static-bar>
         <bottom-bar-control multiIncentive1Good="true" multiIncentive2Good="true" donationsGood="true"></bottom-bar-control>
     </body>
     <script type="module" defer>
         import { LitElement, html, css, nothing } from 'https://esm.run/lit';
         import {classMap} from 'https://esm.run/lit/directives/class-map.js';
-        import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById, getUpcomingEvents} from '../../js/automarathon.js'
+        import {connectToSocket, getEventForHost, toStringTime, getEventTimerValue, getEventById, getUpcomingEvents, getEventRunners} from '../../js/automarathon.js'
 
         const intervalId = setInterval(() => {
             const slideshow = document.querySelector("bottom-bar-control");
@@ -126,6 +126,7 @@
 
             getRelativeTimeString(unix_time) {
                 var time = unix_time - Date.now();
+                console.log("Time until next event: " + time);
                 var text = "Later"
                 if (time) {
                     var mins = time / (1000 * 60);
@@ -416,26 +417,26 @@
                         DONATIONS
                     </div>
                     <div id="donation-slide" class="bottom-slide" style="display: flex; flex-direction: row; gap: 10px; opacity: 0;"">
-                        <recent-donation donator="Gustative" amounts="12.32"></recent-donation>
+                        <recent-donation id="donor-1" donator="Gustative" amounts="12.32"></recent-donation>
                         <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px;"viewBox="0 0 20 77">
                             <line x1="20" y1="0" x2="0" y2="77" stroke-width="4" stroke="white" />
                         </svg>
-                        <recent-donation donator="CAPTAINPAXO" amounts="12.32"></recent-donation>
+                        <recent-donation id="donor-2" donator="CAPTAINPAXO" amounts="12.32"></recent-donation>
                         <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px;"viewBox="0 0 20 77">
                             <line x1="20" y1="0" x2="0" y2="77" stroke-width="4" stroke="white" />
                         </svg>
-                        <recent-donation donator="SIEDEMNASTEK" amounts="12.32"></recent-donation>
+                        <recent-donation id="donor-3" donator="SIEDEMNASTEK" amounts="12.32"></recent-donation>
                         <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px;"viewBox="0 0 20 77">
                             <line x1="20" y1="0" x2="0" y2="77" stroke-width="4" stroke="white" />
                         </svg>
-                        <recent-donation donator="Gustative" amounts="12.32"></recent-donation>
+                        <recent-donation id="donor-4" donator="Gustative" amounts="12.32"></recent-donation>
                     </div>
                     <div id="upNext" class="bottom-slide">
-                        <up-next time="1784456295000" game="LEGO Indiana Jones: The Original Adventures"
+                        <up-next id="next-1" time="1784456295000" game="LEGO Indiana Jones: The Original Adventures"
         category="Raiders of the Lost Ark No 0HP"></up-next>
                     </div>
                     <div id="later" class="bottom-slide" style="opacity: 0;">
-                        <up-next time="1784456295000" game="LEGO Indiana Jones: The Original Adventures"
+                        <up-next id="next-2" time="1784456295000" game="LEGO Indiana Jones: The Original Adventures"
         category="Raiders of the Lost Ark No 0HP"></up-next>
                     </div>
                     <div id="singleIncentive1" class="bottom-slide" style="opacity: 0;">
@@ -463,36 +464,49 @@
             element.category = event.category;
             element.console = event.console;
             element.runners = getEventRunners(event);
-            element.startTime = event.event_start_time;
+            element.time = event.event_start_time;
+        }
+
+        function populateDonation(donation, root, idx) {
+            var element = root.renderRoot.getElementById("donor-" + idx);
+            var donation_info = donation.split(";");
+            if (donation_info.length < 2) {
+                donation_info = ["", ""];
+            }
+            element.donator = donation_info[0];
+            element.amounts = donation_info[1];
         }
 
         function populateBottomBar(data) {
-            var next_event_1_elem = document.getElementById("up-next-1");
-            var next_event_2_elem = document.getElementById("up-next-2");
-            var next_event_3_elem = document.getElementById("up-next-3");
+            var main = document.querySelector("bottom-bar-control");
 
-            var bar_control = document.getElementById("bottom-bar-control");
+            var donation_total_elem = document.querySelector("static-bar");
+            donation_total_elem.donoTotal = data.custom_fields["total-donations"];
+
+            var next_event_1_elem = main.renderRoot.getElementById("next-1");
+            var next_event_2_elem = main.renderRoot.getElementById("next-2");
+
             var next_events = getUpcomingEvents(data);
             if (next_events.length > 0) {
                 populateNextEvent(data, next_events[0], next_event_1_elem);
-                bar_control.upNext1Good = true;
+                main.upNext1Good = true;
             } else {
-                bar_control.upNext1Good = false;
+                main.upNext1Good = false;
             }
 
             if (next_events.length > 1) {
                 populateNextEvent(data, next_events[1], next_event_2_elem);
-                bar_control.upNext2Good = true;
+                main.upNext2Good = true;
             } else {
-                bar_control.upNext2Good = false;
+                main.upNext2Good = false;
             }
 
-            if (next_events.length > 2) {
-                populateNextEvent(data, next_events[2], next_event_3_elem);
-                bar_control.upNext3Good = true;
-            } else {
-                bar_control.upNext3Good = false;
-            }
+ 
+            populateDonation(data.custom_fields["donation-1"], main, 1);
+            populateDonation(data.custom_fields["donation-2"], main, 2);
+            populateDonation(data.custom_fields["donation-3"], main, 3);
+            populateDonation(data.custom_fields["donation-4"], main, 4);
+            main.donationsGood = true;
         }
 
         setInterval(function() {
@@ -506,13 +520,11 @@
         connectToSocket('/ws', function(data) {
             var next_events = getUpcomingEvents(data);
 
-            var static_bottom_bar = document.getElementById("static-bar");
-            static_bottom_bar.donoPercent = data.custom_fields["total-donations"] / data.custom_fields["goal-donations"];
-            static_bottom_bar.donoTotal = data.custom_fields["total-donations"];
 
-            var bar_control = document.getElementById("bottom-bar-control");
+            //var bar_control = document.getElementById("bottom-bar-control");
 
             next_data = data;
+            populateBottomBar(next_data);
         });
     </script>
 </html>
