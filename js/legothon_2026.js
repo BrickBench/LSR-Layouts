@@ -66,6 +66,9 @@ function setRunState(state, event) {
                 runners_info.runner2 = null
                 runners_info.runner2Pronoun = null
             } else if (runners.length >= 2) {
+                var runner1 = state.people[runners[0]]
+                runners_info.runner1 = runner1.name
+                runners_info.runner1Pronoun = runner1.pronouns
                 var runner2 = state.people[runners[1]]
                 runners_info.runner2 = runner2.name
                 runners_info.runner2Pronoun = runner2.pronouns
