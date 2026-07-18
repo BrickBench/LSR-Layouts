@@ -144,27 +144,27 @@
             scheduleBox.runners = runners;
         }
 
-        connectToSocket('/ws', function(data) {
+        /*connectToSocket('/ws', function(data) {
             var next_events = getUpcomingEvents(data);
 
-            populateEvent(data, next_events[0], 0);
-            populateEvent(data, next_events[1], 1);
-            populateEvent(data, next_events[2], 2);
-        });
+            //populateEvent(data, next_events[0], 0);
+            //populateEvent(data, next_events[1], 1);
+            //populateEvent(data, next_events[2], 2);
+        });*/
     </script>
     <body style="width: 1920px; height: 1080px; margin: 0px; background-image: url('boxless_background/Schedule_Page_Template_2026.png');">
         <div style="position: absolute; top: 0px; left: 0px; width: 1011px; height: 881px; display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; 
             box-sizing: border-box;
             padding: 5px; gap: 10px;">
-            <schedule-box index=0 game="LEGO Indiana Jones: The Original Adventures"
-        category="Raiders of the Lost Ark No 0HP" platform="DS" estimate="1:23:23"
-        runners='["Benny", "carkoon", "Colten", "firmynator", "flup", "Lunar", "Mugen", "Sonic7"]'></schedule-box>
-            <schedule-box index=1 time="1784356295000" game="LEGO Indiana Jones: The Original Adventures"
-        category="Raiders of the Lost Ark No 0HP" platform="DS" estimate="1:23:23"
-        runners='["Benny", "carkoon", "Colten", "firmynator", "flup", "Lunar", "Mugen", "Sonic7"]'></schedule-box>
-            <schedule-box index=2 time="1784456295000" game="LEGO Indiana Jones: The Original Adventures"
-        category="Raiders of the Lost Ark No 0HP" platform="DS" estimate="1:23:23"
-        runners='["Benny", "carkoon", "Colten", "firmynator", "flup", "Lunar", "Mugen", "Sonic7"]'></schedule-box>
+            <schedule-box index=0 game="LEGO Builder's Journey"
+        category="Robot's Adventure Any%" platform="PC" estimate="24:00"
+        runners='["Juesto"]' time="1784390100000"></schedule-box>
+            <schedule-box index=1 time="1784392200000" game="LEGO Harry Potter: Years 1-4"
+        category="All Parcels" platform="PC" estimate="2:00:00"
+        runners='["CaptainPaxo"]'></schedule-box>
+            <schedule-box index=2 time="1784400000000" game="LEGO Pirates of the Caribbean: The Video Game"
+        category="Bottle Rush Co-op" platform="PC" estimate="1:40:00"
+        runners='["carkoon", "flup"]'></schedule-box>
         </div>
     </body>
 </html>
