@@ -174,6 +174,15 @@
             "LEGO My Style: Preschool": {video: "legothon_mystyle.mp4", audio: "lswtcs.mp3"},
             "LEGO Rock Band": {video: "legothon_rockbandds.mp4", audio: "lswtcs.mp3"},
             "LEGO Batman: Legacy of the Dark Knight": {video: "legothon_lb4.mp4", audio: "lswtcs.mp3"},
+            "LEGOLAND": {video: "Legothon26-LEGOLAND.mp4", audio: "legoland.mp3"},
+            "LEGO Batman 3: Beyond Gotham": {video: "Legothon26-LB3.mp4", audio: "lb3.mp3"},
+            "LEGO Star Wars: The Complete Saga": {video: "Legothon26-TCS.mp4", audio: "tcs.mp3"},
+            "LEGO Indiana Jones: The Original Adventures": {video: "Legothon26-LIJ1.mp4", audio: "lij1.mp3"},
+            "Bionicle: The Game": {video: "Legothon26-BIONICLE.mp4", audio: "bionicle.mp3"},
+            "LEGO Voyagers": {video: "Legothon26-VOYAGERS.mp4", audio: "voyagers.mp3"},
+            "LEGO Indiana Jones 2: The Adventure Continues": {video: "Legothon26-LIJ2.mp4", audio: "lij2.mp3"},
+            "LEGO Builder's Journey": {video: "Legothon26-BUILDERSJOURNEY.mp4", audio: "lij2.mp3"},
+            "LEGO Harry Potter: Years 1-4": {video: "Legothon26-LHP1-4.mp4", audio: "lhp1-4.mp3"},
         }
 
         connectToSocket('/ws', function(data) {
@@ -184,6 +193,8 @@
             }
 
             var event = getEventById(data, event_id);
+
+            console.log("Event for host " + this_host + ": ", event);
 
             var content = game_to_video[event.game];
             console.log("Content for game " + event.game + ": ", content);
