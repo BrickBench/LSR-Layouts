@@ -15,8 +15,9 @@
                 font-weight: bold;
                 font-family: "Bebas Neue", sans-serif;
                 color: var(--legothon-white);
-                font-size: 9em;
-                margin-top: 30px;
+                font-size: 6em;
+                padding-top: 120px;
+                box-sizing: border-box;
             }
             .mainbox{
                 width: 100%;
@@ -26,7 +27,6 @@
                 color: var(--legothon-white);
                 font-weight: bold;
                 font-family: "Bebas Neue", sans-serif;
-                margin-top: 70px;
                 gap: 10px;
             }
             .optionColumn{
@@ -46,13 +46,22 @@
                 font-size: 10em;
             }
             .levelName{
-                font-size: 4.2em;
+                font-size: 5em;
                 text-align: center;
                 min-height: 150px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 text-transform: uppercase;
+                border-radius: 10px;
+                border: 2px solid white;
+                box-shadow: 4px 4px 10px black;
+                background-color: rgba(var(--legothon-darkgreen), 0.6);
+                box-sizing: border-box;
+                padding: 20px;
+                padding-left: 40px;
+                padding-right: 40px;
+                justify-content: center;
             }
             .game{
                 font-size: 2.3em;
@@ -75,31 +84,55 @@
     <body style="width: 1920px; height: 1080px; margin: 0; background-image: url('boxless_background/Generic_Blank_Template_2026.png');">
         <div style="position: absolute; top: 0px; left: 0px; width: 1920px; height: 1080px; display: flex; flex-direction: column;
                     box-sizing: border-box;
-                    padding: 35px;">
-            <div class="header">
-                TT LEVEL NAMES THROWDOWN
+                    padding: 35px; ">
+            <div class="header" id="quiz_1">
+                Quiz
             </div>
-            <div class="mainbox">
-                <div class="optionColumn">
-                    <div class="levelName">
-                        Better Call Maul
-                    </div>
-                    <img class="levelImage" src="contest1/BetterCallMaul.png"/>
-                    <div class="game">
-                        LEGO Star Wars: The Skywalker Saga
-                    </div>
-                </div>
-                <div class="vs">VS</div>
-                <div class="optionColumn">
-                    <div class="levelName">
-                        They Think It's Owl Over
-                    </div>
-                    <img class="levelImage" src="contest1/TheyThinkItsOwlOver.png"/>
-                    <div class="game">
-                        Lego DC Super-Villains
-                    </div>
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; flex-grow: 1; margin-bottom: 100px;">
+                <div class="mainbox" id="optionsBox">
                 </div>
             </div>
         </div>
     </body>
+    <script type="module" defer>
+        import { LitElement, html, css, nothing } from 'https://esm.run/lit';
+        import {classMap} from 'https://esm.run/lit/directives/class-map.js';
+        import {connectToSocket, getEventForHost, toStringTime, compareTime} from '../../js/automarathon.js'
+        /*connectToSocket('/ws', function(data) {
+            var custom = state.custom_fields;
+
+            var questionString = custom["quizQuestion"];
+            var questionOptions = custom["quizOptions"].split(";");
+
+            document.getElementById("quiz_1").innerHTML = questionString;
+
+            var options = document.getElementById("optionsBox");
+            options.innerHTML = "";
+
+            questionOptions.forEach(element => {
+                options.innerHTML += html`<div class="optionColumn">
+                    <div class="levelName">
+                        ${element}
+                    </div>
+                </div>`;
+            });
+
+       });*/
+
+        var custom = {"quizQuestion": "What % of all Lego Star Wars levels have you play as a member of the Skywalker family?", 
+        "quizOptions": "53%;57%;65%;70%"};
+
+            var questionString = custom["quizQuestion"];
+            var questionOptions = custom["quizOptions"].split(";");
+
+            document.getElementById("quiz_1").innerHTML = questionString;
+
+            var options = document.getElementById("optionsBox");
+            options.innerHTML = "";
+
+            questionOptions.forEach(element => {
+                options.innerHTML += '<div class="optionColumn"><div class="levelName">' + element.trim() +
+                    '</div></div>';
+            });
+    </script>
 </html>
